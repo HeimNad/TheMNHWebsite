@@ -1,48 +1,120 @@
 import Link from "next/link";
-import { FileSignature, CreditCard, Users } from "lucide-react";
+import {
+  FileSignature,
+  MessageSquare,
+  CreditCard,
+  ArrowUpRight,
+  Clock,
+} from "lucide-react";
+import { db } from "@/lib/db";
 
-export default function AdminDashboard() {
+// Ensure real-time data fetching
+export const dynamic = "force-dynamic";
+
+export default async function AdminDashboard() {
+  // Fetch data
+  // 1. Today's Waivers (Created today)
+  // Note: CURRENT_DATE in Postgres is YYYY-MM-DD.
+  const waiversResult = await db.sql`
+    SELECT COUNT(*) as count FROM waivers
+    WHERE created_at >= CURRENT_DATE;
+  `;
+  const todaysWaivers = Number(waiversResult.rows[0]?.count || 0);
+
+  // 2. Unread Messages
+  const messagesResult = await db.sql`
+    SELECT COUNT(*) as count FROM messages
+    WHERE status = 'unread';
+  `;
+  const unreadMessages = Number(messagesResult.rows[0]?.count || 0);
+
+  // 3. New Members (Mock)
+  const newMembers = 0;
+
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Quick Stat Card: Waivers */}
-        <Link href="/admin/waivers" className="block group">
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 group-hover:border-pink-300 group-hover:shadow-md transition-all">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-pink-50 rounded-lg text-pink-600">
-                <FileSignature size={24} />
-              </div>
-              <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">Active</span>
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">Waivers</h3>
-            <p className="text-gray-500 text-sm">View and manage signed waivers</p>
-          </div>
-        </Link>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-500 mt-1">
+          Overview of today&apos;s activity and pending tasks.
+        </p>
+      </div>
 
-        {/* Quick Stat Card: Memberships (Future) */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 opacity-75">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-gray-50 rounded-lg text-gray-400">
-              <CreditCard size={24} />
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Waivers Card */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-gray-500">
+                Today&apos;s Waivers
+              </p>
+              <h3 className="text-3xl font-bold text-gray-900 mt-2">
+                {todaysWaivers}
+              </h3>
             </div>
-            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Coming Soon</span>
+            <div className="p-3 bg-pink-50 rounded-xl text-pink-600">
+              <FileSignature size={24} />
+            </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">Memberships</h3>
-          <p className="text-gray-500 text-sm">Pre-paid cards and subscriptions</p>
+          <div className="mt-4 flex items-center text-sm">
+            <Link
+              href="/admin/waivers"
+              className="text-pink-600 font-medium hover:text-pink-700 flex items-center gap-1"
+            >
+              View All <ArrowUpRight size={16} />
+            </Link>
+          </div>
         </div>
 
-        {/* Quick Stat Card: Customers (Future) */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 opacity-75">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-gray-50 rounded-lg text-gray-400">
-              <Users size={24} />
+        {/* Messages Card */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-gray-500">
+                Pending Inquiries
+              </p>
+              <h3 className="text-3xl font-bold text-gray-900 mt-2">
+                {unreadMessages}
+              </h3>
             </div>
-            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Coming Soon</span>
+            <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+              <MessageSquare size={24} />
+            </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">Customers</h3>
-          <p className="text-gray-500 text-sm">Manage customer profiles</p>
+          <div className="mt-4 flex items-center text-sm">
+            {unreadMessages > 0 ? (
+              <span className="text-orange-600 font-medium flex items-center gap-1">
+                <Clock size={16} /> Needs Attention
+              </span>
+            ) : (
+              <span className="text-green-600 font-medium">All caught up!</span>
+            )}
+            <Link
+              href="/admin/messages"
+              className="ml-auto text-gray-500 hover:text-gray-700"
+            >
+              Go to inbox &rarr;
+            </Link>
+          </div>
+        </div>
+
+        {/* Members Card (Future) */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden opacity-75">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-gray-500">New Members</p>
+              <h3 className="text-3xl font-bold text-gray-900 mt-2">
+                {newMembers}
+              </h3>
+            </div>
+            <div className="p-3 bg-purple-50 rounded-xl text-purple-600">
+              <CreditCard size={24} />
+            </div>
+          </div>
+          <div className="mt-4 text-sm text-gray-400">
+            Membership system inactive
+          </div>
         </div>
       </div>
     </div>

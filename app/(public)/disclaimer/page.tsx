@@ -37,6 +37,9 @@ export default function DisclaimerPage() {
     formState: { errors },
   } = useForm<WaiverFormValues>({
     resolver: zodResolver(waiverSchema),
+    defaultValues: {
+      date: new Date().toISOString().split("T")[0], // Sets today's date
+    },
   });
 
   const clearSignature = () => {

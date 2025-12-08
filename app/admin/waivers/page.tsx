@@ -3,7 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import { useUser, RedirectToSignIn } from "@clerk/nextjs";
 import SignatureCanvas from "react-signature-canvas";
-import { X } from "lucide-react";
+import { X, Eye } from "lucide-react";
+import { Pagination } from "@/components/ui/pagination-control";
 
 interface Waiver {
   id: string;
@@ -19,39 +20,57 @@ export default function AdminPage() {
   const { isSignedIn, isLoaded, user } = useUser();
   const [waivers, setWaivers] = useState<Waiver[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedSignature, setSelectedSignature] = useState<any[] | null>(null);
+  const [selectedWaiver, setSelectedWaiver] = useState<Waiver | null>(null);
   const sigCanvasRef = useRef<SignatureCanvas>(null);
+
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     if (isSignedIn) {
-      fetchWaivers();
+      fetchWaivers(currentPage, pageSize);
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, currentPage, pageSize]);
 
   // Effect to handle signature display when modal opens
   useEffect(() => {
-    if (selectedSignature && sigCanvasRef.current) {
+    if (selectedWaiver && selectedWaiver.signature_data && sigCanvasRef.current) {
       // Need a small timeout to ensure canvas is ready
       setTimeout(() => {
-        sigCanvasRef.current?.fromData(selectedSignature);
+        sigCanvasRef.current?.fromData(selectedWaiver.signature_data);
         sigCanvasRef.current?.off(); // Make it read-only
       }, 100);
     }
-  }, [selectedSignature]);
+  }, [selectedWaiver]);
 
-  const fetchWaivers = async () => {
+  const fetchWaivers = async (page: number, limit: number) => {
+    setLoading(true);
     try {
-      const response = await fetch('/api/admin/waivers');
+      const response = await fetch(`/api/admin/waivers?page=${page}&limit=${limit}`);
       if (!response.ok) {
         throw new Error('Failed to fetch waivers');
       }
       const data = await response.json();
-      setWaivers(data || []);
+      setWaivers(data.data || []);
+      setTotalItems(data.pagination.total);
+      setTotalPages(data.pagination.pages);
     } catch (error) {
       console.error("Error fetching waivers:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setCurrentPage(1); // Reset to first page when changing page size
   };
 
   if (!isLoaded) return <div className="p-8 text-center">Loading...</div>;
@@ -69,12 +88,9 @@ export default function AdminPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Waiver Management</h1>
-        <div className="text-sm text-gray-500">
-          Total Records: <span className="font-medium text-gray-900">{waivers.length}</span>
-        </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -92,7 +108,7 @@ export default function AdminPage() {
                   Location
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Signature
+                  Details
                 </th>
               </tr>
             </thead>
@@ -127,10 +143,11 @@ export default function AdminPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <button
-                        onClick={() => setSelectedSignature(waiver.signature_data)}
-                        className="text-pink-600 hover:text-pink-700 font-medium text-xs bg-pink-50 px-3 py-1 rounded-full transition-colors"
+                        onClick={() => setSelectedWaiver(waiver)}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-pink-600 hover:bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+                        title="View Details"
                       >
-                        View
+                        <Eye size={16} /> View Details
                       </button>
                     </td>
                   </tr>
@@ -139,22 +156,43 @@ export default function AdminPage() {
             </tbody>
           </table>
         </div>
+        
+        {/* Pagination Control */}
+        {!loading && waivers.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={totalItems}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+          />
+        )}
       </div>
 
-      {/* Signature Modal */}
-      {selectedSignature && (
+      {/* Waiver Details Modal */}
+      {selectedWaiver && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in fade-in zoom-in duration-200">
             <button
-              onClick={() => setSelectedSignature(null)}
+              onClick={() => setSelectedWaiver(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <X size={24} />
             </button>
             
-            <h3 className="text-xl font-bold text-pink-900 mb-4">Signature View</h3>
+            <h3 className="text-xl font-bold text-pink-900 mb-4">Waiver Details</h3>
             
-            <div className="border border-pink-200 rounded-lg bg-pink-50/20 overflow-auto h-80">
+            <div className="space-y-4 text-gray-800 mb-6">
+              <p><strong>Signed By:</strong> {selectedWaiver.name}</p>
+              {selectedWaiver.child_name && <p><strong>Child's Name:</strong> {selectedWaiver.child_name}</p>}
+              <p><strong>Date of Waiver:</strong> {new Date(selectedWaiver.date).toLocaleDateString()}</p>
+              <p><strong>Location:</strong> {selectedWaiver.location}</p>
+              <p><strong>Signed At:</strong> {new Date(selectedWaiver.created_at).toLocaleString()}</p>
+            </div>
+
+            <h4 className="text-lg font-semibold text-pink-900 mb-2">Signature</h4>
+            <div className="border border-pink-200 rounded-lg bg-pink-50/20 overflow-auto h-60">
               <SignatureCanvas
                 ref={sigCanvasRef}
                 penColor="#831843"
@@ -168,7 +206,7 @@ export default function AdminPage() {
             
             <div className="mt-6 flex justify-end">
               <button
-                onClick={() => setSelectedSignature(null)}
+                onClick={() => setSelectedWaiver(null)}
                 className="bg-pink-100 hover:bg-pink-200 text-pink-900 font-medium px-4 py-2 rounded-lg transition-colors"
               >
                 Close

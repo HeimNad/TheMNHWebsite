@@ -6,10 +6,12 @@ import { UserButton } from "@clerk/nextjs";
 import {
   LayoutDashboard,
   FileSignature,
+  MessageSquare,
   CreditCard,
   Settings,
   Menu,
   X,
+  Home, // Added Home icon
 } from "lucide-react";
 import { useState } from "react";
 
@@ -24,6 +26,7 @@ export default function AdminLayout({
   const navItems = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "Waivers", href: "/admin/waivers", icon: FileSignature },
+    { name: "Messages", href: "/admin/messages", icon: MessageSquare },
     { name: "Memberships", href: "/admin/memberships", icon: CreditCard },
     { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
@@ -73,7 +76,7 @@ export default function AdminLayout({
                   href={item.href}
                   onClick={() => setIsSidebarOpen(false)}
                   className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+                    flex items-center space-y-1 gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                     ${
                       isActive
                         ? "bg-pink-50 text-pink-700"
@@ -89,10 +92,21 @@ export default function AdminLayout({
                 </Link>
               );
             })}
+            {/* User Profile - Original */}
           </nav>
 
+          {/* Back to Main Site Button */}
+          <Link
+            href="/"
+            onClick={() => setIsSidebarOpen(false)}
+            className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+          >
+            <Home size={18} className="text-gray-700" />
+            Back to Main Site
+          </Link>
+
           {/* User Profile */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-2 border-t border-gray-200">
             <div className="flex items-center gap-3 px-3 py-2">
               <UserButton
                 appearance={{

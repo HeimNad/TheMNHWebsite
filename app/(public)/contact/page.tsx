@@ -1,6 +1,70 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+"use client";
+
+import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
+import { useState, useRef, FormEvent } from "react";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    message: "",
+  });
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const captchaRef = useRef<HCaptcha>(null);
+
+  const HCAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY || "";
+
+  const onCaptchaChange = (token: string) => {
+    setCaptchaToken(token);
+    setErrorMessage("");
+  };
+
+  const onCaptchaError = (err: any) => {
+    console.error("hCaptcha Error:", err);
+    setErrorMessage("Captcha verification failed. Please try again.");
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setErrorMessage("");
+
+    if (!captchaToken) {
+      setErrorMessage("Please complete the security check.");
+      return;
+    }
+
+    setStatus("submitting");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, captchaToken }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send message");
+      }
+
+      setStatus("success");
+      setFormData({ firstName: "", lastName: "", email: "", message: "" });
+      setCaptchaToken(null);
+      captchaRef.current?.resetCaptcha();
+    } catch (error: any) {
+      console.error(error);
+      setStatus("error");
+      setErrorMessage(error.message || "Something went wrong. Please try again later.");
+      captchaRef.current?.resetCaptcha();
+      setCaptchaToken(null);
+    }
+  };
+
   return (
     <div className="bg-pink-50 min-h-screen pt-16 pb-16">
       {/* Hero Section */}
@@ -77,75 +141,149 @@ export default function ContactPage() {
             <h2 className="text-2xl font-bold text-pink-900 mb-6">
               Send us a Message
             </h2>
-            <form className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-6">
+            {status === "success" ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg
+                    className="w-8 h-8"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Message Sent!
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Thank you for reaching out. We will get back to you shortly.
+                </p>
+                <button
+                  onClick={() => setStatus("idle")}
+                  className="text-pink-600 hover:text-pink-700 font-medium"
+                >
+                  Send another message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <label
+                      htmlFor="firstName"
+                      className="block text-sm font-medium text-pink-900 mb-2"
+                    >
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      required
+                      value={formData.firstName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, firstName: e.target.value })
+                      }
+                      className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all"
+                      placeholder="John"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="lastName"
+                      className="block text-sm font-medium text-pink-900 mb-2"
+                    >
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      required
+                      value={formData.lastName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, lastName: e.target.value })
+                      }
+                      className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all"
+                      placeholder="Doe"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label
-                    htmlFor="firstName"
+                    htmlFor="email"
                     className="block text-sm font-medium text-pink-900 mb-2"
                   >
-                    First Name
+                    Email Address
                   </label>
                   <input
-                    type="text"
-                    id="firstName"
+                    type="email"
+                    id="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all"
-                    placeholder="John"
+                    placeholder="john@example.com"
                   />
                 </div>
+
                 <div>
                   <label
-                    htmlFor="lastName"
+                    htmlFor="message"
                     className="block text-sm font-medium text-pink-900 mb-2"
                   >
-                    Last Name
+                    Message
                   </label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all"
-                    placeholder="Doe"
+                  <textarea
+                    id="message"
+                    rows={4}
+                    required
+                    value={formData.message}
+                    onChange={(e) =>
+                      setFormData({ ...formData, message: e.target.value })
+                    }
+                    className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all resize-none"
+                    placeholder="How can we help you?"
+                  ></textarea>
+                </div>
+
+                {/* hCaptcha */}
+                <div className="flex justify-center">
+                  <HCaptcha
+                    sitekey={HCAPTCHA_SITE_KEY}
+                    onVerify={onCaptchaChange}
+                    onError={onCaptchaError}
+                    ref={captchaRef}
                   />
                 </div>
-              </div>
 
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-pink-900 mb-2"
+                {status === "error" && (
+                  <p className="text-red-500 text-sm">{errorMessage}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={status === "submitting"}
+                  className="w-full bg-pink-500 text-white font-medium py-3 rounded-lg hover:bg-pink-600 transition-colors shadow-sm cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
                 >
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all"
-                  placeholder="john@example.com"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-pink-900 mb-2"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all resize-none"
-                  placeholder="How can we help you?"
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-pink-500 text-white font-medium py-3 rounded-lg hover:bg-pink-600 transition-colors shadow-sm cursor-pointer"
-              >
-                Send Message
-              </button>
-            </form>
+                  {status === "submitting" ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2 h-5 w-5" />
+                      Sending...
+                    </>
+                  ) : (
+                    "Send Message"
+                  )}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </section>

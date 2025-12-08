@@ -11,12 +11,12 @@ export async function GET(request: Request) {
     const offset = (page - 1) * limit;
 
     // Get total count
-    const countResult = await db.sql`SELECT COUNT(*) FROM waivers`;
+    const countResult = await db.sql`SELECT COUNT(*) FROM messages`;
     const total = Number(countResult.rows[0].count);
 
     // Get paginated data
     const { rows } = await db.sql`
-      SELECT * FROM waivers 
+      SELECT * FROM messages 
       ORDER BY created_at DESC
       LIMIT ${limit} OFFSET ${offset}
     `;
@@ -31,7 +31,35 @@ export async function GET(request: Request) {
       }
     });
   } catch (error) {
-    console.error('Error fetching waivers:', error);
+    console.error('Error fetching messages:', error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const { id, status } = body;
+
+    if (!id || !status) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    await db.sql`
+      UPDATE messages
+      SET status = ${status}
+      WHERE id = ${id}
+    `;
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error updating message:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
