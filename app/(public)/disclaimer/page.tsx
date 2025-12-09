@@ -38,7 +38,13 @@ export default function DisclaimerPage() {
   } = useForm<WaiverFormValues>({
     resolver: zodResolver(waiverSchema),
     defaultValues: {
-      date: new Date().toISOString().split("T")[0], // Sets today's date
+      date: (() => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      })(),
     },
   });
 
@@ -60,7 +66,7 @@ export default function DisclaimerPage() {
     setLoading(true);
 
     try {
-      const signatureData = sigCanvas.current?.toData(); // Get vector data
+      const signatureData = sigCanvas.current?.toData();
 
       const response = await fetch("/api/waiver", {
         method: "POST",

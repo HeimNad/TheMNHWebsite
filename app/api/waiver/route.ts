@@ -14,19 +14,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Ensure the table exists (this is a safety check, ideally run migration separately)
-    await db.sql`
-      CREATE TABLE IF NOT EXISTS waivers (
-        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-        created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-        name TEXT NOT NULL,
-        child_name TEXT,
-        date DATE NOT NULL,
-        location TEXT NOT NULL,
-        signature_data JSONB NOT NULL
-      );
-    `;
-
     // Insert data
     await db.sql`
       INSERT INTO waivers (name, child_name, date, location, signature_data)

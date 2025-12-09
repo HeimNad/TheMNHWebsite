@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser, RedirectToSignIn } from "@clerk/nextjs";
-import { X, Eye, Ban } from "lucide-react";
+import { X, Eye, Ban, RefreshCw } from "lucide-react";
 import { Pagination } from "@/components/ui/pagination-control";
 
 interface Message {
@@ -10,8 +10,9 @@ interface Message {
   first_name: string;
   last_name: string;
   email: string;
+  subject?: string;
   message: string;
-  status: 'unread' | 'read' | 'ignored';
+  status: "unread" | "read" | "ignored";
   created_at: string;
 }
 
@@ -19,6 +20,7 @@ export default function MessagesPage() {
   const { isSignedIn, isLoaded } = useUser();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [showIgnored, setShowIgnored] = useState(false);
 
@@ -34,12 +36,20 @@ export default function MessagesPage() {
     }
   }, [isSignedIn, currentPage, pageSize]);
 
-  const fetchMessages = async (page: number, limit: number) => {
-    setLoading(true);
+  const fetchMessages = async (
+    page: number,
+    limit: number,
+    isManualRefresh = false
+  ) => {
+    if (isManualRefresh) setIsRefreshing(true);
+    else setLoading(true);
+
     try {
-      const response = await fetch(`/api/admin/messages?page=${page}&limit=${limit}`);
+      const response = await fetch(
+        `/api/admin/messages?page=${page}&limit=${limit}`
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch messages');
+        throw new Error("Failed to fetch messages");
       }
       const data = await response.json();
       setMessages(data.data || []);
@@ -49,6 +59,7 @@ export default function MessagesPage() {
       console.error("Error fetching messages:", error);
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -63,23 +74,24 @@ export default function MessagesPage() {
 
   const updateStatus = async (id: string, newStatus: string) => {
     try {
-      const response = await fetch('/api/admin/messages', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/admin/messages", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status: newStatus }),
       });
 
-      if (!response.ok) throw new Error('Failed to update status');
+      if (!response.ok) throw new Error("Failed to update status");
 
       // Update local state
-      setMessages(messages.map(msg =>
-        msg.id === id ? { ...msg, status: newStatus as any } : msg
-      ));
+      setMessages(
+        messages.map((msg) =>
+          msg.id === id ? { ...msg, status: newStatus as any } : msg
+        )
+      );
 
       if (selectedMessage && selectedMessage.id === id) {
         setSelectedMessage({ ...selectedMessage, status: newStatus as any });
       }
-
     } catch (error) {
       console.error("Error updating status:", error);
     }
@@ -91,12 +103,27 @@ export default function MessagesPage() {
     return <RedirectToSignIn />;
   }
 
-  const filteredMessages = messages.filter(msg => showIgnored ? true : msg.status !== 'ignored');
+  const filteredMessages = messages.filter((msg) =>
+    showIgnored ? true : msg.status !== "ignored"
+  );
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
+          <button
+            onClick={() => fetchMessages(currentPage, pageSize, true)}
+            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+            title="Refresh data"
+            disabled={loading || isRefreshing}
+          >
+            <RefreshCw
+              size={20}
+              className={`${isRefreshing ? "animate-spin" : ""}`}
+            />
+          </button>
+        </div>
         <div className="flex items-center gap-4">
           <label className="flex items-center space-x-2 text-sm text-gray-600 cursor-pointer">
             <input
@@ -122,6 +149,9 @@ export default function MessagesPage() {
                   Name
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Subject
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Email
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -135,33 +165,56 @@ export default function MessagesPage() {
             <tbody className="bg-white divide-y divide-gray-200">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                  <td
+                    colSpan={6}
+                    className="px-6 py-8 text-center text-gray-500"
+                  >
                     Loading messages...
                   </td>
                 </tr>
               ) : filteredMessages.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                  <td
+                    colSpan={6}
+                    className="px-6 py-8 text-center text-gray-500"
+                  >
                     No messages found on this page.
                   </td>
                 </tr>
               ) : (
                 filteredMessages.map((msg) => (
-                  <tr key={msg.id} className={`hover:bg-gray-50 transition-colors ${msg.status === 'unread' ? 'bg-pink-50/30' : ''}`}>
+                  <tr
+                    key={msg.id}
+                    className={`hover:bg-gray-50 transition-colors ${
+                      msg.status === "unread" ? "bg-pink-50/30" : ""
+                    }`}
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {new Date(msg.created_at).toLocaleDateString()} <br/>
-                      <span className="text-xs text-gray-500">{new Date(msg.created_at).toLocaleTimeString()}</span>
+                      {new Date(msg.created_at).toLocaleDateString()} <br />
+                      <span className="text-xs text-gray-500">
+                        {new Date(msg.created_at).toLocaleTimeString()}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {msg.first_name} {msg.last_name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">
+                      {msg.subject || "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {msg.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                        ${msg.status === 'unread' ? 'bg-green-100 text-green-800' :
-                          msg.status === 'ignored' ? 'bg-gray-100 text-gray-800' : 'bg-blue-100 text-blue-800'}`}>
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                        ${
+                          msg.status === "unread"
+                            ? "bg-green-100 text-green-800"
+                            : msg.status === "ignored"
+                            ? "bg-gray-100 text-gray-800"
+                            : "bg-blue-100 text-blue-800"
+                        }`}
+                      >
                         {msg.status}
                       </span>
                     </td>
@@ -169,16 +222,17 @@ export default function MessagesPage() {
                       <button
                         onClick={() => {
                           setSelectedMessage(msg);
-                          if (msg.status === 'unread') updateStatus(msg.id, 'read');
+                          if (msg.status === "unread")
+                            updateStatus(msg.id, "read");
                         }}
                         className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         title="View Details"
                       >
                         <Eye size={16} /> View
                       </button>
-                      {msg.status !== 'ignored' && (
+                      {msg.status !== "ignored" && (
                         <button
-                          onClick={() => updateStatus(msg.id, 'ignored')}
+                          onClick={() => updateStatus(msg.id, "ignored")}
                           className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                           title="Ignore Message"
                         >
@@ -217,7 +271,7 @@ export default function MessagesPage() {
               <X size={24} />
             </button>
 
-            <div className="mb-6">
+            <div className="mb-4">
               <h3 className="text-xl font-bold text-gray-900 mb-1">
                 {selectedMessage.first_name} {selectedMessage.last_name}
               </h3>
@@ -227,15 +281,22 @@ export default function MessagesPage() {
               </p>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 min-h-[100px] max-h-[300px] overflow-y-auto">
-              <p className="text-gray-800 whitespace-pre-wrap">{selectedMessage.message}</p>
+            <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+              <span className="block text-xs font-bold text-gray-500 uppercase mb-1">Subject</span>
+              <p className="text-gray-900 font-medium">{selectedMessage.subject || "General Inquiry"}</p>
+            </div>
+
+            <div className="bg-white p-4 rounded-lg border border-gray-200 min-h-[100px] max-h-[300px] overflow-y-auto">
+              <p className="text-gray-800 whitespace-pre-wrap">
+                {selectedMessage.message}
+              </p>
             </div>
 
             <div className="mt-6 flex justify-end gap-3">
-               {selectedMessage.status !== 'ignored' && (
+              {selectedMessage.status !== "ignored" && (
                 <button
                   onClick={() => {
-                    updateStatus(selectedMessage.id, 'ignored');
+                    updateStatus(selectedMessage.id, "ignored");
                     setSelectedMessage(null);
                   }}
                   className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium"

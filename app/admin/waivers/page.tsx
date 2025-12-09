@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useUser, RedirectToSignIn } from "@clerk/nextjs";
 import SignatureCanvas from "react-signature-canvas";
-import { X, Eye } from "lucide-react";
+import { X, Eye, RefreshCw } from "lucide-react";
 import { Pagination } from "@/components/ui/pagination-control";
 
 interface Waiver {
@@ -20,6 +20,7 @@ export default function AdminPage() {
   const { isSignedIn, isLoaded, user } = useUser();
   const [waivers, setWaivers] = useState<Waiver[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedWaiver, setSelectedWaiver] = useState<Waiver | null>(null);
   const sigCanvasRef = useRef<SignatureCanvas>(null);
 
@@ -46,8 +47,10 @@ export default function AdminPage() {
     }
   }, [selectedWaiver]);
 
-  const fetchWaivers = async (page: number, limit: number) => {
-    setLoading(true);
+  const fetchWaivers = async (page: number, limit: number, isManualRefresh = false) => {
+    if (isManualRefresh) setIsRefreshing(true);
+    else setLoading(true);
+
     try {
       const response = await fetch(`/api/admin/waivers?page=${page}&limit=${limit}`);
       if (!response.ok) {
@@ -61,6 +64,7 @@ export default function AdminPage() {
       console.error("Error fetching waivers:", error);
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -87,7 +91,17 @@ export default function AdminPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Waiver Management</h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold text-gray-900">Waiver Management</h1>
+          <button
+            onClick={() => fetchWaivers(currentPage, pageSize, true)}
+            className="p-2 text-gray-500 hover:text-pink-600 hover:bg-pink-50 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-pink-500"
+            title="Refresh data"
+            disabled={loading || isRefreshing}
+          >
+            <RefreshCw size={20} className={`${isRefreshing ? "animate-spin" : ""}`} />
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">

@@ -3,7 +3,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
-import { Star, ShieldCheck, Heart, MapPin } from "lucide-react";
+import { Star, ShieldCheck, Heart, MapPin, Smile } from "lucide-react";
 
 export default function Home() {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
@@ -12,6 +12,15 @@ export default function Home() {
     { color: "bg-pink-200", text: "Magical Unicorns" },
     { color: "bg-purple-200", text: "Friendly Dinosaurs" },
     { color: "bg-blue-200", text: "Zooming Zebras" },
+    { color: "bg-green-200", text: "Happy Pandas" },
+    { color: "bg-yellow-200", text: "Speedy Tigers" },
+  ];
+
+  const galleryImages = [
+    { color: "bg-pink-100", emoji: "🦄", label: "Unicorns" },
+    { color: "bg-blue-100", emoji: "🦕", label: "Dinos" },
+    { color: "bg-yellow-100", emoji: "🦁", label: "Lions" },
+    { color: "bg-green-100", emoji: "🐼", label: "Pandas" },
   ];
 
   return (
@@ -28,7 +37,7 @@ export default function Home() {
             <p className="text-lg text-pink-700 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               Create safe and fun electric riding companions for children of all
               ages! From glowing unicorns to singing dinosaur cars, our animal
-              electric vehicles have passed EU safety certification.
+              electric vehicles are designed for endless fun.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -48,12 +57,12 @@ export default function Home() {
           </div>
 
           {/* Right Carousel */}
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white rotate-2 hover:rotate-0 transition-transform duration-500">
-            <div className="embla overflow-hidden bg-white" ref={emblaRef}>
-              <div className="flex h-96">
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white rotate-2 hover:rotate-0 transition-transform duration-500 aspect-square sm:aspect-video lg:aspect-square">
+            <div className="embla overflow-hidden bg-white h-full" ref={emblaRef}>
+              <div className="flex h-full">
                 {slides.map((slide, index) => (
                   <div
-                    className="embla__slide flex-[0_0_100%] min-w-0 relative"
+                    className="embla__slide flex-[0_0_100%] min-w-0 relative h-full"
                     key={index}
                   >
                     <div
@@ -61,11 +70,11 @@ export default function Home() {
                     >
                       {/* Placeholder for actual images */}
                       <div className="text-center">
-                        <div className="text-6xl mb-4">🎠</div>
-                        <h3 className="text-2xl font-bold text-white drop-shadow-sm">
+                        <div className="text-8xl mb-6">🎠</div>
+                        <h3 className="text-3xl font-bold text-white drop-shadow-sm">
                           {slide.text}
                         </h3>
-                        <p className="text-white/80">Image Placeholder</p>
+                        <p className="text-white/80 mt-2">Image Placeholder</p>
                       </div>
                     </div>
                   </div>
@@ -74,6 +83,25 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* New Gallery Section */}
+      <section className="py-16 bg-white/50">
+         <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-12">
+               <h2 className="text-3xl font-bold text-pink-900 mb-4">Meet Our Friends</h2>
+               <p className="text-pink-600 max-w-2xl mx-auto">See some of our most popular rides waiting for you!</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+               {galleryImages.map((item, idx) => (
+                  <div key={idx} className={`${item.color} rounded-2xl aspect-square flex flex-col items-center justify-center hover:scale-105 transition-transform duration-300 shadow-sm cursor-pointer`}>
+                     <span className="text-6xl mb-2">{item.emoji}</span>
+                     <span className="font-bold text-pink-900">{item.label}</span>
+                     <span className="text-xs text-pink-500/70 mt-1">Placeholder</span>
+                  </div>
+               ))}
+            </div>
+         </div>
       </section>
 
       {/* Features / Trust Section */}
@@ -95,10 +123,10 @@ export default function Home() {
                 <ShieldCheck size={32} />
               </div>
               <h3 className="text-xl font-bold text-pink-900 mb-3">
-                EU Safety Certified
+                Safety First
               </h3>
               <p className="text-pink-700">
-                Our vehicles have passed rigorous safety certifications,
+                Our vehicles are designed with rigorous safety standards,
                 allowing children to enjoy exploration while parents feel at
                 ease.
               </p>
@@ -119,7 +147,7 @@ export default function Home() {
 
             <div className="bg-pink-50 p-8 rounded-2xl text-center hover:-translate-y-1 transition-transform duration-300">
               <div className="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-pink-500">
-                <Heart size={32} />
+                <Smile size={32} />
               </div>
               <h3 className="text-xl font-bold text-pink-900 mb-3">
                 Joyful Growth

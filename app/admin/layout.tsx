@@ -27,8 +27,8 @@ export default function AdminLayout({
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "Waivers", href: "/admin/waivers", icon: FileSignature },
     { name: "Messages", href: "/admin/messages", icon: MessageSquare },
-    { name: "Memberships", href: "/admin/memberships", icon: CreditCard },
-    { name: "Settings", href: "/admin/settings", icon: Settings },
+    // { name: "Memberships", href: "/admin/memberships", icon: CreditCard },
+    // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
   return (
@@ -55,9 +55,7 @@ export default function AdminLayout({
         <div className="h-full flex flex-col">
           {/* Sidebar Header */}
           <div className="h-16 flex items-center px-6 border-b border-gray-200">
-            <Link href="/" className="text-xl font-bold text-pink-600">
-              Admin Panel
-            </Link>
+            <a className="text-xl font-bold text-pink-600">Admin Panel</a>
             <button
               className="ml-auto lg:hidden text-gray-500"
               onClick={() => setIsSidebarOpen(false)}

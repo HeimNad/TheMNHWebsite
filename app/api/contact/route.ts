@@ -24,7 +24,7 @@ async function verifyHCaptcha(token: string) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { firstName, lastName, email, message, captchaToken } = body;
+    const { firstName, lastName, email, message, subject, captchaToken } = body;
 
     if (!firstName || !lastName || !email || !message) {
       return NextResponse.json(
@@ -49,20 +49,8 @@ export async function POST(request: Request) {
     }
 
     await db.sql`
-      CREATE TABLE IF NOT EXISTS messages (
-        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-        created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-        first_name TEXT NOT NULL,
-        last_name TEXT NOT NULL,
-        email TEXT NOT NULL,
-        message TEXT NOT NULL,
-        status TEXT DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'ignored'))
-      );
-    `;
-
-    await db.sql`
-      INSERT INTO messages (first_name, last_name, email, message, status)
-      VALUES (${firstName}, ${lastName}, ${email}, ${message}, 'unread')
+      INSERT INTO messages (first_name, last_name, email, subject, message, status)
+      VALUES (${firstName}, ${lastName}, ${email}, ${subject || 'General Inquiry'}, ${message}, 'unread')
     `;
 
     return NextResponse.json({ success: true }, { status: 201 });
