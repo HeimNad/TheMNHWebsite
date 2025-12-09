@@ -7,8 +7,6 @@ import {
   LayoutDashboard,
   FileSignature,
   MessageSquare,
-  CreditCard,
-  Settings,
   Menu,
   X,
   Home, // Added Home icon

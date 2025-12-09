@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The MNH",
-  description: "MNH animal ride",
+  title: "The MNH Wonder Rides",
+  description: "MNH Animal Ride for Kids' Parties and Events",
   icons: "/favicon.ico",
 };
 

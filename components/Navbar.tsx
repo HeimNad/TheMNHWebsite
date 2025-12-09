@@ -54,12 +54,6 @@ export default function Navbar() {
               Home
             </Link>
             <Link
-              href="/about"
-              className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors"
-            >
-              About
-            </Link>
-            <Link
               href="/party"
               className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors"
             >
@@ -131,13 +125,6 @@ export default function Navbar() {
             className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
           >
             Home
-          </Link>
-          <Link
-            href="/about"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
-          >
-            About
           </Link>
           <Link
             href="/party"
