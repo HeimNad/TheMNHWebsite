@@ -22,9 +22,5 @@ CREATE TABLE IF NOT EXISTS messages (
   email TEXT NOT NULL,
   subject TEXT DEFAULT 'General Inquiry',
   message TEXT NOT NULL,
-  status TEXT DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'ignored'))
+  status TEXT DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'ignored', 'replied'))
 );
-
--- Migration for existing deployments: Add 'subject' column to messages table
--- Run this if the 'messages' table already exists but lacks the 'subject' column.
-ALTER TABLE messages ADD COLUMN IF NOT EXISTS subject TEXT DEFAULT 'General Inquiry';

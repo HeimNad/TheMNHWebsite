@@ -331,21 +331,23 @@ I confirm that I am at least 18 years of age or am the legal guardian of the par
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {waiver.location}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm flex items-center gap-2">
-                      <button
-                        onClick={() => setSelectedWaiver(waiver)}
-                        className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-pink-600 hover:bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
-                        title="View Details"
-                      >
-                        <Eye size={16} /> View
-                      </button>
-                      <button
-                        onClick={() => downloadPDF(waiver)}
-                        className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        title="Download PDF"
-                      >
-                        <FileText size={16} /> PDF
-                      </button>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setSelectedWaiver(waiver)}
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-pink-600 hover:bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
+                          title="View Details"
+                        >
+                          <Eye size={16} /> View
+                        </button>
+                        <button
+                          onClick={() => downloadPDF(waiver)}
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          title="Download PDF"
+                        >
+                          <FileText size={16} /> PDF
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

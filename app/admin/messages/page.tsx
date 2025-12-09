@@ -12,7 +12,7 @@ interface Message {
   email: string;
   subject?: string;
   message: string;
-  status: "unread" | "read" | "ignored";
+  status: "unread" | "read" | "ignored" | "replied";
   created_at: string;
 }
 
@@ -238,35 +238,42 @@ export default function MessagesPage() {
                         ${
                           msg.status === "unread"
                             ? "bg-green-100 text-green-800"
+                            : msg.status === "replied"
+                            ? "bg-purple-100 text-purple-800"
                             : msg.status === "ignored"
                             ? "bg-gray-100 text-gray-800"
                             : "bg-blue-100 text-blue-800"
                         }`}
                       >
-                        {msg.status}
+                        {msg.status.charAt(0).toUpperCase() + msg.status.slice(1)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm space-x-1">
-                      <button
-                        onClick={() => {
-                          setSelectedMessage(msg);
-                          if (msg.status === "unread")
-                            updateStatus(msg.id, "read");
-                        }}
-                        className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        title="View Details"
-                      >
-                        <Eye size={16} /> View
-                      </button>
-                      {msg.status !== "ignored" && (
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <div className="flex items-center gap-2">
                         <button
-                          onClick={() => updateStatus(msg.id, "ignored")}
-                          className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                          title="Ignore Message"
+                          onClick={() => {
+                            setSelectedMessage(msg);
+                            if (msg.status === "unread")
+                              updateStatus(msg.id, "read");
+                          }}
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                          title="View Details"
                         >
-                          <Ban size={16} /> Ignore
+                          <Eye size={16} /> View
                         </button>
-                      )}
+                        
+                        <select
+                          value={msg.status}
+                          onChange={(e) => updateStatus(msg.id, e.target.value)}
+                          className="cursor-pointer text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <option value="unread">Unread</option>
+                          <option value="read">Read</option>
+                          <option value="replied">Replied</option>
+                          <option value="ignored">Ignored</option>
+                        </select>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -320,18 +327,20 @@ export default function MessagesPage() {
               </p>
             </div>
 
-            <div className="mt-6 flex justify-end gap-3">
-              {selectedMessage.status !== "ignored" && (
-                <button
-                  onClick={() => {
-                    updateStatus(selectedMessage.id, "ignored");
-                    setSelectedMessage(null);
-                  }}
-                  className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium"
+            <div className="mt-6 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Status:</span>
+                <select
+                  value={selectedMessage.status}
+                  onChange={(e) => updateStatus(selectedMessage.id, e.target.value)}
+                  className="block w-32 pl-3 pr-10 py-2 text-sm border border-gray-300 bg-white focus:outline-none focus:ring-pink-500 focus:border-pink-500 rounded-md shadow-sm"
                 >
-                  Ignore Message
-                </button>
-              )}
+                  <option value="unread">Unread</option>
+                  <option value="read">Read</option>
+                  <option value="replied">Replied</option>
+                  <option value="ignored">Ignored</option>
+                </select>
+              </div>
               <button
                 onClick={() => setSelectedMessage(null)}
                 className="bg-pink-100 hover:bg-pink-200 text-pink-900 font-medium px-4 py-2 rounded-lg transition-colors"
