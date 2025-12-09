@@ -5,6 +5,7 @@ import SignatureCanvas from "react-signature-canvas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { CheckCircle } from "lucide-react";
 
 // Define Zod schema
 const waiverSchema = z.object({
@@ -179,20 +180,34 @@ export default function DisclaimerPage() {
 
         {/* Form */}
         <div className="bg-white rounded-2xl shadow-sm border border-pink-100 p-8">
-          {status.message && (
-            <div
-              className={`mb-6 p-4 rounded-lg ${
-                status.type === "success"
-                  ? "bg-green-50 text-green-800 border border-green-200"
-                  : "bg-red-50 text-red-800 border border-red-200"
-              }`}
-            >
-              {status.message}
+          {status.type === "success" ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle size={32} />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Waiver Submitted Successfully!
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Thank you for completing the waiver. You are now ready to ride!
+              </p>
+              <button
+                onClick={() => setStatus({ type: null, message: "" })}
+                className="text-pink-600 hover:text-pink-700 font-medium transition-colors"
+              >
+                Sign another waiver
+              </button>
             </div>
-          )}
+          ) : (
+            <>
+              {status.message && status.type === "error" && (
+                <div className="mb-6 p-4 rounded-lg bg-red-50 text-red-800 border border-red-200">
+                  {status.message}
+                </div>
+              )}
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
+              <form
+                onSubmit={handleSubmit(onSubmit)}
             className="space-y-6"
             noValidate
           >
@@ -366,6 +381,8 @@ export default function DisclaimerPage() {
               {loading ? "Submitting..." : "Submit Waiver"}
             </button>
           </form>
+          </>
+        )}
         </div>
       </div>
     </div>

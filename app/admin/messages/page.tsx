@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser, RedirectToSignIn } from "@clerk/nextjs";
-import { X, Eye, Ban, RefreshCw } from "lucide-react";
+import { X, Eye, Ban, RefreshCw, Search } from "lucide-react";
 import { Pagination } from "@/components/ui/pagination-control";
 
 interface Message {
@@ -24,29 +24,32 @@ export default function MessagesPage() {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [showIgnored, setShowIgnored] = useState(false);
 
-  // Pagination State
+  // Pagination & Search State
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeSearch, setActiveSearch] = useState("");
 
   useEffect(() => {
     if (isSignedIn) {
-      fetchMessages(currentPage, pageSize);
+      fetchMessages(currentPage, pageSize, false, activeSearch);
     }
-  }, [isSignedIn, currentPage, pageSize]);
+  }, [isSignedIn, currentPage, pageSize, activeSearch]);
 
   const fetchMessages = async (
     page: number,
     limit: number,
-    isManualRefresh = false
+    isManualRefresh = false,
+    search = ""
   ) => {
     if (isManualRefresh) setIsRefreshing(true);
     else setLoading(true);
 
     try {
       const response = await fetch(
-        `/api/admin/messages?page=${page}&limit=${limit}`
+        `/api/admin/messages?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch messages");
@@ -61,6 +64,12 @@ export default function MessagesPage() {
       setLoading(false);
       setIsRefreshing(false);
     }
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCurrentPage(1);
+    setActiveSearch(searchQuery);
   };
 
   const handlePageChange = (page: number) => {
@@ -109,11 +118,41 @@ export default function MessagesPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
+          <label className="flex items-center space-x-2 text-sm text-gray-600 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={showIgnored}
+              onChange={(e) => setShowIgnored(e.target.checked)}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span>Show Ignored</span>
+          </label>
+        </div>
+        
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <form onSubmit={handleSearch} className="flex items-center gap-2 flex-1 md:flex-none">
+            <div className="relative flex-1 md:w-64">
+              <input
+                type="text"
+                placeholder="Search name or email..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
+              >
+                <Search size={16} />
+              </button>
+            </div>
+          </form>
+
           <button
-            onClick={() => fetchMessages(currentPage, pageSize, true)}
+            onClick={() => fetchMessages(currentPage, pageSize, true, activeSearch)}
             className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
             title="Refresh data"
             disabled={loading || isRefreshing}
@@ -123,17 +162,6 @@ export default function MessagesPage() {
               className={`${isRefreshing ? "animate-spin" : ""}`}
             />
           </button>
-        </div>
-        <div className="flex items-center gap-4">
-          <label className="flex items-center space-x-2 text-sm text-gray-600 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={showIgnored}
-              onChange={(e) => setShowIgnored(e.target.checked)}
-              className="rounded border-gray-300 text-pink-600 focus:ring-pink-500"
-            />
-            <span>Show Ignored</span>
-          </label>
         </div>
       </div>
 
