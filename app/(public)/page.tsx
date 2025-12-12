@@ -3,7 +3,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
-import { Star, ShieldCheck, Heart, MapPin, Smile, Clock } from "lucide-react";
+import { Star, ShieldCheck, MapPin, Smile, Clock } from "lucide-react";
 
 export default function Home() {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
@@ -224,7 +224,7 @@ export default function Home() {
                   </h4>
                   <ul className="text-sm text-pink-700 space-y-1">
                     <li className="flex justify-between max-w-xs">
-                      <span>Mon - Sat:</span>
+                      <span>Fri - Sat:</span>
                       <span>10:00 AM - 9:00 PM</span>
                     </li>
                     <li className="flex justify-between max-w-xs">
