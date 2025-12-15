@@ -60,10 +60,10 @@ export default function Navbar() {
               Parties
             </Link>
             <Link
-              href="/wavier"
+              href="/waiver"
               className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors"
             >
-              Disclaimer
+              Waiver
             </Link>
             <Link
               href="/contact"
@@ -134,11 +134,11 @@ export default function Navbar() {
             Parties
           </Link>
           <Link
-            href="/disclaimer"
+            href="/waiver"
             onClick={() => setIsMobileMenuOpen(false)}
             className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
           >
-            Disclaimer
+            Waiver
           </Link>
           <Link
             href="/contact"
