@@ -4,9 +4,10 @@ import { db } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
+  let fetchHistory = false;
   try {
     const { searchParams } = new URL(request.url);
-    const fetchHistory = searchParams.get('history') === 'true';
+    fetchHistory = searchParams.get('history') === 'true';
 
     if (fetchHistory) {
       const { rows } = await db.sql`
