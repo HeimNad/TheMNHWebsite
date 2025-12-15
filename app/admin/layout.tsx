@@ -9,7 +9,8 @@ import {
   MessageSquare,
   Menu,
   X,
-  Home, // Added Home icon
+  Home,
+  Flag,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -25,6 +26,7 @@ export default function AdminLayout({
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "Waivers", href: "/admin/waivers", icon: FileSignature },
     { name: "Messages", href: "/admin/messages", icon: MessageSquare },
+    { name: "Announcements", href: "/admin/announcements", icon: Flag },
     // { name: "Memberships", href: "/admin/memberships", icon: CreditCard },
     // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];

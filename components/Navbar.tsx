@@ -60,7 +60,7 @@ export default function Navbar() {
               Parties
             </Link>
             <Link
-              href="/disclaimer"
+              href="/wavier"
               className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors"
             >
               Disclaimer

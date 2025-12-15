@@ -48,7 +48,7 @@ export default function Home() {
                 View Our Locations <MapPin size={20} />
               </Link>
               <Link
-                href="/disclaimer"
+                href="/waiver"
                 className="bg-white text-pink-600 border-2 border-pink-100 px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-50 transition-colors flex items-center justify-center"
               >
                 Sign Waiver

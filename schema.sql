@@ -24,3 +24,13 @@ CREATE TABLE IF NOT EXISTS messages (
   message TEXT NOT NULL,
   status TEXT DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'ignored', 'replied'))
 );
+
+-- 3. Table: announcements
+-- Used to store site-wide announcements
+CREATE TABLE IF NOT EXISTS announcements (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  message TEXT NOT NULL,
+  is_active BOOLEAN DEFAULT FALSE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
