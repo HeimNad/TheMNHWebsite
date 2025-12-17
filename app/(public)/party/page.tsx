@@ -3,186 +3,204 @@
 import Link from "next/link";
 import {
   PartyPopper,
-  Gamepad2,
-  Music,
-  Cake,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  Calendar,
   Star,
+  Music,
   ArrowRight,
+  Info,
 } from "lucide-react";
 
 export default function PartyPage() {
-  const partyFeatures = [
-    {
-      icon: <Star className="w-8 h-8 text-yellow-500" />,
-      title: "Magical Animal Rides",
-      description:
-        "Unlimited access to our fleet of electric plush animals. From unicorns to dinos, let the kids ride to their hearts' content!",
-      color: "bg-yellow-50",
-      borderColor: "border-yellow-100",
-    },
-    {
-      icon: <Gamepad2 className="w-8 h-8 text-blue-500" />,
-      title: "Gaming Zone",
-      description:
-        "Challenge friends with Nintendo Switch and motion-sensing games. Dance battles, racing, and sports fun for everyone.",
-      color: "bg-blue-50",
-      borderColor: "border-blue-100",
-    },
-    {
-      icon: <Cake className="w-8 h-8 text-pink-500" />,
-      title: "Birthday Celebration",
-      description:
-        "We provide a festive atmosphere with birthday decorations. Bring your own cake and snacks to celebrate in style!",
-      color: "bg-pink-50",
-      borderColor: "border-pink-100",
-    },
-    {
-      icon: <Music className="w-8 h-8 text-purple-500" />,
-      title: "Music & Atmosphere",
-      description:
-        "Keep the energy high with our party playlist system. The rides themselves light up and play fun tunes!",
-      color: "bg-purple-50",
-      borderColor: "border-purple-100",
-    },
-  ];
-
-  const galleryImages = [
-    { color: "bg-pink-200", label: "Happy Riders", emoji: "🦄" },
-    { color: "bg-blue-200", label: "Game Time", emoji: "🎮" },
-    { color: "bg-yellow-200", label: "Cake Cutting", emoji: "🎂" },
-    { color: "bg-purple-200", label: "Group Photos", emoji: "📸" },
-  ];
-
   return (
     <div className="bg-pink-50 min-h-screen pt-16 pb-16">
-      {/* Hero Section */}
-      <section className="bg-pink-100/50 py-16 sm:py-24 relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-10 left-10 text-pink-300 opacity-50 animate-bounce">
-          <PartyPopper size={48} />
+      {/* Decorative Background Elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-10 text-pink-300 opacity-40 animate-bounce">
+          <Star size={64} />
         </div>
-        <div className="absolute bottom-10 right-10 text-purple-300 opacity-50 animate-bounce delay-700">
-          <Star size={48} />
+        <div className="absolute top-40 right-20 text-yellow-300 opacity-40 animate-pulse">
+          <Music size={48} />
         </div>
+        <div className="absolute bottom-20 left-20 text-blue-300 opacity-40 animate-bounce delay-700">
+          <PartyPopper size={56} />
+        </div>
+      </div>
 
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-pink-900 mb-6">
-            Celebrate with{" "}
-            <span className="text-pink-500">MNH Wonder Rides!</span>
+      <div className="max-w-6xl mx-auto px-2 relative z-10">
+        {/* Header Section */}
+        <div className="text-center mb-16 space-y-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-pink-900 leading-tight">
+            Celebrate Your Child&rsquo;s Special Day <br />
+            <span className="text-pink-500">at MNH Wonder Rides!</span>
           </h1>
-          <p className="text-lg sm:text-xl text-pink-700 max-w-2xl mx-auto mb-10">
-            Make your child&rsquo;s special day unforgettable. Combining the joy
-            of riding with gaming fun for the ultimate party experience.
+          <p className="text-lg md:text-xl text-pink-700 max-w-3xl mx-auto leading-relaxed">
+            Enjoy a fun and active birthday with exclusive animal rides and
+            access to our play zone. Perfect for kids ages 2 and up, create
+            unforgettable memories with smiles, games, and laughter – all in a
+            safe and exciting space!
           </p>
-          <Link
-            href="/contact?subject=Party Inquiry#contact-form"
-            className="inline-flex items-center gap-2 bg-pink-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-600 transition-colors shadow-lg hover:shadow-pink-200/50"
-          >
-            Book Your Party Now <ArrowRight size={20} />
-          </Link>
         </div>
-      </section>
 
-      {/* Gallery Section */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold text-center text-pink-900 mb-12">
-          Picture Perfect Moments
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {galleryImages.map((img, idx) => (
-            <div
-              key={idx}
-              className={`${img.color} aspect-square rounded-2xl flex flex-col items-center justify-center group hover:scale-105 transition-transform duration-300 shadow-sm`}
-            >
-              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
-                {img.emoji}
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Left Column: Package Details */}
+          <div className="space-y-10">
+            {/* Private Party Packages Card */}
+            <div className="bg-white rounded-3xl p-8 shadow-xl border-4 border-pink-100 relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-yellow-400 text-pink-900 font-bold px-6 py-2 rounded-bl-2xl shadow-sm transform rotate-0">
+                Best Value!
               </div>
-              <span className="font-semibold text-pink-900">{img.label}</span>
-              <span className="text-xs text-black/40 mt-1">
-                Image Placeholder
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
 
-      {/* Services Section */}
-      <section className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-pink-900 mb-4">
-              What&rsquo;s Included?
-            </h2>
-            <p className="text-pink-600 max-w-2xl mx-auto">
-              We take care of the entertainment so you can focus on making
-              memories.
-            </p>
+              <h2 className="text-3xl font-bold text-purple-900 mb-6 flex items-center gap-3">
+                <span className="bg-purple-100 p-2 rounded-full text-purple-600">
+                  <PartyPopper size={32} />
+                </span>
+                Private Party Packages
+              </h2>
+
+              <div className="flex items-center gap-2 text-pink-600 font-semibold mb-6 bg-pink-50 w-fit px-4 py-2 rounded-full">
+                <Clock size={20} />
+                <span>Party duration: 1.5 hours</span>
+              </div>
+
+              <ul className="space-y-4 mb-8">
+                {[
+                  "Exclusive use of our electric animal rides",
+                  "Access the interactive play zone (blocks, games & more)",
+                  "Friendly team member on-site to assist",
+                  "Time for photos, play & fun",
+                  "Basic cleaning included",
+                ].map((item, index) => (
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 text-gray-700"
+                  >
+                    <CheckCircle
+                      className="text-green-500 shrink-0 mt-0.5"
+                      size={20}
+                    />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="bg-pink-400/50 text-white p-6 rounded-2xl text-center mb-6 shadow-md transform hover:scale-105 transition-transform duration-300">
+                <p className="text-sm uppercase tracking-wide opacity-90 mb-1">
+                  Pricing
+                </p>
+                <div className="flex justify-center items-baseline gap-2 mb-2">
+                  <span className="text-3xl font-bold">Weekday: $399</span>
+                  <span className="text-2xl opacity-80">|</span>
+                  <span className="text-3xl font-bold">Weekend: $499</span>
+                </div>
+                <p className="text-sm font-medium bg-white/20 inline-block px-3 py-1 rounded-full">
+                  Up to 10 kids (ages 2+)
+                </p>
+              </div>
+
+              <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl">
+                <h3 className="font-bold text-yellow-800 mb-1 flex items-center gap-2">
+                  <Star size={18} className="fill-yellow-500 text-yellow-500" />{" "}
+                  Add-on Option
+                </h3>
+                <p className="text-yellow-900 text-sm">
+                  <strong>Additional child sharing ride time: +$35</strong>{" "}
+                  <br />
+                  (Up to 14 kids total. Ride time may be rotated.)
+                </p>
+              </div>
+            </div>
+
+            {/* Reservation Notice */}
+            <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-xl flex items-center gap-4 shadow-sm">
+              <Calendar className="text-blue-500 shrink-0" size={32} />
+              <div>
+                <p className="font-bold text-blue-900">Plan Ahead!</p>
+                <p className="text-blue-800">
+                  Please reserve at least 2 weeks in advance.
+                </p>
+              </div>
+            </div>
+
+            {/* Notes Section */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-pink-200 shadow-sm">
+              <h3 className="text-xl font-bold text-pink-900 mb-4 flex items-center gap-2">
+                <Info size={24} className="text-pink-500" /> Notes for All Party
+                Packages
+              </h3>
+              <ul className="space-y-3 text-pink-800 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-pink-400 mt-1">•</span>
+                  <span>
+                    All party packages include basic cleaning. Excessive waste,
+                    food waste, or special setups may incur a cleaning fee of{" "}
+                    <strong>$30–$50</strong>.
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-pink-400 mt-1">•</span>
+                  <span>
+                    Guests may bring their own cake and food.
+                    <span className="block text-xs text-pink-600 mt-1 font-medium bg-pink-100 w-fit px-2 py-0.5 rounded">
+                      (No refrigeration or heating available on site)
+                    </span>
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {partyFeatures.map((feature, idx) => (
-              <div
-                key={idx}
-                className={`flex gap-6 p-8 rounded-2xl border ${feature.borderColor} ${feature.color} transition-all hover:shadow-md`}
-              >
-                <div className="shrink-0 bg-white p-4 rounded-xl shadow-sm h-fit">
-                  {feature.icon}
+          {/* Right Column: CTA & Visuals */}
+          <div className="space-y-8 lg:sticky lg:top-24">
+            {/* Image Placeholder Area - Simulating the Poster Image */}
+            <div className="bg-white p-4 rounded-3xl shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-500">
+              <div className="aspect-4/3 bg-linear-to-br from-pink-100 to-purple-100 rounded-2xl overflow-hidden relative group">
+                {/* You can replace this div with an actual <Image /> component */}
+                <div className="absolute inset-0 flex items-center justify-center text-pink-300">
+                  <div className="text-center">
+                    <p className="text-6xl mb-2">🎈🎂🎉</p>
+                    <p className="font-bold text-xl text-pink-400">
+                      Party Zone Photo
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {feature.description}
+
+                {/* Overlay Text */}
+                <div className="absolute bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-4 text-white">
+                  <p className="font-bold text-lg">Safe & Exciting Space</p>
+                  <p className="text-sm opacity-90">
+                    Interactive play zone with blocks & games
                   </p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
 
-      {/* Additional Info / How it works */}
-      <section className="max-w-4xl mx-auto px-6 py-16 text-center">
-        <div className="bg-pink-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl">
-          <h2 className="text-3xl font-bold mb-6">Ready to Party?</h2>
-          <div className="grid sm:grid-cols-3 gap-8 text-pink-100 mb-10">
-            <div>
-              <div className="bg-pink-800 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">
-                1
-              </div>
-              <h3 className="font-semibold mb-2">Check Availability</h3>
-              <p className="text-sm opacity-80">
-                Contact us to find the perfect date and time.
+            {/* Booking CTA Card */}
+            <div className="bg-pink-900 text-white rounded-3xl p-8 shadow-2xl text-center">
+              <h2 className="text-3xl font-bold mb-4">Ready to Book?</h2>
+              <p className="mb-8 text-pink-100">
+                Secure your preferred date and time today to ensure an
+                unforgettable celebration!
               </p>
-            </div>
-            <div>
-              <div className="bg-pink-800 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">
-                2
-              </div>
-              <h3 className="font-semibold mb-2">Customize Package</h3>
-              <p className="text-sm opacity-80">
-                Choose your rides and add-ons.
-              </p>
-            </div>
-            <div>
-              <div className="bg-pink-800 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">
-                3
-              </div>
-              <h3 className="font-semibold mb-2">Confirm Booking</h3>
-              <p className="text-sm opacity-80">
-                Secure your spot with a deposit.
+
+              <Link
+                href="/contact?subject=Party Inquiry#contact-form"
+                className="group relative inline-flex items-center justify-center gap-3 bg-white text-pink-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-100 transition-all w-full sm:w-auto shadow-lg hover:shadow-xl hover:-translate-y-1"
+              >
+                <span>Book Your Party Now</span>
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <p className="mt-6 text-xs text-pink-300">
+                Have questions? Call us at (516) 423-6988
               </p>
             </div>
           </div>
-          <Link
-            href="/contact?subject=Party Inquiry#contact-form"
-            className="bg-white text-pink-900 px-8 py-3 rounded-full font-bold hover:bg-pink-100 transition-colors inline-block"
-          >
-            Inquire About Parties
-          </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
