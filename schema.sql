@@ -20,8 +20,11 @@ CREATE TABLE IF NOT EXISTS messages (
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   email TEXT NOT NULL,
+  phone TEXT,
   subject TEXT DEFAULT 'General Inquiry',
   message TEXT NOT NULL,
+  child_age TEXT,
+  preferred_contact TEXT,
   status TEXT DEFAULT 'unread' CHECK (status IN ('unread', 'read', 'ignored', 'replied'))
 );
 

@@ -11,6 +11,9 @@ function ContactForm() {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
+    childAge: "",
+    preferredContact: "email",
     subject: "",
     message: "",
   });
@@ -44,8 +47,19 @@ function ContactForm() {
     e.preventDefault();
     setErrorMessage("");
 
+    // Validation
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(formData.email)) {
+      setErrorMessage("Please enter a valid email address.");
+
+      return;
+    }
+
     if (!captchaToken) {
       setErrorMessage("Please complete the security check.");
+
       return;
     }
 
@@ -69,6 +83,9 @@ function ContactForm() {
         firstName: "",
         lastName: "",
         email: "",
+        phone: "",
+        childAge: "",
+        preferredContact: "email",
         subject: "",
         message: "",
       });
@@ -87,7 +104,7 @@ function ContactForm() {
 
   return (
     <div
-      className="bg-white p-8 rounded-2xl shadow-sm border border-pink-100 scroll-mt-18"
+      className="bg-white p-8 rounded-2xl shadow-sm border border-pink-100 scroll-mt-24"
       id="contact-form"
     >
       <h2 className="text-2xl font-bold text-pink-900 mb-6">
@@ -166,24 +183,90 @@ function ContactForm() {
             </div>
           </div>
 
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-pink-900 mb-2"
-            >
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              required
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all"
-              placeholder="john@example.com"
-            />
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-pink-900 mb-2"
+              >
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                required
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all"
+                placeholder="john@example.com"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-pink-900 mb-2"
+              >
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+                className="w-full px-4 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all"
+                placeholder="(555) 123-4567"
+              />
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div>
+              <label
+                htmlFor="childAge"
+                className="block text-sm font-medium text-pink-900 mb-2"
+              >
+                Child&apos;s Age{" "}
+                <span className="text-gray-400 text-xs font-normal">
+                  (Optional)
+                </span>
+              </label>
+              <select
+                id="childAge"
+                value={formData.childAge}
+                onChange={(e) =>
+                  setFormData({ ...formData, childAge: e.target.value })
+                }
+                className="w-full pl-3 pr-8 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all bg-white"
+              >
+                <option value="">Select Age</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6-12">6-12</option>
+                <option value="12+">12+</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-pink-900 mb-2">
+                Preferred Contact Method
+              </label>
+              <select
+                value={formData.preferredContact}
+                onChange={(e) =>
+                  setFormData({ ...formData, preferredContact: e.target.value })
+                }
+                className="w-full pl-3 pr-8 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all bg-white"
+              >
+                <option value="email">Email Only</option>
+                <option value="sms">SMS Only</option>
+                <option value="both">Both SMS & Email</option>
+              </select>
+            </div>
           </div>
 
           <div>
@@ -307,7 +390,7 @@ export default function ContactPage() {
                 <h3 className="text-lg font-semibold text-pink-900 mb-1">
                   Call Us
                 </h3>
-                <p className="text-pink-700">+1 (516) 373-1319</p>
+                <p className="text-pink-700">+1 (516) 423-6988</p>
                 <p className="text-sm text-pink-600 mt-1">
                   Mon-Sat from 10am to 9pm.
                 </p>

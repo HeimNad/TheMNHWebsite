@@ -10,6 +10,9 @@ interface Message {
   first_name: string;
   last_name: string;
   email: string;
+  phone?: string;
+  child_age?: string;
+  preferred_contact?: string;
   subject?: string;
   message: string;
   status: "unread" | "read" | "ignored" | "replied";
@@ -306,14 +309,37 @@ export default function MessagesPage() {
               <X size={24} />
             </button>
 
-            <div className="mb-4">
-              <h3 className="text-xl font-bold text-gray-900 mb-1">
-                {selectedMessage.first_name} {selectedMessage.last_name}
-              </h3>
-              <p className="text-sm text-gray-500">{selectedMessage.email}</p>
-              <p className="text-xs text-gray-400 mt-1">
-                {new Date(selectedMessage.created_at).toLocaleString()}
-              </p>
+            <div className="mb-6 grid grid-cols-2 gap-4 text-sm">
+              <div className="col-span-2">
+                <h3 className="text-xl font-bold text-gray-900">
+                  {selectedMessage.first_name} {selectedMessage.last_name}
+                </h3>
+              </div>
+              
+              <div>
+                <span className="block text-xs text-gray-500 uppercase font-semibold">Email</span>
+                <span className="text-gray-900">{selectedMessage.email}</span>
+              </div>
+              
+              <div>
+                <span className="block text-xs text-gray-500 uppercase font-semibold">Phone</span>
+                <span className="text-gray-900">{selectedMessage.phone || "-"}</span>
+              </div>
+
+              <div>
+                <span className="block text-xs text-gray-500 uppercase font-semibold">Child Age</span>
+                <span className="text-gray-900">{selectedMessage.child_age || "-"}</span>
+              </div>
+
+              <div>
+                <span className="block text-xs text-gray-500 uppercase font-semibold">Preferred Contact</span>
+                <span className="text-gray-900 capitalize">{selectedMessage.preferred_contact || "-"}</span>
+              </div>
+
+              <div className="col-span-2">
+                <span className="block text-xs text-gray-500 uppercase font-semibold">Date</span>
+                <span className="text-gray-900">{new Date(selectedMessage.created_at).toLocaleString()}</span>
+              </div>
             </div>
 
             <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">

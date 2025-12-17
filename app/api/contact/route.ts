@@ -24,7 +24,7 @@ async function verifyHCaptcha(token: string) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { firstName, lastName, email, message, subject, captchaToken } = body;
+    const { firstName, lastName, email, phone, childAge, preferredContact, message, subject, captchaToken } = body;
 
     if (!firstName || !lastName || !email || !message) {
       return NextResponse.json(
@@ -49,8 +49,8 @@ export async function POST(request: Request) {
     }
 
     await db.sql`
-      INSERT INTO messages (first_name, last_name, email, subject, message, status)
-      VALUES (${firstName}, ${lastName}, ${email}, ${subject || 'General Inquiry'}, ${message}, 'unread')
+      INSERT INTO messages (first_name, last_name, email, phone, child_age, preferred_contact, subject, message, status)
+      VALUES (${firstName}, ${lastName}, ${email}, ${phone}, ${childAge}, ${preferredContact}, ${subject || 'General Inquiry'}, ${message}, 'unread')
     `;
 
     return NextResponse.json({ success: true }, { status: 201 });
