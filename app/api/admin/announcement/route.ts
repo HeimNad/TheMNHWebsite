@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { auth } from '@clerk/nextjs/server';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   let fetchHistory = false;
   try {
     const { searchParams } = new URL(request.url);
@@ -34,6 +40,11 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { message, is_active } = body;
@@ -65,10 +76,6 @@ export async function POST(request: Request) {
       `;
     } else {
       // New message content (or first record), insert new history entry
-      // Ensure we deactivate old active ones if we want only one active at a time?
-      // Actually, the GET logic only picks the latest active one, so multiple active rows are fine,
-      // but usually we might want to set others to inactive. 
-      // For history tracking, just inserting is fine. The GET logic `WHERE is_active = true ORDER BY created_at DESC LIMIT 1` handles it.
       
       await db.sql`
         INSERT INTO announcements (message, is_active)
@@ -87,6 +94,11 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { id } = body;

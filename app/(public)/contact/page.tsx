@@ -243,12 +243,12 @@ function ContactForm() {
                 className="w-full pl-3 pr-8 py-3 rounded-lg border border-pink-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all bg-white"
               >
                 <option value="">Select Age</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6-12">6-12</option>
-                <option value="12+">12+</option>
+                <option value="2">2 years</option>
+                <option value="3">3 years</option>
+                <option value="4">4 years</option>
+                <option value="5">5 years</option>
+                <option value="6-12">6-12 years</option>
+                <option value="12+">12+ years</option>
               </select>
             </div>
             <div>
