@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   PartyPopper,
   Clock,
   CheckCircle,
-  AlertCircle,
   Calendar,
   Star,
   Music,
@@ -63,29 +63,109 @@ export default function PartyPage() {
 
               <div className="flex items-center gap-2 text-pink-600 font-semibold mb-6 bg-pink-50 w-fit px-4 py-2 rounded-full">
                 <Clock size={20} />
-                <span>Party duration: 1.5 hours</span>
+                <span>Party duration: 2 hours</span>
               </div>
 
-              <ul className="space-y-4 mb-8">
-                {[
-                  "Exclusive use of our electric animal rides",
-                  "Access the interactive play zone (blocks, games & more)",
-                  "Friendly team member on-site to assist",
-                  "Time for photos, play & fun",
-                  "Basic cleaning included",
-                ].map((item, index) => (
-                  <li
-                    key={index}
-                    className="flex items-start gap-3 text-gray-700"
-                  >
+              <div className="space-y-6 mb-8 text-gray-700">
+                <h3 className="font-bold text-pink-900 text-lg">
+                  What we provide:
+                </h3>
+
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
                     <CheckCircle
-                      className="text-green-500 shrink-0 mt-0.5"
+                      className="text-green-500 shrink-0 mt-1"
                       size={20}
                     />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+                    <div>
+                      <span className="font-semibold">
+                        Private use of the entire MNH Wonder Rides play area for
+                        2 hours
+                      </span>
+                      <ul className="mt-2 ml-4 space-y-1 text-sm text-gray-600 border-l-2 border-pink-100 pl-4">
+                        <li>• 50 minutes of animal ride time</li>
+                        <li>
+                          • 40 minutes of fun game play (blocks, games &
+                          interactive play zone)
+                        </li>
+                        <li>• 30 minutes for celebration</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {[
+                    "Exclusive use of all 10 electric animal rides",
+                    "A friendly staff member on-site to assist throughout the party",
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <CheckCircle
+                        className="text-green-500 shrink-0 mt-1"
+                        size={20}
+                      />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+
+                  <div className="flex items-start gap-3">
+                    <CheckCircle
+                      className="text-green-500 shrink-0 mt-1"
+                      size={20}
+                    />
+                    <div>
+                      <span>Designated celebration area for cake & food</span>
+                      <p className="text-xs text-gray-500 mt-1 italic">
+                        (No refrigeration or heating available on-site.)
+                      </p>
+                    </div>
+                  </div>
+
+                  {[
+                    "Water bottles provided for all kids",
+                    "Small gift for each child",
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <CheckCircle
+                        className="text-green-500 shrink-0 mt-1"
+                        size={20}
+                      />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+
+                  <div className="flex items-start gap-3">
+                    <CheckCircle
+                      className="text-green-500 shrink-0 mt-1"
+                      size={20}
+                    />
+                    <div>
+                      <span>Basic post-party cleaning included</span>
+                      <p className="text-xs text-gray-500 mt-1 italic">
+                        (Excessive waste or special setups may incur a cleaning
+                        fee.)
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <CheckCircle
+                      className="text-green-500 shrink-0 mt-1"
+                      size={20}
+                    />
+                    <div>
+                      <span className="font-semibold">
+                        All party paper products included
+                      </span>
+                      <ul className="mt-2 ml-4 space-y-1 text-sm text-gray-600 border-l-2 border-pink-100 pl-4">
+                        <li>• Theme Plates, napkins & utensils</li>
+                        <li className="text-pink-600 italic">
+                          ( Cups not included — we provide water bottles
+                          instead. )
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div className="bg-pink-400/50 text-white p-6 rounded-2xl text-center mb-6 shadow-md transform hover:scale-105 transition-transform duration-300">
                 <p className="text-sm uppercase tracking-wide opacity-90 mb-1">
@@ -159,14 +239,20 @@ export default function PartyPage() {
             <div className="bg-white p-4 rounded-3xl shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-500">
               <div className="aspect-4/3 bg-linear-to-br from-pink-100 to-purple-100 rounded-2xl overflow-hidden relative group">
                 {/* You can replace this div with an actual <Image /> component */}
-                <div className="absolute inset-0 flex items-center justify-center text-pink-300">
+                {/* <div className="absolute inset-0 flex items-center justify-center text-pink-300">
                   <div className="text-center">
                     <p className="text-6xl mb-2">🎈🎂🎉</p>
                     <p className="font-bold text-xl text-pink-400">
                       Party Zone Photo
                     </p>
                   </div>
-                </div>
+                </div> */}
+                <Image
+                  src="/party.png"
+                  alt="Party Zone Photo"
+                  fill
+                  className="object-cover"
+                />
 
                 {/* Overlay Text */}
                 <div className="absolute bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-4 text-white">

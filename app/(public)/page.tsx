@@ -3,24 +3,25 @@
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
+import Image from "next/image";
 import { Star, ShieldCheck, MapPin, Smile, Clock } from "lucide-react";
 
 export default function Home() {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
 
   const slides = [
-    { color: "bg-pink-200", text: "Magical Unicorns" },
-    { color: "bg-purple-200", text: "Friendly Dinosaurs" },
-    { color: "bg-blue-200", text: "Zooming Zebras" },
-    { color: "bg-green-200", text: "Happy Pandas" },
-    { color: "bg-yellow-200", text: "Speedy Tigers" },
+    { image: "/home/home-5.jpg", alt: "Samana Store Full" },
+    { image: "/home/home-4.jpg", alt: "BoardWay Commons Store Full" },
+    { image: "/home/home-6.jpg", alt: "Samana Store Animals" },
+    { image: "/home/home-1.jpg", alt: "BoardWay Commons Store Left Side" },
+    { image: "/home/home-2.jpg", alt: "BoardWay Commons Store Right Side" },
   ];
 
   const galleryImages = [
-    { color: "bg-pink-100", emoji: "🦄", label: "Unicorns" },
-    { color: "bg-blue-100", emoji: "🦕", label: "Dinos" },
-    { color: "bg-yellow-100", emoji: "🦁", label: "Lions" },
-    { color: "bg-green-100", emoji: "🐼", label: "Pandas" },
+    { image: "/home/home-7.jpg", label: "Happy Moments" },
+    { image: "/home/home-8.png", label: "Celebrations" },
+    { image: "/home/home-3.jpg", label: "Fun with Friends" },
+    { image: "/home/home-9.jpg", label: "Joyful Rides" },
   ];
 
   return (
@@ -58,24 +59,24 @@ export default function Home() {
 
           {/* Right Carousel */}
           <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white rotate-2 hover:rotate-0 transition-transform duration-500 aspect-square sm:aspect-video lg:aspect-square">
-            <div className="embla overflow-hidden bg-white h-full" ref={emblaRef}>
+            <div
+              className="embla overflow-hidden bg-white h-full"
+              ref={emblaRef}
+            >
               <div className="flex h-full">
                 {slides.map((slide, index) => (
                   <div
                     className="embla__slide flex-[0_0_100%] min-w-0 relative h-full"
                     key={index}
                   >
-                    <div
-                      className={`w-full h-full ${slide.color} flex items-center justify-center`}
-                    >
-                      {/* Placeholder for actual images */}
-                      <div className="text-center">
-                        <div className="text-8xl mb-6">🎠</div>
-                        <h3 className="text-3xl font-bold text-white drop-shadow-sm">
-                          {slide.text}
-                        </h3>
-                        <p className="text-white/80 mt-2">Image Placeholder</p>
-                      </div>
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={slide.image}
+                        alt={slide.alt}
+                        fill
+                        className="object-cover"
+                        priority={index === 0}
+                      />
                     </div>
                   </div>
                 ))}
@@ -97,14 +98,15 @@ export default function Home() {
               </span>{" "}
               brings joy and excitement to children and families by setting up
               electric fluffy animal rides in malls. Our mission is simple: we
-              believe every child deserves a wonderful childhood filled with fun,
-              laughter, and unforgettable moments with their loved ones.
+              believe every child deserves a wonderful childhood filled with
+              fun, laughter, and unforgettable moments with their loved ones.
             </p>
             <p className="leading-relaxed text-pink-800">
               With our safe, entertaining, and adorable animal rides, we create
-              magical experiences that turn ordinary shopping trips into cherished
-              family memories. Whether it&rsquo;s a quick ride or an entire
-              afternoon of fun, we&rsquo;re here to make every moment special.
+              magical experiences that turn ordinary shopping trips into
+              cherished family memories. Whether it&rsquo;s a quick ride or an
+              entire afternoon of fun, we&rsquo;re here to make every moment
+              special.
             </p>
             <p className="font-medium text-xl text-pink-500 pt-4">
               Come ride with us and let the adventure begin!
@@ -115,21 +117,37 @@ export default function Home() {
 
       {/* New Gallery Section */}
       <section className="py-16 bg-pink-50">
-         <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-12">
-               <h2 className="text-3xl font-bold text-pink-900 mb-4">Meet Our Friends</h2>
-               <p className="text-pink-600 max-w-2xl mx-auto">See some of our most popular rides waiting for you!</p>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-               {galleryImages.map((item, idx) => (
-                  <div key={idx} className={`${item.color} rounded-2xl aspect-square flex flex-col items-center justify-center hover:scale-105 transition-transform duration-300 shadow-sm cursor-pointer`}>
-                     <span className="text-6xl mb-2">{item.emoji}</span>
-                     <span className="font-bold text-pink-900">{item.label}</span>
-                     <span className="text-xs text-pink-500/70 mt-1">Placeholder</span>
-                  </div>
-               ))}
-            </div>
-         </div>
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-pink-900 mb-4">
+              Wonderful Moments
+            </h2>
+            <p className="text-pink-600 max-w-2xl mx-auto">
+              Capturing the joy and laughter of our little riders and their
+              families.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {galleryImages.map((item, idx) => (
+              <div
+                key={idx}
+                className="relative rounded-2xl aspect-square overflow-hidden hover:scale-105 transition-transform duration-300 shadow-sm cursor-pointer group"
+              >
+                <Image
+                  src={item.image}
+                  alt={item.label}
+                  fill
+                  className="object-cover group-hover:opacity-90 transition-opacity"
+                />
+                <div className="absolute inset-0 bg-black/20 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="font-bold text-white text-lg drop-shadow-md">
+                    {item.label}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Features / Trust Section */}
