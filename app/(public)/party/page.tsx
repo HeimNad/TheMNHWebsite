@@ -172,9 +172,9 @@ export default function PartyPage() {
                   Pricing
                 </p>
                 <div className="flex justify-center items-baseline gap-2 mb-2">
-                  <span className="text-3xl font-bold">Weekday: $399</span>
+                  <span className="text-3xl font-bold">Weekday: $449</span>
                   <span className="text-2xl opacity-80">|</span>
-                  <span className="text-3xl font-bold">Weekend: $499</span>
+                  <span className="text-3xl font-bold">Weekend: $549</span>
                 </div>
                 <p className="text-sm font-medium bg-white/20 inline-block px-3 py-1 rounded-full">
                   Up to 10 kids (ages 2+)
