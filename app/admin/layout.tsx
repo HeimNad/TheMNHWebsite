@@ -11,6 +11,8 @@ import {
   X,
   Home,
   Flag,
+  CreditCard,
+  ClipboardList,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -26,7 +28,9 @@ export default function AdminLayout({
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "Waivers", href: "/admin/waivers", icon: FileSignature },
     { name: "Messages", href: "/admin/messages", icon: MessageSquare },
+    { name: "Membership", href: "/admin/membership", icon: CreditCard },
     { name: "Announcements", href: "/admin/announcements", icon: Flag },
+    { name: "Audit Logs", href: "/admin/audit", icon: ClipboardList },
     // { name: "Memberships", href: "/admin/memberships", icon: CreditCard },
     // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];

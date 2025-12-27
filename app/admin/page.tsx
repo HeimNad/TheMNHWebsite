@@ -28,8 +28,18 @@ export default async function AdminDashboard() {
   `;
   const unreadMessages = Number(messagesResult.rows[0]?.count || 0);
 
-  // 3. New Members (Mock)
-  const newMembers = 0;
+  // 3. Membership Stats
+  // Active Cards
+  const activeCardsResult = await db.sql`
+    SELECT COUNT(*) as count FROM punch_cards WHERE status = 'active';
+  `;
+  const activeCards = Number(activeCardsResult.rows[0]?.count || 0);
+
+  // Cards Issued Today
+  const cardsTodayResult = await db.sql`
+    SELECT COUNT(*) as count FROM punch_cards WHERE created_at >= CURRENT_DATE;
+  `;
+  const cardsToday = Number(cardsTodayResult.rows[0]?.count || 0);
 
   return (
     <div className="space-y-8">
@@ -99,21 +109,29 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        {/* Members Card (Future) */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden opacity-75">
+        {/* Members Card */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-500">New Members</p>
+              <p className="text-sm font-medium text-gray-500">Active Cards</p>
               <h3 className="text-3xl font-bold text-gray-900 mt-2">
-                {newMembers}
+                {activeCards}
               </h3>
             </div>
             <div className="p-3 bg-purple-50 rounded-xl text-purple-600">
               <CreditCard size={24} />
             </div>
           </div>
-          <div className="mt-4 text-sm text-gray-400">
-            Membership system inactive
+          <div className="mt-4 flex items-center justify-between text-sm">
+            <span className="text-green-600 font-medium">
+               +{cardsToday} new today
+            </span>
+            <Link
+              href="/admin/membership"
+              className="text-purple-600 font-medium hover:text-purple-700 flex items-center gap-1"
+            >
+              Manage <ArrowUpRight size={16} />
+            </Link>
           </div>
         </div>
       </div>
