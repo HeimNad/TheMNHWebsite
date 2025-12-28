@@ -37,10 +37,10 @@ export default function PartyPage() {
             <span className="text-pink-500">at MNH Wonder Rides!</span>
           </h1>
           <p className="text-lg md:text-xl text-pink-700 max-w-3xl mx-auto leading-relaxed">
-            Enjoy a fun and active birthday with exclusive animal rides and
-            access to our play zone. Perfect for kids ages 2 and up, create
-            unforgettable memories with smiles, games, and laughter – all in a
-            safe and exciting space!
+            We make your child&rsquo;s birthday unforgettable with exclusive
+            access to our adorable electric animal rides and fun play
+            activities. Our staff will guide the experience so you can relax,
+            enjoy, and celebrate your child&rsquo;s special day!
           </p>
         </div>
 

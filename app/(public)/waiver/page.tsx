@@ -266,7 +266,7 @@ export default function WaiverPage() {
                       {...register("date")}
                       type="date"
                       id="date"
-                      className={`w-full px-4 py-3 rounded-lg border ${
+                      className={`w-full px-4 py-3 rounded-lg border appearance-none min-w-0 bg-white ${
                         errors.date ? "border-red-500" : "border-pink-200"
                       } focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all text-pink-900`}
                     />
