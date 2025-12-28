@@ -242,12 +242,12 @@ export default function Home() {
                   </h4>
                   <ul className="text-sm text-pink-700 space-y-1">
                     <li className="flex justify-between max-w-xs">
-                      <span>Fri - Sat:</span>
-                      <span>10:00 AM - 9:00 PM</span>
+                      <span>Fri:</span>
+                      <span>3:00 PM - 9:00 PM</span>
                     </li>
                     <li className="flex justify-between max-w-xs">
-                      <span>Sun:</span>
-                      <span>11:00 AM - 7:00 PM</span>
+                      <span>Sat - Sun:</span>
+                      <span>11:00 AM - 8:00 PM</span>
                     </li>
                   </ul>
                 </div>
@@ -281,12 +281,16 @@ export default function Home() {
                   </h4>
                   <ul className="text-sm text-pink-700 space-y-1">
                     <li className="flex justify-between max-w-xs">
-                      <span>Mon - Sat:</span>
-                      <span>10:00 AM - 9:00 PM</span>
+                      <span>Mon - Tues:</span>
+                      <span>3:00 PM - 8:00 PM</span>
+                    </li>
+                    <li className="flex justify-between max-w-xs">
+                      <span>Sat:</span>
+                      <span>11:00 AM - 8:00 PM</span>
                     </li>
                     <li className="flex justify-between max-w-xs">
                       <span>Sun:</span>
-                      <span>11:00 AM - 7:00 PM</span>
+                      <span>12:00 AM - 7:00 PM</span>
                     </li>
                   </ul>
                 </div>
