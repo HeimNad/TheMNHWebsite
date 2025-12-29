@@ -70,5 +70,21 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   performed_by TEXT NOT NULL, -- Operator's name or email
   target_id UUID NOT NULL, -- Reference to the punch_card id
   details JSONB, -- Optional additional details
-  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+
+-- 6. Table: bookings
+-- Used to manage party reservations (calendar events)
+CREATE TABLE IF NOT EXISTS bookings (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  start_time TIMESTAMPTZ NOT NULL,
+  end_time TIMESTAMPTZ NOT NULL,
+  customer_name TEXT NOT NULL,
+  customer_phone TEXT NOT NULL,
+  child_name TEXT,
+  child_age TEXT,
+  package_type TEXT, -- e.g. 'Weekday Package', 'Weekend Package'
+  deposit_amount INTEGER DEFAULT 0,
+  status TEXT DEFAULT 'confirmed' CHECK (status IN ('confirmed', 'pending', 'cancelled')),
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
