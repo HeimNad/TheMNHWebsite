@@ -13,6 +13,8 @@ import {
   Flag,
   CreditCard,
   ClipboardList,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -22,7 +24,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile state
+  const [isCollapsed, setIsCollapsed] = useState(false); // Desktop state
 
   const navItems = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -31,8 +34,6 @@ export default function AdminLayout({
     { name: "Membership", href: "/admin/membership", icon: CreditCard },
     { name: "Announcements", href: "/admin/announcements", icon: Flag },
     { name: "Audit Logs", href: "/admin/audit", icon: ClipboardList },
-    // { name: "Memberships", href: "/admin/memberships", icon: CreditCard },
-    // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
   return (
@@ -48,18 +49,20 @@ export default function AdminLayout({
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out
-          ${
-            isSidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full lg:translate-x-0"
-          }
+          fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-gray-200 transform transition-all duration-300 ease-in-out
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          ${isCollapsed ? "lg:w-20" : "lg:w-64"}
+          w-64
         `}
       >
         <div className="h-full flex flex-col">
           {/* Sidebar Header */}
-          <div className="h-16 flex items-center px-6 border-b border-gray-200">
-            <a className="text-xl font-bold text-pink-600">Admin Panel</a>
+          <div className={`h-16 flex items-center border-b border-gray-200 ${isCollapsed ? 'justify-center px-0' : 'px-6'}`}>
+            {isCollapsed ? (
+              <span className="text-xl font-bold text-pink-600">MNH</span>
+            ) : (
+              <span className="text-xl font-bold text-pink-600 whitespace-nowrap">Admin Panel</span>
+            )}
             <button
               className="ml-auto lg:hidden text-gray-500"
               onClick={() => setIsSidebarOpen(false)}
@@ -69,7 +72,7 @@ export default function AdminLayout({
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-1">
+          <nav className="flex-1 px-3 py-6 space-y-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -78,54 +81,70 @@ export default function AdminLayout({
                   href={item.href}
                   onClick={() => setIsSidebarOpen(false)}
                   className={`
-                    flex items-center space-y-1 gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+                    flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                     ${
                       isActive
                         ? "bg-pink-50 text-pink-700"
                         : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                     }
+                    ${isCollapsed ? "justify-center" : ""}
                   `}
+                  title={isCollapsed ? item.name : undefined}
                 >
                   <item.icon
-                    size={18}
-                    className={isActive ? "text-pink-500" : "text-gray-400"}
+                    size={20}
+                    className={`shrink-0 ${isActive ? "text-pink-500" : "text-gray-400"}`}
                   />
-                  {item.name}
+                  {!isCollapsed && <span className="whitespace-nowrap">{item.name}</span>}
                 </Link>
               );
             })}
-            {/* User Profile - Original */}
           </nav>
 
           {/* Back to Main Site Button */}
           <Link
             href="/"
             onClick={() => setIsSidebarOpen(false)}
-            className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+            className={`
+              flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 hover:text-gray-900 mx-2 rounded-lg mb-2
+              ${isCollapsed ? "justify-center px-2" : ""}
+            `}
+            title="Back to Main Site"
           >
-            <Home size={18} className="text-gray-700" />
-            Back to Main Site
+            <Home size={20} className="text-gray-700 shrink-0" />
+            {!isCollapsed && <span className="whitespace-nowrap">Back to Site</span>}
           </Link>
 
           {/* User Profile */}
-          <div className="p-2 border-t border-gray-200">
-            <div className="flex items-center gap-3 px-3 py-2">
+          <div className={`p-2 border-t border-gray-200 ${isCollapsed ? 'flex justify-center' : ''}`}>
+            <div className={`flex items-center gap-3 px-3 py-2 ${isCollapsed ? 'justify-center px-0' : ''}`}>
               <UserButton
                 appearance={{
                   elements: {
                     userButtonAvatarBox: "w-8 h-8",
-                    userButtonBox: "flex-row-reverse gap-2",
+                    userButtonBox: isCollapsed ? "" : "flex-row-reverse gap-2",
+                    userButtonOuterIdentifier: isCollapsed ? "hidden" : "block",
                   },
                 }}
-                showName
+                showName={!isCollapsed}
               />
             </div>
+          </div>
+          
+          {/* Desktop Collapse Toggle */}
+          <div className="hidden lg:flex justify-center p-2 border-t border-gray-100">
+             <button
+               onClick={() => setIsCollapsed(!isCollapsed)}
+               className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors w-full flex justify-center"
+             >
+               {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+             </button>
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden transition-all duration-300">
         {/* Mobile Header */}
         <header className="lg:hidden bg-white border-b border-gray-200 h-16 flex items-center px-4 gap-4">
           <button
@@ -134,6 +153,7 @@ export default function AdminLayout({
           >
             <Menu size={24} />
           </button>
+          <span className="font-bold text-gray-900">MNH Admin</span>
         </header>
 
         {/* Page Content */}
