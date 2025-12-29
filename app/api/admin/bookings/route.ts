@@ -63,7 +63,7 @@ export async function POST(request: Request) {
           )
       `;
 
-      if (conflictCheck.rowCount > 0) {
+      if ((conflictCheck.rowCount ?? 0) > 0) {
         return NextResponse.json({ error: 'Time slot overlaps with an existing booking' }, { status: 409 });
       }
 

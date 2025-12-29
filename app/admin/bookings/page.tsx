@@ -331,7 +331,7 @@ function CreateBookingModal({
     "block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide";
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+    <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
       <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
           <h3 className="text-xl font-bold text-gray-900">New Reservation</h3>
@@ -469,7 +469,7 @@ function CreateBookingModal({
           <div>
             <label className={labelClass}>Notes</label>
             <textarea
-              className={`${inputClass} min-h-[80px] resize-none`}
+              className={`${inputClass} min-h-20 resize-none`}
               placeholder="Special requests, allergies, etc."
               value={formData.notes}
               onChange={(e) =>
