@@ -5,13 +5,15 @@ import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Loader2, Plus, X, User, Phone, Baby, Clock } from "lucide-react";
+import { ConfirmationModal } from "@/components/ui/confirmation-modal";
+import { AlertModal } from "@/components/ui/alert-modal";
 
 // Setup the localizer
 const localizer = momentLocalizer(moment);
 
 type Booking = {
   id: string;
-  title: string; // Required by RBC (we'll use customer_name)
+  title: string;
   start: Date;
   end: Date;
   customer_name: string;
@@ -35,18 +37,39 @@ export default function BookingsPage() {
   } | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Booking | null>(null);
 
-  // Fetch events for current view (defaulting to a wide range for MVP)
+  // Alert & Confirm States
+  const [alertState, setAlertState] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "error";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "success",
+  });
+  const [cancelId, setCancelId] = useState<string | null>(null);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  const showAlert = (
+    title: string,
+    message: string,
+    type: "success" | "error" = "success"
+  ) => {
+    setAlertState({ isOpen: true, title, message, type });
+  };
+
+  // Fetch events for current view
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      // Fetch 3 months back and 3 months forward
       const start = moment().subtract(3, "months").toISOString();
       const end = moment().add(3, "months").toISOString();
 
       const res = await fetch(`/api/admin/bookings?start=${start}&end=${end}`);
       if (res.ok) {
         const data = await res.json();
-        // Transform for RBC
         const formattedEvents = data.map((b: any) => ({
           ...b,
           title: `${b.customer_name} (${b.package_type || "Party"})`,
@@ -77,18 +100,34 @@ export default function BookingsPage() {
 
   const handleCreateSuccess = () => {
     setIsCreateModalOpen(false);
-    fetchEvents(); // Refresh
+    showAlert("Success", "Reservation created successfully!");
+    fetchEvents();
   };
 
-  const handleCancelBooking = async (id: string) => {
-    if (!confirm("Are you sure you want to cancel this booking?")) return;
+  const initiateCancel = (id: string) => {
+    setCancelId(id);
+  };
 
+  const confirmCancel = async () => {
+    if (!cancelId) return;
+    setIsCancelling(true);
     try {
-      await fetch(`/api/admin/bookings?id=${id}`, { method: "DELETE" });
-      setSelectedEvent(null);
-      fetchEvents();
+      const res = await fetch(`/api/admin/bookings?id=${cancelId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setCancelId(null);
+        setSelectedEvent(null);
+        showAlert("Cancelled", "Booking has been cancelled.", "success");
+        fetchEvents();
+      } else {
+        throw new Error("Failed to cancel");
+      }
     } catch (err) {
-      alert("Failed to cancel");
+      setCancelId(null);
+      showAlert("Error", "Failed to cancel booking.", "error");
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -98,7 +137,8 @@ export default function BookingsPage() {
       {/* Line 1: Time (Always Visible) */}
       <div className="font-bold flex items-center gap-1 shrink-0 whitespace-nowrap">
         <Clock size={10} className="hidden sm:block" />
-        {moment(event.start).format("h:mma")} - {moment(event.end).format("h:mma")}
+        {moment(event.start).format("h:mma")} -{" "}
+        {moment(event.end).format("h:mma")}
       </div>
 
       {/* Line 2: Child Name (Hidden on very small mobile, visible on small+) */}
@@ -154,18 +194,27 @@ export default function BookingsPage() {
           components={{
             event: CustomEvent,
           }}
-          eventPropGetter={(event) => ({
-            style: {
-              backgroundColor: "#EC4899", // Pink-500
-              borderRadius: "6px",
-              border: "none",
-              color: "white",
-              display: "block",
-              padding: "6px",
-              minHeight: "85px", // Tall enough for 4 lines
-              boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
-            },
-          })}
+          eventPropGetter={(event) => {
+            const duration = moment(event.end).diff(
+              moment(event.start),
+              "hours",
+              true
+            );
+            const isShort = duration < 2;
+
+            return {
+              style: {
+                backgroundColor: "#EC4899",
+                borderRadius: "6px",
+                border: "none",
+                color: "white",
+                display: "block",
+                padding: isShort ? "4px" : "6px",
+                minHeight: isShort ? "45px" : "85px",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+              },
+            };
+          }}
         />
       </div>
 
@@ -239,7 +288,7 @@ export default function BookingsPage() {
 
             <div className="mt-8 flex gap-3">
               <button
-                onClick={() => handleCancelBooking(selectedEvent.id)}
+                onClick={() => initiateCancel(selectedEvent.id)}
                 className="flex-1 bg-red-50 text-red-600 font-medium py-2.5 rounded-lg hover:bg-red-100 transition-colors"
               >
                 Cancel Booking
@@ -254,6 +303,27 @@ export default function BookingsPage() {
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={!!cancelId}
+        title="Cancel Reservation"
+        message="Are you sure you want to cancel this booking? This action cannot be undone."
+        confirmLabel="Yes, Cancel Booking"
+        variant="danger"
+        onConfirm={confirmCancel}
+        onCancel={() => setCancelId(null)}
+        isLoading={isCancelling}
+      />
+
+      {/* Alert Modal */}
+      <AlertModal
+        isOpen={alertState.isOpen}
+        title={alertState.title}
+        message={alertState.message}
+        type={alertState.type}
+        onClose={() => setAlertState({ ...alertState, isOpen: false })}
+      />
     </div>
   );
 }
@@ -270,7 +340,6 @@ function CreateBookingModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Form State
   const [formData, setFormData] = useState({
     customer_name: "",
     customer_phone: "",
@@ -289,7 +358,6 @@ function CreateBookingModal({
     setError("");
 
     try {
-      // Combine date and time
       const startDateTime = moment(
         `${formData.date} ${formData.start_time}`
       ).toDate();
@@ -331,7 +399,7 @@ function CreateBookingModal({
     "block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide";
 
   return (
-    <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
       <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
           <h3 className="text-xl font-bold text-gray-900">New Reservation</h3>
