@@ -1,9 +1,11 @@
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
+import Hero from "@/components/home/Hero";
+import Gallery from "@/components/home/Gallery";
 import Link from "next/link";
-import Image from "next/image";
 import { Star, ShieldCheck, MapPin, Smile, Clock } from "lucide-react";
 import { db } from "@/lib/db";
+
+// Ensure dynamic fetching for settings
+export const dynamic = "force-dynamic";
 
 // Default hours fallback
 const DEFAULT_HOURS = {
@@ -66,19 +68,10 @@ export default async function Home() {
   const samaneaHours = groupHours(hoursData.samanea);
   const broadwayHours = groupHours(hoursData.broadway);
 
-  // Client-side carousel logic needs to be moved to a separate component if we want this page to be async server component.
-  // HOWEVER, mixing client hooks (useEmblaCarousel) in an async component works in Next.js IF the client logic is extracted.
-  // OR we can make this a Client Component and fetch data via API.
-  // BUT the instruction was to "fetch from database" which implies Server Component.
-  // THE PROBLEM: 'useEmblaCarousel' cannot be used in a Server Component.
-  // SOLUTION: Extract the Hero/Carousel section into a Client Component.
-
   return (
     <div className="bg-pink-50 min-h-screen">
-      <HeroSection />
+      <Hero />
 
-      {/* ... (Mission and Gallery sections remain unchanged, we can keep them here or extract) ... */}
-      
       {/* Mission Content */}
       <section className="bg-white py-16">
         <div className="max-w-6xl mx-auto px-6">
@@ -107,8 +100,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <GallerySection />
+      <Gallery />
 
       {/* Features / Trust Section */}
       <section className="py-16 bg-white">
@@ -253,20 +245,4 @@ export default async function Home() {
       </section>
     </div>
   );
-}
-
-// Extracted Client Components
-function HeroSection() {
-  "use client";
-  // We need to inline the carousel logic here or import it from a new file
-  // For simplicity in this replacement, I will assume we create a separate file for Hero
-  // BUT to avoid creating too many files right now, I'll inline a simplified non-hook version OR 
-  // actually, since I am replacing the file, I MUST extract the client logic properly.
-  // Let's create `components/home/HeroCarousel.tsx` and `components/home/Gallery.tsx` first.
-  return null; 
-}
-
-function GallerySection() {
-  "use client";
-  return null;
 }
