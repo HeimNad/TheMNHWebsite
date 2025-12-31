@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Calendar,
+  Settings,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -36,6 +37,7 @@ export default function AdminLayout({
     { name: "Bookings", href: "/admin/bookings", icon: Calendar },
     { name: "Announcements", href: "/admin/announcements", icon: Flag },
     { name: "Audit Logs", href: "/admin/audit", icon: ClipboardList },
+    { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
   return (

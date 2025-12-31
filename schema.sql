@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS announcements (
   message TEXT NOT NULL,
   is_active BOOLEAN DEFAULT FALSE NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
 -- 4. Table: punch_cards
@@ -46,21 +47,24 @@ CREATE TABLE IF NOT EXISTS punch_cards (
   balance INTEGER NOT NULL DEFAULT 0, -- Current remaining rides
   initial_punches INTEGER NOT NULL,   -- How many rides it started with (e.g. 6 or 13)
   card_type TEXT NOT NULL,         -- '5_plus_1', '10_plus_3', etc.
-
+  
   -- Customer Info (Optional/Nullable)
   customer_name TEXT,              -- Parent's name
   customer_phone TEXT,             -- Main identifier for membership lookup
   customer_email TEXT,             -- For receipts/marketing
   child_name TEXT,                 -- For personalization
   child_birth_month TEXT,          -- MM/DD or just Month for birthday marketing
-
+  
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'completed', 'void')),
   notes TEXT,                      -- Staff notes (e.g. "Grandma brings him")
-
+  
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
   last_used_at TIMESTAMPTZ,
   updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_punch_cards_code ON punch_cards(code);
+CREATE INDEX IF NOT EXISTS idx_punch_cards_phone ON punch_cards(customer_phone);
 
 -- 5. Table: audit_logs
 -- Used to track staff actions (ISSUE, REDEEM, VOID, UPDATE) for accountability
@@ -70,6 +74,10 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   performed_by TEXT NOT NULL, -- Operator's name or email
   target_id UUID NOT NULL, -- Reference to the punch_card id
   details JSONB, -- Optional additional details
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_logs_target_id ON audit_logs(target_id);
 
 -- 6. Table: bookings
 -- Used to manage party reservations (calendar events)
@@ -86,5 +94,15 @@ CREATE TABLE IF NOT EXISTS bookings (
   status TEXT DEFAULT 'confirmed' CHECK (status IN ('confirmed', 'pending', 'cancelled')),
   notes TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_bookings_start_time ON bookings(start_time);
+
+-- 7. Table: settings
+-- Used to store global app configurations (e.g. business hours)
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY, -- e.g. 'business_hours'
+  value JSONB NOT NULL,
   updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
