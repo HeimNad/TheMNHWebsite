@@ -58,8 +58,7 @@ export async function POST(request: Request) {
       await client.sql`
         INSERT INTO audit_logs (action, performed_by, target_id, details)
         VALUES ('REDEEM', ${operatorName}, ${id}, ${JSON.stringify({ 
-          prev_balance: card.balance, 
-          new_balance: newBalance 
+          balance: newBalance 
         })})
       `;
 

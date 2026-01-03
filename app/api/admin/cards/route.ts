@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       await client.sql`
         INSERT INTO audit_logs (action, performed_by, target_id, details)
         VALUES ('ISSUE', ${operatorName}, ${newCard.id}, ${JSON.stringify({ 
-          initial_balance: initial_punches 
+          init: initial_punches 
         })})
       `;
 
