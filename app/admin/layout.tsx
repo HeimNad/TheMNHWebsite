@@ -41,8 +41,9 @@ export default function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
       {/* Mobile Sidebar Overlay */}
+
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -51,21 +52,37 @@ export default function AdminLayout({
       )}
 
       {/* Sidebar */}
+
       <aside
         className={`
-          fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-gray-200 transform transition-all duration-300 ease-in-out
-          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-          ${isCollapsed ? "lg:w-20" : "lg:w-64"}
-          w-64
-        `}
+
+            fixed lg:static inset-y-0 left-0 z-50 bg-white border-r border-gray-200 transform transition-all duration-300 ease-in-out
+
+            ${
+              isSidebarOpen
+                ? "translate-x-0"
+                : "-translate-x-full lg:translate-x-0"
+            }
+
+            ${isCollapsed ? "lg:w-20" : "lg:w-64"}
+
+            w-64 shrink-0
+
+          `}
       >
         <div className="h-full flex flex-col">
           {/* Sidebar Header */}
-          <div className={`h-16 flex items-center border-b border-gray-200 ${isCollapsed ? 'justify-center px-0' : 'px-6'}`}>
+          <div
+            className={`h-16 flex items-center border-b border-gray-200 ${
+              isCollapsed ? "justify-center px-0" : "px-6"
+            }`}
+          >
             {isCollapsed ? (
               <span className="text-xl font-bold text-pink-600">MNH</span>
             ) : (
-              <span className="text-xl font-bold text-pink-600 whitespace-nowrap">Admin Panel</span>
+              <span className="text-xl font-bold text-pink-600 whitespace-nowrap">
+                Admin Panel
+              </span>
             )}
             <button
               className="ml-auto lg:hidden text-gray-500"
@@ -97,9 +114,13 @@ export default function AdminLayout({
                 >
                   <item.icon
                     size={20}
-                    className={`shrink-0 ${isActive ? "text-pink-500" : "text-gray-400"}`}
+                    className={`shrink-0 ${
+                      isActive ? "text-pink-500" : "text-gray-400"
+                    }`}
                   />
-                  {!isCollapsed && <span className="whitespace-nowrap">{item.name}</span>}
+                  {!isCollapsed && (
+                    <span className="whitespace-nowrap">{item.name}</span>
+                  )}
                 </Link>
               );
             })}
@@ -116,12 +137,22 @@ export default function AdminLayout({
             title="Back to Main Site"
           >
             <Home size={20} className="text-gray-700 shrink-0" />
-            {!isCollapsed && <span className="whitespace-nowrap">Back to Site</span>}
+            {!isCollapsed && (
+              <span className="whitespace-nowrap">Back to Site</span>
+            )}
           </Link>
 
           {/* User Profile */}
-          <div className={`p-2 border-t border-gray-200 ${isCollapsed ? 'flex justify-center' : ''}`}>
-            <div className={`flex items-center gap-3 px-3 py-2 ${isCollapsed ? 'justify-center px-0' : ''}`}>
+          <div
+            className={`p-2 border-t border-gray-200 ${
+              isCollapsed ? "flex justify-center" : ""
+            }`}
+          >
+            <div
+              className={`flex items-center gap-3 px-3 py-2 ${
+                isCollapsed ? "justify-center px-0" : ""
+              }`}
+            >
               <UserButton
                 appearance={{
                   elements: {
@@ -134,15 +165,19 @@ export default function AdminLayout({
               />
             </div>
           </div>
-          
+
           {/* Desktop Collapse Toggle */}
           <div className="hidden lg:flex justify-center p-2 border-t border-gray-100">
-             <button
-               onClick={() => setIsCollapsed(!isCollapsed)}
-               className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors w-full flex justify-center"
-             >
-               {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-             </button>
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors w-full flex justify-center"
+            >
+              {isCollapsed ? (
+                <ChevronRight size={20} />
+              ) : (
+                <ChevronLeft size={20} />
+              )}
+            </button>
           </div>
         </div>
       </aside>
