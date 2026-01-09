@@ -85,7 +85,7 @@ export default function PartyPage() {
                       <ul className="mt-2 ml-4 space-y-1 text-sm text-gray-600 border-l-2 border-pink-100 pl-4">
                         <li>• 50 minutes of animal ride time</li>
                         <li>
-                          • 40 minutes of fun game play (blocks, games &
+                          • 90 minutes of fun game play (blocks, games &
                           interactive play zone)
                         </li>
                         <li>• 30 minutes for celebration</li>

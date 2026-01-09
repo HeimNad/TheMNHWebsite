@@ -131,7 +131,7 @@ export default function BookingsPage() {
     }
   };
 
-  // Custom Event Component for Calendar
+  // Custom Event Component
   const CustomEvent = ({ event }: { event: Booking }) => (
     <div className="text-[10px] sm:text-xs leading-tight space-y-0.5 h-full overflow-hidden">
       {/* Line 1: Time (Always Visible) */}
@@ -146,14 +146,14 @@ export default function BookingsPage() {
         {event.child_name ? `Kid: ${event.child_name}` : event.customer_name}
       </div>
 
-      {/* Line 3: Package (Visible on medium+) */}
+      {/* Line 3: Package (Visible on medium screens and up) */}
       <div className="truncate opacity-90 italic hidden md:block">
         {event.package_type}
       </div>
 
-      {/* Line 4: Notes (Visible on large+) */}
+      {/* Line 4: Notes (Visible on large screens and up) */}
       {event.notes && (
-        <div className="truncate opacity-80 border-t border-white/20 mt-0.5 pt-0.5 hidden xl:block">
+        <div className="truncate opacity-80 border-t border-white/20 mt-0.5 pt-0.5 hidden lg:block">
           {event.notes}
         </div>
       )}
@@ -194,27 +194,18 @@ export default function BookingsPage() {
           components={{
             event: CustomEvent,
           }}
-          eventPropGetter={(event) => {
-            const duration = moment(event.end).diff(
-              moment(event.start),
-              "hours",
-              true
-            );
-            const isShort = duration < 2;
-
-            return {
-              style: {
-                backgroundColor: "#EC4899",
-                borderRadius: "6px",
-                border: "none",
-                color: "white",
-                display: "block",
-                padding: isShort ? "4px" : "6px",
-                minHeight: isShort ? "45px" : "85px",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
-              },
-            };
-          }}
+          eventPropGetter={() => ({
+            style: {
+              backgroundColor: "#EC4899", // Pink-500
+              borderRadius: "6px",
+              border: "none",
+              color: "white",
+              display: "block",
+              padding: "4px 6px",
+              minHeight: "60px",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+            },
+          })}
         />
       </div>
 
@@ -338,8 +329,10 @@ function CreateBookingModal({
   onSuccess: () => void;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLookingUp, setIsLookingUp] = useState(false);
   const [error, setError] = useState("");
 
+  // Form State
   const [formData, setFormData] = useState({
     customer_name: "",
     customer_phone: "",
@@ -351,6 +344,33 @@ function CreateBookingModal({
     start_time: slot ? moment(slot.start).format("HH:mm") : "10:00",
     end_time: slot ? moment(slot.end).format("HH:mm") : "12:00",
   });
+
+  const handlePhoneBlur = async () => {
+    if (!formData.customer_phone || formData.customer_phone.length < 4) return;
+
+    setIsLookingUp(true);
+    try {
+      const res = await fetch(
+        `/api/admin/customers/lookup?phone=${encodeURIComponent(
+          formData.customer_phone
+        )}`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data) {
+          setFormData((prev) => ({
+            ...prev,
+            customer_name: data.customer_name || prev.customer_name,
+            child_name: data.child_name || prev.child_name,
+          }));
+        }
+      }
+    } catch (err) {
+      console.error("Lookup failed", err);
+    } finally {
+      setIsLookingUp(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -399,8 +419,8 @@ function CreateBookingModal({
     "block text-xs font-semibold text-gray-700 mb-1.5 uppercase tracking-wide";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+      <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in zoom-in-95 max-h-[90vh] overflow-y-auto custom-scrollbar">
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
           <h3 className="text-xl font-bold text-gray-900">New Reservation</h3>
           <button
@@ -417,7 +437,7 @@ function CreateBookingModal({
           </div>
         )}
 
-        <div className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="bg-pink-50/50 p-4 rounded-xl border border-pink-100 space-y-4">
             <div>
               <label className={labelClass}>Date</label>
@@ -493,6 +513,12 @@ function CreateBookingModal({
             <div>
               <label className={labelClass}>
                 Phone Number <span className="text-red-500">*</span>
+                {isLookingUp && (
+                  <Loader2
+                    size={12}
+                    className="animate-spin text-pink-500 inline ml-2"
+                  />
+                )}
               </label>
               <input
                 type="tel"
@@ -503,6 +529,7 @@ function CreateBookingModal({
                 onChange={(e) =>
                   setFormData({ ...formData, customer_phone: e.target.value })
                 }
+                onBlur={handlePhoneBlur}
               />
             </div>
           </div>
@@ -548,7 +575,7 @@ function CreateBookingModal({
 
           <div className="pt-2">
             <button
-              onClick={handleSubmit}
+              type="submit"
               disabled={isSubmitting}
               className="w-full bg-pink-600 text-white font-bold py-3.5 rounded-xl hover:bg-pink-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
             >
@@ -559,7 +586,7 @@ function CreateBookingModal({
               )}
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

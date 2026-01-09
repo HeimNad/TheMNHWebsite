@@ -581,7 +581,32 @@ function IssueCardModal({
     child_birth_month: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLookingUp, setIsLookingUp] = useState(false);
   const [error, setError] = useState("");
+
+  const handlePhoneBlur = async () => {
+    if (!formData.customer_phone || formData.customer_phone.length < 4) return;
+    
+    setIsLookingUp(true);
+    try {
+      const res = await fetch(`/api/admin/customers/lookup?phone=${encodeURIComponent(formData.customer_phone)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data) {
+          setFormData(prev => ({
+            ...prev,
+            customer_name: data.customer_name || prev.customer_name,
+            child_name: data.child_name || prev.child_name,
+            child_birth_month: data.child_birth_month || prev.child_birth_month
+          }));
+        }
+      }
+    } catch (err) {
+      console.error("Lookup failed", err);
+    } finally {
+      setIsLookingUp(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -712,20 +737,17 @@ function IssueCardModal({
           {/* Customer Details */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-gray-700 mb-1 flex justify-between">
                 Phone Number
+                {isLookingUp && <Loader2 size={12} className="animate-spin text-pink-500" />}
               </label>
-              <input
-                type="tel"
+              <input 
+                type="tel" 
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-pink-200 outline-none"
                 placeholder="Required for membership"
                 value={formData.customer_phone}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    customer_phone: e.target.value,
-                  })
-                }
+                onChange={e => setFormData({...formData, customer_phone: e.target.value})}
+                onBlur={handlePhoneBlur}
               />
             </div>
             <div>
