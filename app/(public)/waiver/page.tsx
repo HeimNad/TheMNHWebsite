@@ -19,6 +19,7 @@ const waiverSchema = z.object({
   ageConfirmed: z.literal(true, {
     message: "You must confirm your age.",
   }),
+  website: z.string().optional(), // Honeypot field
 });
 
 type WaiverFormValues = z.infer<typeof waiverSchema>;
@@ -30,6 +31,7 @@ export default function WaiverPage() {
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
+  const [formLoadTime] = useState(() => Date.now());
 
   const {
     register,
@@ -80,6 +82,8 @@ export default function WaiverPage() {
           date: data.date,
           location: data.location,
           signature_data: signatureData,
+          _hp: data.website || "",
+          _ts: formLoadTime,
         }),
       });
 
@@ -211,6 +215,16 @@ export default function WaiverPage() {
                 className="space-y-6"
                 noValidate
               >
+                {/* Honeypot field - hidden from humans, bots will fill it */}
+                <div className="absolute -left-[9999px]" aria-hidden="true">
+                  <input
+                    {...register("website")}
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label
