@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Eye,
   Clock,
+  Calendar,
 } from "lucide-react";
 import { ConfirmationModal } from "@/components/ui/confirmation-modal";
 
@@ -29,6 +30,8 @@ type Card = {
   child_birth_month?: string;
   status: "active" | "completed" | "void";
   created_at: string;
+  valid_from?: string;
+  used_dates?: number[];
 };
 
 // Generic Alert Modal for Success/Error messages
@@ -92,10 +95,12 @@ export default function MembershipPage() {
     isOpen: boolean;
     cardId: string | null;
     balance: number;
+    isActivation: boolean;
   }>({
     isOpen: false,
     cardId: null,
     balance: 0,
+    isActivation: false,
   });
   const [isRedeeming, setIsRedeeming] = useState(false);
 
@@ -144,7 +149,10 @@ export default function MembershipPage() {
   };
 
   const initiateRedeem = (cardId: string, currentBalance: number) => {
-    setRedeemModal({ isOpen: true, cardId, balance: currentBalance });
+    const card = cards.find((c) => c.id === cardId);
+    const isTimeBased = card?.card_type.startsWith("weekly") || card?.card_type.startsWith("monthly");
+    const isActivation = isTimeBased && !card?.valid_from;
+    setRedeemModal({ isOpen: true, cardId, balance: currentBalance, isActivation: isActivation || false });
   };
 
   const confirmRedeem = async () => {
@@ -159,24 +167,33 @@ export default function MembershipPage() {
       });
 
       if (res.ok) {
-        // Update local state
+        const updatedCard = await res.json();
+        const wasActivation = updatedCard.activated === true;
+        // Update local state with server response
         setCards(
           cards.map((card) => {
             if (card.id === redeemModal.cardId) {
-              const newBalance = redeemModal.balance - 1;
               return {
                 ...card,
-                balance: newBalance,
-                status: newBalance === 0 ? "completed" : "active",
+                balance: updatedCard.balance,
+                status: updatedCard.status,
+                used_dates: updatedCard.used_dates,
+                valid_from: updatedCard.valid_from,
               };
             }
             return card;
           })
         );
         setRedeemModal({ ...redeemModal, isOpen: false });
+        const card = cards.find((c) => c.id === redeemModal.cardId);
+        const isWeekly = card?.card_type.startsWith("weekly");
         showAlert(
-          "Redeemed!",
-          "One ride has been successfully deducted.",
+          wasActivation ? "Activated!" : "Redeemed!",
+          wasActivation
+            ? "Weekly pass is now active. You can now redeem today's ride."
+            : isWeekly
+            ? "Today's ride has been successfully recorded."
+            : "One ride has been successfully deducted.",
           "success"
         );
       } else {
@@ -314,11 +331,13 @@ export default function MembershipPage() {
 
                   <div className="flex items-end justify-between mb-6 border-b border-gray-100 pb-4">
                     <div>
-                      <span className="block text-3xl font-bold text-pink-600 leading-none">
+                      <span className={`block text-3xl font-bold leading-none ${
+                        card.card_type.startsWith("weekly") || card.card_type.startsWith("monthly") ? "text-indigo-600" : "text-pink-600"
+                      }`}>
                         {card.balance}
                       </span>
                       <span className="text-xs text-gray-400 font-medium mt-1 block">
-                        Rides Left
+                        {card.card_type.startsWith("weekly") || card.card_type.startsWith("monthly") ? "Days Left" : "Rides Left"}
                       </span>
                     </div>
                     <div className="text-right">
@@ -328,6 +347,24 @@ export default function MembershipPage() {
                       <span className="text-xs text-gray-400">Total</span>
                     </div>
                   </div>
+
+                  {/* Time-Based Pass Status */}
+                  {(card.card_type.startsWith("weekly") || card.card_type.startsWith("monthly")) && (
+                    card.valid_from ? (
+                      <div className="flex items-center gap-2 text-xs text-indigo-600 bg-indigo-50 px-3 py-2 rounded-lg mb-4">
+                        <Calendar size={14} />
+                        <span>
+                          {new Date(card.valid_from).toLocaleDateString()} →{" "}
+                          {new Date(new Date(card.valid_from).getTime() + (card.card_type.startsWith("monthly") ? 29 : 6) * 24 * 60 * 60 * 1000).toLocaleDateString()}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg mb-4">
+                        <Clock size={14} />
+                        <span>Not Activated</span>
+                      </div>
+                    )
+                  )}
 
                   <div className="space-y-2 mb-6">
                     {card.customer_name ? (
@@ -369,11 +406,19 @@ export default function MembershipPage() {
                     </button>
                     {card.status === "active" && card.balance > 0 ? (
                       <button
-                        className="flex-3 bg-pink-600 text-white py-2.5 rounded-lg font-medium hover:bg-pink-700 active:bg-pink-800 transition-colors flex justify-center items-center gap-2 shadow-sm hover:shadow"
+                        className={`flex-3 py-2.5 rounded-lg font-medium transition-colors flex justify-center items-center gap-2 shadow-sm hover:shadow ${
+                          (card.card_type.startsWith("weekly") || card.card_type.startsWith("monthly")) && !card.valid_from
+                            ? "bg-amber-500 text-white hover:bg-amber-600 active:bg-amber-700"
+                            : card.card_type.startsWith("weekly") || card.card_type.startsWith("monthly")
+                            ? "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800"
+                            : "bg-pink-600 text-white hover:bg-pink-700 active:bg-pink-800"
+                        }`}
                         onClick={() => initiateRedeem(card.id, card.balance)}
                       >
                         <CreditCard size={18} />
-                        Redeem
+                        {(card.card_type.startsWith("weekly") || card.card_type.startsWith("monthly")) && !card.valid_from
+                          ? "Activate"
+                          : "Redeem"}
                       </button>
                     ) : (
                       <button
@@ -393,12 +438,16 @@ export default function MembershipPage() {
         )}
       </div>
 
-      {/* Confirmation Modal for Redeem */}
+      {/* Confirmation Modal for Redeem/Activate */}
       <ConfirmationModal
         isOpen={redeemModal.isOpen}
-        title="Redeem Ride"
-        message="Are you sure you want to deduct 1 ride from this card? This action cannot be undone."
-        confirmLabel="Yes, Redeem"
+        title={redeemModal.isActivation ? "Activate Weekly Pass" : "Redeem Ride"}
+        message={
+          redeemModal.isActivation
+            ? "This will activate the weekly pass starting from today. The 7-day countdown begins now. Continue?"
+            : "Are you sure you want to deduct 1 ride from this card? This action cannot be undone."
+        }
+        confirmLabel={redeemModal.isActivation ? "Yes, Activate" : "Yes, Redeem"}
         onConfirm={confirmRedeem}
         onCancel={() => setRedeemModal({ ...redeemModal, isOpen: false })}
         isLoading={isRedeeming}
@@ -432,7 +481,11 @@ export default function MembershipPage() {
             </div>
 
             <div className="space-y-6 overflow-y-auto pr-2 flex-1 custom-scrollbar">
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex justify-between items-center">
+              <div className={`p-4 rounded-xl border flex justify-between items-center ${
+                viewCard.card_type.startsWith("weekly") || viewCard.card_type.startsWith("monthly")
+                  ? "bg-indigo-50 border-indigo-100"
+                  : "bg-gray-50 border-gray-100"
+              }`}>
                 <div>
                   <span className="block text-xs text-gray-500 uppercase font-semibold">
                     Card Code
@@ -442,14 +495,51 @@ export default function MembershipPage() {
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="block text-3xl font-bold text-pink-600">
+                  <span className={`block text-3xl font-bold ${
+                    viewCard.card_type.startsWith("weekly") || viewCard.card_type.startsWith("monthly") ? "text-indigo-600" : "text-pink-600"
+                  }`}>
                     {viewCard.balance}
                   </span>
                   <span className="text-xs text-gray-400 font-medium">
-                    / {viewCard.initial_punches} Rides
+                    / {viewCard.initial_punches} {viewCard.card_type.startsWith("weekly") || viewCard.card_type.startsWith("monthly") ? "Days" : "Rides"}
                   </span>
                 </div>
               </div>
+
+              {/* Time-Based Pass Period */}
+              {(viewCard.card_type.startsWith("weekly") || viewCard.card_type.startsWith("monthly")) && (
+                viewCard.valid_from ? (
+                  <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-xl">
+                    <span className="block text-xs text-indigo-600 uppercase font-semibold mb-2">
+                      Valid Period
+                    </span>
+                    <div className="flex items-center gap-2 text-indigo-900 font-medium">
+                      <Calendar size={16} />
+                      <span>
+                        {new Date(viewCard.valid_from).toLocaleDateString()} →{" "}
+                        {new Date(new Date(viewCard.valid_from).getTime() + (viewCard.card_type.startsWith("monthly") ? 29 : 6) * 24 * 60 * 60 * 1000).toLocaleDateString()}
+                      </span>
+                    </div>
+                    {viewCard.used_dates && viewCard.used_dates.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-indigo-200">
+                        <span className="block text-xs text-indigo-600 mb-2">
+                          Days Used: {viewCard.used_dates.length} / {viewCard.initial_punches}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl">
+                    <div className="flex items-center gap-2 text-amber-700 font-medium">
+                      <Clock size={16} />
+                      <span>Not Activated</span>
+                    </div>
+                    <p className="text-xs text-amber-600 mt-2">
+                      The {viewCard.card_type.startsWith("monthly") ? "30" : "7"}-day period will start when this card is first used.
+                    </p>
+                  </div>
+                )
+              )}
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
@@ -473,7 +563,11 @@ export default function MembershipPage() {
                     Type
                   </span>
                   <span className="text-gray-900 font-medium">
-                    {viewCard.card_type.replace(/_/g, " ").toUpperCase()}
+                    {viewCard.card_type === "weekly_7"
+                      ? "WEEKLY PASS"
+                      : viewCard.card_type === "monthly_30"
+                      ? "MONTHLY PASS"
+                      : viewCard.card_type.replace(/_/g, " ").toUpperCase()}
                   </span>
                 </div>
               </div>
@@ -579,6 +673,8 @@ function IssueCardModal({
     customer_phone: "",
     child_name: "",
     child_birth_month: "",
+    valid_from: "",
+    weeklyMode: "gift" as "gift" | "scheduled",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLookingUp, setIsLookingUp] = useState(false);
@@ -614,7 +710,19 @@ function IssueCardModal({
     setError("");
 
     // Determine initial punches based on type
-    const initial_punches = formData.type === "5_plus_1" ? 6 : 13;
+    const isTimeBased = formData.type === "weekly_7" || formData.type === "monthly_30";
+    const initial_punches =
+      formData.type === "weekly_7" ? 7 :
+      formData.type === "monthly_30" ? 30 :
+      formData.type === "5_plus_1" ? 6 :
+      formData.type === "10_plus_1" ? 11 : 13;
+
+    // Validate scheduled mode requires date
+    if (isTimeBased && formData.weeklyMode === "scheduled" && !formData.valid_from) {
+      setError("Please select a start date");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/admin/cards", {
@@ -624,6 +732,7 @@ function IssueCardModal({
           ...formData,
           initial_punches,
           card_type: formData.type,
+          valid_from: isTimeBased && formData.weeklyMode === "scheduled" ? formData.valid_from : undefined,
         }),
       });
 
@@ -643,8 +752,8 @@ function IssueCardModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-70 p-4 animate-in fade-in">
-      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in-95">
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-pink-50">
+      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in-95 max-h-[90vh] flex flex-col">
+        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-pink-50 shrink-0">
           <h3 className="font-bold text-lg text-pink-900">Issue New Card</h3>
           <button
             onClick={onClose}
@@ -654,7 +763,7 @@ function IssueCardModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
           {error && (
             <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg border border-red-100">
               {error}
@@ -686,41 +795,155 @@ function IssueCardModal({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Package Type
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-3">
+                {/* Row 1: 5+1, 10+3 */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    className={`px-3 py-3 rounded-lg border-2 text-sm font-semibold transition-all ${
+                      formData.type === "5_plus_1"
+                        ? "border-pink-500 bg-pink-50 text-pink-700"
+                        : "border-gray-200 text-gray-600 hover:border-gray-300"
+                    }`}
+                    onClick={() =>
+                      setFormData({ ...formData, type: "5_plus_1", valid_from: "" })
+                    }
+                  >
+                    5 + 1 Free
+                    <span className="block text-xs font-normal mt-1 text-gray-500">
+                      6 Rides
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-3 rounded-lg border-2 text-sm font-semibold transition-all ${
+                      formData.type === "10_plus_3"
+                        ? "border-pink-500 bg-pink-50 text-pink-700"
+                        : "border-gray-200 text-gray-600 hover:border-gray-300"
+                    }`}
+                    onClick={() =>
+                      setFormData({ ...formData, type: "10_plus_3", valid_from: "" })
+                    }
+                  >
+                    10 + 3 Free
+                    <span className="block text-xs font-normal mt-1 text-gray-500">
+                      13 Rides
+                    </span>
+                  </button>
+                </div>
+                {/* Row 2: 10+1 */}
                 <button
                   type="button"
-                  className={`px-4 py-3 rounded-lg border-2 text-sm font-semibold transition-all ${
-                    formData.type === "5_plus_1"
+                  className={`w-full px-3 py-3 rounded-lg border-2 text-sm font-semibold transition-all ${
+                    formData.type === "10_plus_1"
                       ? "border-pink-500 bg-pink-50 text-pink-700"
                       : "border-gray-200 text-gray-600 hover:border-gray-300"
                   }`}
                   onClick={() =>
-                    setFormData({ ...formData, type: "5_plus_1" })
+                    setFormData({ ...formData, type: "10_plus_1", valid_from: "" })
                   }
                 >
-                  Buy 5 Get 1 Free
+                  10 + 1 Free
                   <span className="block text-xs font-normal mt-1 text-gray-500">
-                    Total: 6 Rides
+                    11 Rides
                   </span>
                 </button>
-                <button
-                  type="button"
-                  className={`px-4 py-3 rounded-lg border-2 text-sm font-semibold transition-all ${
-                    formData.type === "10_plus_3"
-                      ? "border-pink-500 bg-pink-50 text-pink-700"
-                      : "border-gray-200 text-gray-600 hover:border-gray-300"
-                  }`}
-                  onClick={() =>
-                    setFormData({ ...formData, type: "10_plus_3" })
-                  }
-                >
-                  Buy 10 Get 3 Free
-                  <span className="block text-xs font-normal mt-1 text-gray-500">
-                    Total: 13 Rides
-                  </span>
-                </button>
+                {/* Row 3: Weekly, Monthly */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    className={`px-3 py-3 rounded-lg border-2 text-sm font-semibold transition-all ${
+                      formData.type === "weekly_7"
+                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                        : "border-gray-200 text-gray-600 hover:border-gray-300"
+                    }`}
+                    onClick={() =>
+                      setFormData({ ...formData, type: "weekly_7" })
+                    }
+                  >
+                    Weekly Pass
+                    <span className="block text-xs font-normal mt-1 text-gray-500">
+                      7 Days
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-3 rounded-lg border-2 text-sm font-semibold transition-all ${
+                      formData.type === "monthly_30"
+                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                        : "border-gray-200 text-gray-600 hover:border-gray-300"
+                    }`}
+                    onClick={() =>
+                      setFormData({ ...formData, type: "monthly_30" })
+                    }
+                  >
+                    Monthly Pass
+                    <span className="block text-xs font-normal mt-1 text-gray-500">
+                      30 Days
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
+
+            {/* Weekly/Monthly Pass Options */}
+            {(formData.type === "weekly_7" || formData.type === "monthly_30") && (
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-gray-700">
+                  Activation Mode
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    className={`px-3 py-3 rounded-lg border-2 text-sm font-semibold transition-all text-left ${
+                      formData.weeklyMode === "gift"
+                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                        : "border-gray-200 text-gray-600 hover:border-gray-300"
+                    }`}
+                    onClick={() =>
+                      setFormData({ ...formData, weeklyMode: "gift", valid_from: "" })
+                    }
+                  >
+                    Gift Card
+                    <span className="block text-xs font-normal mt-1 text-gray-500">
+                      Activate on first use
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-3 py-3 rounded-lg border-2 text-sm font-semibold transition-all text-left ${
+                      formData.weeklyMode === "scheduled"
+                        ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                        : "border-gray-200 text-gray-600 hover:border-gray-300"
+                    }`}
+                    onClick={() =>
+                      setFormData({ ...formData, weeklyMode: "scheduled" })
+                    }
+                  >
+                    Scheduled
+                    <span className="block text-xs font-normal mt-1 text-gray-500">
+                      Set start date now
+                    </span>
+                  </button>
+                </div>
+
+                {formData.weeklyMode === "scheduled" && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Start Date <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 outline-none"
+                      value={formData.valid_from}
+                      onChange={(e) =>
+                        setFormData({ ...formData, valid_from: e.target.value })
+                      }
+                    />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="relative">

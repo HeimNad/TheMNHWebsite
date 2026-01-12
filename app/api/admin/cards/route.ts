@@ -17,21 +17,24 @@ export async function POST(request: Request) {
       user.emailAddresses[0]?.emailAddress || 'Unknown Staff';
 
     const body = await request.json();
-    const { 
-      code, 
-      initial_punches, 
-      card_type, 
-      customer_name, 
-      customer_phone, 
+    const {
+      code,
+      initial_punches,
+      card_type,
+      customer_name,
+      customer_phone,
       customer_email,
       child_name,
       child_birth_month,
-      notes 
+      notes,
+      valid_from
     } = body;
 
     if (!code || !initial_punches || !card_type) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
+
+    const isWeeklyPass = card_type.startsWith('weekly');
 
     const client = await db.connect();
 
@@ -49,13 +52,15 @@ export async function POST(request: Request) {
 
       const result = await client.sql`
         INSERT INTO punch_cards (
-          code, balance, initial_punches, card_type, 
+          code, balance, initial_punches, card_type,
           customer_name, customer_phone, customer_email,
-          child_name, child_birth_month, notes, status
+          child_name, child_birth_month, notes, status,
+          valid_from, used_dates
         ) VALUES (
-          ${code}, ${initial_punches}, ${initial_punches}, ${card_type}, 
+          ${code}, ${initial_punches}, ${initial_punches}, ${card_type},
           ${customer_name || null}, ${customer_phone || null}, ${customer_email || null},
-          ${child_name || null}, ${child_birth_month || null}, ${notes || null}, 'active'
+          ${child_name || null}, ${child_birth_month || null}, ${notes || null}, 'active',
+          ${isWeeklyPass ? valid_from : null}, ${isWeeklyPass ? '[]' : null}
         )
         RETURNING *
       `;
@@ -63,11 +68,12 @@ export async function POST(request: Request) {
       const newCard = result.rows[0];
 
       // Record Audit Log
+      const auditDetails = isWeeklyPass
+        ? { type: card_type, from: valid_from }
+        : { init: initial_punches };
       await client.sql`
         INSERT INTO audit_logs (action, performed_by, target_id, details)
-        VALUES ('ISSUE', ${operatorName}, ${newCard.id}, ${JSON.stringify({ 
-          init: initial_punches 
-        })})
+        VALUES ('ISSUE', ${operatorName}, ${newCard.id}, ${JSON.stringify(auditDetails)})
       `;
 
       await client.sql`COMMIT`;
