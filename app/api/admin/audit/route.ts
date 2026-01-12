@@ -11,37 +11,28 @@ export async function GET(request: Request) {
   const offset = (page - 1) * limit;
 
   try {
-    const client = await db.connect();
-    
-    try {
-      // Get total count
-      const countResult = await client.sql`SELECT COUNT(*) FROM audit_logs`;
-      const total = Number(countResult.rows[0].count);
+    const countResult = await db.sql`SELECT COUNT(*) FROM audit_logs`;
+    const total = Number(countResult.rows[0].count);
 
-      // Get logs with joined card info if possible (optional, but nice)
-      // For now, simple select
-      const result = await client.sql`
-        SELECT 
-          a.*,
-          p.code as target_code 
-        FROM audit_logs a
-        LEFT JOIN punch_cards p ON a.target_id = p.id
-        ORDER BY a.created_at DESC
-        LIMIT ${limit} OFFSET ${offset}
-      `;
+    const result = await db.sql`
+      SELECT
+        a.*,
+        p.code as target_code
+      FROM audit_logs a
+      LEFT JOIN punch_cards p ON a.target_id = p.id
+      ORDER BY a.created_at DESC
+      LIMIT ${limit} OFFSET ${offset}
+    `;
 
-      return NextResponse.json({
-        data: result.rows,
-        pagination: {
-          total,
-          pages: Math.ceil(total / limit),
-          current: page,
-          limit
-        }
-      });
-    } finally {
-      client.release();
-    }
+    return NextResponse.json({
+      data: result.rows,
+      pagination: {
+        total,
+        pages: Math.ceil(total / limit),
+        current: page,
+        limit
+      }
+    });
   } catch (error) {
     console.error('Failed to fetch audit logs:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

@@ -14,20 +14,15 @@ export async function GET(request: Request) {
   }
 
   try {
-    const client = await db.connect();
-    try {
-      const result = await client.sql`
-        SELECT value FROM settings WHERE key = ${key}
-      `;
-      
-      if ((result.rowCount ?? 0) === 0) {
-        return NextResponse.json(null); // No setting found
-      }
-      
-      return NextResponse.json(result.rows[0].value);
-    } finally {
-      client.release();
+    const result = await db.sql`
+      SELECT value FROM settings WHERE key = ${key}
+    `;
+
+    if ((result.rowCount ?? 0) === 0) {
+      return NextResponse.json(null);
     }
+
+    return NextResponse.json(result.rows[0].value);
   } catch (error) {
     console.error('Failed to fetch settings:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
@@ -44,20 +39,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Key and Value required' }, { status: 400 });
     }
 
-    const client = await db.connect();
-    try {
-      // Upsert (Insert or Update)
-      await client.sql`
-        INSERT INTO settings (key, value, updated_at)
-        VALUES (${key}, ${JSON.stringify(value)}, NOW())
-        ON CONFLICT (key) 
-        DO UPDATE SET value = ${JSON.stringify(value)}, updated_at = NOW();
-      `;
-      
-      return NextResponse.json({ success: true });
-    } finally {
-      client.release();
-    }
+    await db.sql`
+      INSERT INTO settings (key, value, updated_at)
+      VALUES (${key}, ${JSON.stringify(value)}, NOW())
+      ON CONFLICT (key)
+      DO UPDATE SET value = ${JSON.stringify(value)}, updated_at = NOW()
+    `;
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Failed to save settings:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
