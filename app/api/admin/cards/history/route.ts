@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
+// Auth is handled by middleware
 // GET /api/admin/cards/history?target_id=...
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

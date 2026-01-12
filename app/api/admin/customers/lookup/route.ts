@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+// Auth is handled by middleware
 // GET /api/admin/customers/lookup?phone=...
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

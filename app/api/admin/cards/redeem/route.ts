@@ -1,20 +1,12 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs/server';
+import { getOperatorName } from '@/lib/auth';
 
 // POST /api/admin/cards/redeem - Redeem a ride
+// Auth is handled by middleware
 export async function POST(request: Request) {
   try {
-    const user = await currentUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const operatorName = 
-      (user.firstName && user.lastName) ? `${user.firstName} ${user.lastName}` :
-      user.firstName ? user.firstName :
-      user.username ? user.username :
-      user.emailAddresses[0]?.emailAddress || 'Unknown Staff';
+    const operatorName = await getOperatorName();
 
     const body = await request.json();
     const { id } = body;

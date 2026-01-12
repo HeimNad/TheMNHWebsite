@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+// Auth is handled by middleware
 // GET /api/admin/settings?key=business_hours
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
