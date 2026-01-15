@@ -52,12 +52,19 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    fetch("/api/admin/settings?key=business_hours")
+    const controller = new AbortController();
+
+    fetch("/api/admin/settings?key=business_hours", { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         if (data) setHours(data);
       })
+      .catch((err) => {
+        if (err.name !== 'AbortError') console.error('Failed to fetch settings:', err);
+      })
       .finally(() => setLoading(false));
+
+    return () => controller.abort();
   }, []);
 
   const updateDay = (

@@ -45,10 +45,12 @@ export default function AdminPage() {
   useEffect(() => {
     if (selectedWaiver && selectedWaiver.signature_data && sigCanvasRef.current) {
       // Need a small timeout to ensure canvas is ready
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         sigCanvasRef.current?.fromData(selectedWaiver.signature_data);
         sigCanvasRef.current?.off(); // Make it read-only
       }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
   }, [selectedWaiver]);
 
@@ -376,6 +378,7 @@ I confirm that I am at least 18 years of age or am the legal guardian of the par
             <button
               onClick={() => setSelectedWaiver(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Close"
             >
               <X size={24} />
             </button>

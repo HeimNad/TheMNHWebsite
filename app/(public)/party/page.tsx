@@ -20,7 +20,7 @@ export default function PartyPage() {
   return (
     <div className="bg-pink-50 min-h-screen pt-16 pb-16">
       {/* Decorative Background Elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         <div className="absolute top-20 left-10 text-pink-300 opacity-40 animate-bounce">
           <Star size={64} />
         </div>

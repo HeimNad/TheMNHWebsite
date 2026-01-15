@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -16,13 +16,14 @@ type Booking = {
   title: string;
   start: Date;
   end: Date;
+  start_time: string;
+  end_time: string;
   customer_name: string;
   customer_phone: string;
   child_name?: string;
   child_age?: string;
   package_type?: string;
   notes?: string;
-  resource?: any;
 };
 
 export default function BookingsPage() {
@@ -60,8 +61,8 @@ export default function BookingsPage() {
     setAlertState({ isOpen: true, title, message, type });
   };
 
-  // Fetch events for current view
-  const fetchEvents = async () => {
+  // Refresh events - callable from callbacks
+  const refreshEvents = async () => {
     setLoading(true);
     try {
       const start = moment().subtract(3, "months").toISOString();
@@ -70,7 +71,7 @@ export default function BookingsPage() {
       const res = await fetch(`/api/admin/bookings?start=${start}&end=${end}`);
       if (res.ok) {
         const data = await res.json();
-        const formattedEvents = data.map((b: any) => ({
+        const formattedEvents = data.map((b: Booking) => ({
           ...b,
           title: `${b.customer_name} (${b.package_type || "Party"})`,
           start: new Date(b.start_time),
@@ -85,8 +86,40 @@ export default function BookingsPage() {
     }
   };
 
+  // Initial fetch with cleanup
   useEffect(() => {
-    fetchEvents();
+    const controller = new AbortController();
+
+    const fetchEvents = async () => {
+      setLoading(true);
+      try {
+        const start = moment().subtract(3, "months").toISOString();
+        const end = moment().add(3, "months").toISOString();
+
+        const res = await fetch(`/api/admin/bookings?start=${start}&end=${end}`, {
+          signal: controller.signal,
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const formattedEvents = data.map((b: Booking) => ({
+            ...b,
+            title: `${b.customer_name} (${b.package_type || "Party"})`,
+            start: new Date(b.start_time),
+            end: new Date(b.end_time),
+          }));
+          setEvents(formattedEvents);
+        }
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error("Failed to fetch bookings", error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    refreshEvents();
+    return () => controller.abort();
   }, []);
 
   const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
@@ -101,7 +134,7 @@ export default function BookingsPage() {
   const handleCreateSuccess = () => {
     setIsCreateModalOpen(false);
     showAlert("Success", "Reservation created successfully!");
-    fetchEvents();
+    refreshEvents();
   };
 
   const initiateCancel = (id: string) => {
@@ -119,7 +152,7 @@ export default function BookingsPage() {
         setCancelId(null);
         setSelectedEvent(null);
         showAlert("Cancelled", "Booking has been cancelled.", "success");
-        fetchEvents();
+        refreshEvents();
       } else {
         throw new Error("Failed to cancel");
       }
@@ -225,6 +258,7 @@ export default function BookingsPage() {
             <button
               onClick={() => setSelectedEvent(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              aria-label="Close"
             >
               <X size={24} />
             </button>
@@ -331,6 +365,7 @@ function CreateBookingModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLookingUp, setIsLookingUp] = useState(false);
   const [error, setError] = useState("");
+  const lookupAbortRef = useRef<AbortController | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -348,12 +383,17 @@ function CreateBookingModal({
   const handlePhoneBlur = async () => {
     if (!formData.customer_phone || formData.customer_phone.length < 4) return;
 
+    // Cancel previous lookup request
+    lookupAbortRef.current?.abort();
+    lookupAbortRef.current = new AbortController();
+
     setIsLookingUp(true);
     try {
       const res = await fetch(
         `/api/admin/customers/lookup?phone=${encodeURIComponent(
           formData.customer_phone
-        )}`
+        )}`,
+        { signal: lookupAbortRef.current.signal }
       );
       if (res.ok) {
         const data = await res.json();
@@ -366,7 +406,9 @@ function CreateBookingModal({
         }
       }
     } catch (err) {
-      console.error("Lookup failed", err);
+      if ((err as Error).name !== 'AbortError') {
+        console.error("Lookup failed", err);
+      }
     } finally {
       setIsLookingUp(false);
     }
@@ -426,6 +468,7 @@ function CreateBookingModal({
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors bg-gray-50 p-2 rounded-full hover:bg-gray-100"
+            aria-label="Close"
           >
             <X size={20} />
           </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Search,
   CreditCard,
@@ -86,6 +86,7 @@ export default function MembershipPage() {
   const [cards, setCards] = useState<Card[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const searchAbortRef = useRef<AbortController | null>(null);
 
   // Modal States
   const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
@@ -128,11 +129,16 @@ export default function MembershipPage() {
     if (e) e.preventDefault();
     if (!searchQuery.trim()) return;
 
+    // Cancel previous search request
+    searchAbortRef.current?.abort();
+    searchAbortRef.current = new AbortController();
+
     setIsLoading(true);
     setHasSearched(true);
     try {
       const res = await fetch(
-        `/api/admin/cards?query=${encodeURIComponent(searchQuery)}`
+        `/api/admin/cards?query=${encodeURIComponent(searchQuery)}`,
+        { signal: searchAbortRef.current.signal }
       );
       if (res.ok) {
         const data = await res.json();
@@ -141,8 +147,10 @@ export default function MembershipPage() {
         setCards([]);
       }
     } catch (error) {
-      console.error("Search failed", error);
-      setCards([]);
+      if ((error as Error).name !== 'AbortError') {
+        console.error("Search failed", error);
+        setCards([]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -469,6 +477,7 @@ export default function MembershipPage() {
             <button
               onClick={() => setViewCard(null)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Close"
             >
               <X size={24} />
             </button>
@@ -758,6 +767,7 @@ function IssueCardModal({
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
+            aria-label="Close"
           >
             <X size={24} />
           </button>
