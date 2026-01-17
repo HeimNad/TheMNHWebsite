@@ -11,6 +11,7 @@ import {
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import OverviewChart from "@/components/admin/OverviewChart";
+import { LocalTime } from "@/components/ui/local-time";
 
 // Ensure real-time data fetching
 export const dynamic = "force-dynamic";
@@ -187,7 +188,7 @@ export default async function AdminDashboard() {
                     </p>
                   </div>
                   <div className="text-xs text-gray-400 whitespace-nowrap">
-                    {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <LocalTime date={log.created_at} />
                   </div>
                 </div>
               ))

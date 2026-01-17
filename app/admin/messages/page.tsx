@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useUser, RedirectToSignIn } from "@clerk/nextjs";
 import { X, Eye, Ban, RefreshCw, Search } from "lucide-react";
 import { Pagination } from "@/components/ui/pagination-control";
+import { LocalTime } from "@/components/ui/local-time";
 
 interface Message {
   id: string;
@@ -221,9 +222,9 @@ export default function MessagesPage() {
                     }`}
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {new Date(msg.created_at).toLocaleDateString()} <br />
+                      <LocalTime date={msg.created_at} format="date" /> <br />
                       <span className="text-xs text-gray-500">
-                        {new Date(msg.created_at).toLocaleTimeString()}
+                        <LocalTime date={msg.created_at} format="time" />
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -339,7 +340,7 @@ export default function MessagesPage() {
 
               <div className="col-span-2">
                 <span className="block text-xs text-gray-500 uppercase font-semibold">Date</span>
-                <span className="text-gray-900">{new Date(selectedMessage.created_at).toLocaleString()}</span>
+                <span className="text-gray-900"><LocalTime date={selectedMessage.created_at} format="datetime" /></span>
               </div>
             </div>
 

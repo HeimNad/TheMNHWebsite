@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Pagination } from "@/components/ui/pagination-control";
 import { Loader2, RefreshCw, ClipboardList } from "lucide-react";
+import { LocalTime } from "@/components/ui/local-time";
 
 type AuditLog = {
   id: string;
@@ -90,7 +91,7 @@ export default function AuditPage() {
                 logs.map((log) => (
                   <tr key={log.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(log.created_at).toLocaleString()}
+                      <LocalTime date={log.created_at} format="datetime" />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${

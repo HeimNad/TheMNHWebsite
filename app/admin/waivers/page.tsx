@@ -5,6 +5,7 @@ import { useUser, RedirectToSignIn } from "@clerk/nextjs";
 import SignatureCanvas from "react-signature-canvas";
 import { X, Eye, RefreshCw, FileText, Search } from "lucide-react";
 import { Pagination } from "@/components/ui/pagination-control";
+import { LocalTime } from "@/components/ui/local-time";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -319,9 +320,9 @@ I confirm that I am at least 18 years of age or am the legal guardian of the par
                     className="hover:bg-gray-50 transition-colors"
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {new Date(waiver.created_at).toLocaleDateString()} <br />
+                      <LocalTime date={waiver.created_at} format="date" /> <br />
                       <span className="text-xs text-gray-500">
-                        {new Date(waiver.created_at).toLocaleTimeString()}
+                        <LocalTime date={waiver.created_at} format="time" />
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -398,14 +399,14 @@ I confirm that I am at least 18 years of age or am the legal guardian of the par
               )}
               <p>
                 <strong>Date of Waiver:</strong>{" "}
-                {new Date(selectedWaiver.date).toLocaleDateString()}
+                <LocalTime date={selectedWaiver.date} format="date" />
               </p>
               <p>
                 <strong>Location:</strong> {selectedWaiver.location}
               </p>
               <p>
                 <strong>Signed At:</strong>{" "}
-                {new Date(selectedWaiver.created_at).toLocaleString()}
+                <LocalTime date={selectedWaiver.created_at} format="datetime" />
               </p>
             </div>
 
