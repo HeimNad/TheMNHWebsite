@@ -17,9 +17,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The MNH Wonder Rides",
+  metadataBase: new URL("https://themnhwonderrides.com"),
+  title: {
+    template: "%s | The MNH Wonder Rides",
+    default: "The MNH Wonder Rides",
+  },
   description: "MNH Animal Ride for Kids' Parties and Events",
   icons: "/favicon.ico",
+  openGraph: {
+    siteName: "The MNH Wonder Rides",
+    type: "website",
+    locale: "en_US",
+    images: [{ url: "/favicon.jpg" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

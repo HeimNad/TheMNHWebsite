@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Hero from "@/components/home/Hero";
 import Gallery from "@/components/home/Gallery";
 import Link from "next/link";
 import { Star, ShieldCheck, MapPin, Smile, Clock } from "lucide-react";
 import { db } from "@/lib/db";
+
+export const metadata: Metadata = {
+  title: "Kids' Animal Rides for Parties & Events",
+  description:
+    "The MNH Wonder Rides brings joy to children with safe electric animal rides at Samanea Mall and Broadway Commons in Long Island, NY.",
+  alternates: { canonical: "/" },
+};
 
 // Ensure dynamic fetching for settings
 export const dynamic = "force-dynamic";
