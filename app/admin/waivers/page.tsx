@@ -6,8 +6,6 @@ import SignatureCanvas from "react-signature-canvas";
 import { X, Eye, RefreshCw, FileText, Search } from "lucide-react";
 import { Pagination } from "@/components/ui/pagination-control";
 import { LocalTime } from "@/components/ui/local-time";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 
 interface Waiver {
   id: string;
@@ -91,7 +89,11 @@ export default function AdminPage() {
     setCurrentPage(1); // Reset to first page when changing page size
   };
 
-  const downloadPDF = (waiver: Waiver) => {
+  const downloadPDF = async (waiver: Waiver) => {
+    const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+      import("jspdf"),
+      import("jspdf-autotable"),
+    ]);
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
