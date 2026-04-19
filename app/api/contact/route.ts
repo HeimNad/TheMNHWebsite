@@ -6,6 +6,15 @@ const HCAPTCHA_SECRET = process.env.HCAPTCHA_SECRET_KEY || "";
 const SITE_URL = "https://themnhwonderrides.com";
 const LOGO_URL = `${SITE_URL}/favicon.jpg`;
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT) || 465,
@@ -91,8 +100,11 @@ function emailWrapper(content: string) {
 }
 
 function customerReceiptHtml(firstName: string, subjectLine: string, message: string) {
+  const safeName = escapeHtml(firstName);
+  const safeSubject = escapeHtml(subjectLine);
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
   return emailWrapper(`
-    <h2 style="font-size:18px;color:#831843;font-weight:700;margin:0 0 8px;">Hi ${firstName}! 🦄</h2>
+    <h2 style="font-size:18px;color:#831843;font-weight:700;margin:0 0 8px;">Hi ${safeName}! 🦄</h2>
     <p style="font-size:13.5px;color:#6b7280;line-height:1.7;margin:0 0 20px;">
       Thank you so much for reaching out! We've received your message and
       can't wait to help make your little one's day extra magical.
@@ -105,11 +117,11 @@ function customerReceiptHtml(firstName: string, subjectLine: string, message: st
     <table cellpadding="0" cellspacing="0" style="width:100%;font-size:13px;">
       <tr>
         <td style="color:#d1aabb;width:120px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Subject</td>
-        <td style="color:#374151;padding:5px 0;vertical-align:top;"><strong>${subjectLine}</strong></td>
+        <td style="color:#374151;padding:5px 0;vertical-align:top;"><strong>${safeSubject}</strong></td>
       </tr>
     </table>
     <div style="background:#fff5f9;border:1.5px solid #fce7f3;border-radius:10px;padding:14px 16px;font-size:13px;color:#4b5563;line-height:1.7;margin-top:8px;">
-      ${message.replace(/\n/g, "<br>")}
+      ${safeMessage}
     </div>
 
     <hr style="border:none;border-top:1.5px dashed #fce7f3;margin:18px 0;" />
@@ -148,6 +160,14 @@ function adminNotificationHtml(
   subjectLine: string,
   message: string
 ) {
+  const safeName = escapeHtml(firstName);
+  const safeLastName = escapeHtml(lastName);
+  const safeEmail = escapeHtml(email);
+  const safePhone = escapeHtml(phone || "N/A");
+  const safeChildAge = escapeHtml(childAge || "N/A");
+  const safePreferredContact = escapeHtml(preferredContact || "N/A");
+  const safeSubject = escapeHtml(subjectLine);
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
   return emailWrapper(`
     <h2 style="font-size:18px;color:#831843;font-weight:700;margin:0 0 8px;">
       New Message Received
@@ -164,27 +184,27 @@ function adminNotificationHtml(
     <table cellpadding="0" cellspacing="0" style="width:100%;font-size:13px;">
       <tr>
         <td style="color:#d1aabb;width:130px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Name</td>
-        <td style="color:#374151;padding:5px 0;vertical-align:top;"><strong>${firstName} ${lastName}</strong></td>
+        <td style="color:#374151;padding:5px 0;vertical-align:top;"><strong>${safeName} ${safeLastName}</strong></td>
       </tr>
       <tr>
         <td style="color:#d1aabb;width:130px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Email</td>
-        <td style="padding:5px 0;vertical-align:top;"><a href="mailto:${email}" style="color:#ec4899;text-decoration:none;">${email}</a></td>
+        <td style="padding:5px 0;vertical-align:top;"><a href="mailto:${safeEmail}" style="color:#ec4899;text-decoration:none;">${safeEmail}</a></td>
       </tr>
       <tr>
         <td style="color:#d1aabb;width:130px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Phone</td>
-        <td style="color:#374151;padding:5px 0;vertical-align:top;">${phone || "N/A"}</td>
+        <td style="color:#374151;padding:5px 0;vertical-align:top;">${safePhone}</td>
       </tr>
       <tr>
         <td style="color:#d1aabb;width:130px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Child Age</td>
-        <td style="color:#374151;padding:5px 0;vertical-align:top;">${childAge || "N/A"}</td>
+        <td style="color:#374151;padding:5px 0;vertical-align:top;">${safeChildAge}</td>
       </tr>
       <tr>
         <td style="color:#d1aabb;width:130px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Preferred Contact</td>
-        <td style="color:#374151;padding:5px 0;vertical-align:top;">${preferredContact || "N/A"}</td>
+        <td style="color:#374151;padding:5px 0;vertical-align:top;">${safePreferredContact}</td>
       </tr>
       <tr>
         <td style="color:#d1aabb;width:130px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Subject</td>
-        <td style="color:#374151;padding:5px 0;vertical-align:top;"><strong>${subjectLine}</strong></td>
+        <td style="color:#374151;padding:5px 0;vertical-align:top;"><strong>${safeSubject}</strong></td>
       </tr>
     </table>
 
@@ -192,12 +212,12 @@ function adminNotificationHtml(
 
     <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#f472b6;margin-bottom:10px;">💬 Message</div>
     <div style="background:#fff5f9;border:1.5px solid #fce7f3;border-radius:10px;padding:14px 16px;font-size:13px;color:#4b5563;line-height:1.7;">
-      ${message.replace(/\n/g, "<br>")}
+      ${safeMessage}
     </div>
 
     <div style="margin-top:20px;">
-      <a href="mailto:${email}" style="display:inline-block;background:#ec4899;color:#fff;text-decoration:none;font-weight:700;font-size:13.5px;padding:11px 26px;border-radius:999px;">
-        Reply to ${firstName} →
+      <a href="mailto:${safeEmail}" style="display:inline-block;background:#ec4899;color:#fff;text-decoration:none;font-weight:700;font-size:13.5px;padding:11px 26px;border-radius:999px;">
+        Reply to ${safeName} →
       </a>
     </div>
 

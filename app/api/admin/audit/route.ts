@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = Number(searchParams.get('page')) || 1;
-  const limit = Number(searchParams.get('limit')) || 20;
+  const limit = Math.min(Number(searchParams.get('limit')) || 20, 100);
   const offset = (page - 1) * limit;
 
   try {

@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const page = Number(searchParams.get('page')) || 1;
-    const limit = Number(searchParams.get('limit')) || 10;
+    const limit = Math.min(Number(searchParams.get('limit')) || 10, 100);
     const search = searchParams.get('search') || '';
     const offset = (page - 1) * limit;
 
