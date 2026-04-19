@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, Show, UserButton } from "@clerk/nextjs";
 import { Patrick_Hand } from "next/font/google";
 import { Menu, X, User, LayoutDashboard } from "lucide-react"; // Import User icon
 import Image from "next/image";
@@ -75,7 +75,7 @@ export default function Navbar() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden lg:flex items-center gap-4">
-            <SignedOut>
+            <Show when="signed-out">
               <SignInButton mode="modal">
                 <button
                   className="p-2 rounded-full hover:bg-pink-100 transition-colors"
@@ -84,8 +84,8 @@ export default function Navbar() {
                   <User size={24} className="text-pink-900" />
                 </button>
               </SignInButton>
-            </SignedOut>
-            <SignedIn>
+            </Show>
+            <Show when="signed-in">
               <UserButton
                 appearance={{
                   elements: {
@@ -101,7 +101,7 @@ export default function Navbar() {
                   />
                 </UserButton.MenuItems>
               </UserButton>
-            </SignedIn>
+            </Show>
           </div>
 
           {/* Mobile menu button */}
@@ -117,7 +117,6 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div className="lg:hidden absolute top-16 left-0 w-full bg-pink-50/95 backdrop-blur-xl border-b border-pink-200 shadow-lg flex flex-col p-4 space-y-4">
@@ -151,14 +150,14 @@ export default function Navbar() {
           </Link>
 
           <div className="border-t border-pink-200 pt-4 flex flex-col gap-3">
-            <SignedOut>
+            <Show when="signed-out">
               <SignInButton mode="modal">
                 <button className="w-full text-center border border-pink-300 rounded-lg py-2 text-pink-900 font-medium hover:bg-pink-100 transition-colors cursor-pointer">
                   Sign In
                 </button>
               </SignInButton>
-            </SignedOut>
-            <SignedIn>
+            </Show>
+            <Show when="signed-in">
               <div className="flex justify-center py-2">
                 <UserButton
                   showName
@@ -178,7 +177,7 @@ export default function Navbar() {
                   </UserButton.MenuItems>
                 </UserButton>
               </div>
-            </SignedIn>
+            </Show>
           </div>
         </div>
       )}

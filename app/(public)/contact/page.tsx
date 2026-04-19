@@ -1,6 +1,7 @@
 "use client";
 
-import { Mail, Phone, MapPin, Loader2, Instagram } from "lucide-react";
+import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
+import { SiInstagram } from "@icons-pack/react-simple-icons";
 import { useState, useRef, FormEvent, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
@@ -417,7 +418,7 @@ export default function ContactPage() {
             {/* Instagram */}
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center shrink-0">
-                <Instagram className="text-pink-500" />
+                <SiInstagram className="text-pink-500" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-pink-900 mb-1">

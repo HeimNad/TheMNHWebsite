@@ -41,17 +41,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      ><ClerkProvider>
           {children}
           <SpeedInsights />
           <Analytics />
-        </body>
-        <GoogleAnalytics gaId="G-J6CX55ZMLD" />
-      </html>
-    </ClerkProvider>
+        </ClerkProvider></body>
+      <GoogleAnalytics gaId="G-J6CX55ZMLD" />
+    </html>
   );
 }
