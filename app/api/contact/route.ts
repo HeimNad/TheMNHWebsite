@@ -278,8 +278,8 @@ export async function POST(request: Request) {
         await Promise.all([
           transporter.sendMail({
             from: `"MNH Wonder Rides" <${process.env.SMTP_USER}>`,
-            to: process.env.ADMIN_EMAIL,
-            cc: process.env.SMTP_USER,
+            to: process.env.SMTP_USER,
+            cc: process.env.ADMIN_EMAIL,
             replyTo: email,
             subject: `New Inquiry: ${subjectLine}`,
             html: adminNotificationHtml(firstName, lastName, email, phone, childAge, preferredContact, subjectLine, message),
