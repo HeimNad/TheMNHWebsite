@@ -279,6 +279,8 @@ export async function POST(request: Request) {
           transporter.sendMail({
             from: `"MNH Wonder Rides" <${process.env.SMTP_USER}>`,
             to: process.env.ADMIN_EMAIL,
+            cc: process.env.SMTP_USER,
+            replyTo: email,
             subject: `New Inquiry: ${subjectLine}`,
             html: adminNotificationHtml(firstName, lastName, email, phone, childAge, preferredContact, subjectLine, message),
           }),
