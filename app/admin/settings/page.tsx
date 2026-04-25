@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2, Save, MapPin, Power } from "lucide-react";
+import { Loader2, Save, MapPin, Power, RefreshCw } from "lucide-react";
 import { AlertModal } from "@/components/ui/alert-modal";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -45,6 +45,7 @@ export default function SettingsPage() {
   const [hours, setHours] = useState(DEFAULT_HOURS_STR);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [alert, setAlert] = useState({
     isOpen: false,
     type: "success" as "success" | "error",
@@ -97,6 +98,21 @@ export default function SettingsPage() {
     }));
   };
 
+  const handleSyncSling = async () => {
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/admin/settings/sync-sling", { method: "POST" });
+      if (!res.ok) throw new Error("Failed to sync");
+      const data = await res.json();
+      if (data.hours) setHours(data.hours);
+      setAlert({ isOpen: true, type: "success", message: "Hours synced from Sling successfully!" });
+    } catch {
+      setAlert({ isOpen: true, type: "error", message: "Failed to sync from Sling. Check API configuration." });
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -137,18 +153,32 @@ export default function SettingsPage() {
             Manage global website configuration.
           </p>
         </div>
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="flex items-center gap-2 bg-pink-600 text-white px-6 py-2.5 rounded-xl hover:bg-pink-700 transition-colors shadow-sm disabled:opacity-70 font-medium"
-        >
-          {saving ? (
-            <Loader2 className="animate-spin" size={18} />
-          ) : (
-            <Save size={18} />
-          )}
-          Save Changes
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleSyncSling}
+            disabled={syncing || saving}
+            className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-70 font-medium text-sm"
+          >
+            {syncing ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              <RefreshCw size={16} />
+            )}
+            Sync from Sling
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saving || syncing}
+            className="flex items-center gap-2 bg-pink-600 text-white px-6 py-2.5 rounded-xl hover:bg-pink-700 transition-colors shadow-sm disabled:opacity-70 font-medium"
+          >
+            {saving ? (
+              <Loader2 className="animate-spin" size={18} />
+            ) : (
+              <Save size={18} />
+            )}
+            Save Changes
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">

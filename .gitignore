@@ -27,6 +27,7 @@
 # local dev scripts
 test-email.mjs
 email-preview.html
+/temp
 
 # debug
 npm-debug.log*
