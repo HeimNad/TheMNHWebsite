@@ -37,7 +37,7 @@ export default function Navbar() {
                 />
               </div>
               <span
-                className={`font-bold text-3xl tracking-tight text-pink-900 ${patrickHand.className}`}
+                className={`font-bold text-3xl tracking-tight text-pink-700 ${patrickHand.className}`}
               >
                 <span className="xl:hidden">The MNH</span>
                 <span className="hidden xl:inline">The MNH Wonder Rides</span>
@@ -49,25 +49,25 @@ export default function Navbar() {
           <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-8">
             <Link
               href="/"
-              className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors"
+              className="text-pink-700/80 hover:text-pink-600 font-medium transition-colors"
             >
               Home
             </Link>
             <Link
               href="/party"
-              className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors"
+              className="text-pink-700/80 hover:text-pink-600 font-medium transition-colors"
             >
               Parties
             </Link>
             <Link
               href="/waiver"
-              className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors"
+              className="text-pink-700/80 hover:text-pink-600 font-medium transition-colors"
             >
               Waiver
             </Link>
             <Link
               href="/contact"
-              className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors"
+              className="text-pink-700/80 hover:text-pink-600 font-medium transition-colors"
             >
               Contact
             </Link>
@@ -81,7 +81,7 @@ export default function Navbar() {
                   className="p-2 rounded-full hover:bg-pink-100 transition-colors"
                   aria-label="Sign In"
                 >
-                  <User size={24} className="text-pink-900" />
+                  <User size={24} className="text-pink-700" />
                 </button>
               </SignInButton>
             </Show>
@@ -108,7 +108,7 @@ export default function Navbar() {
           <div className="lg:hidden flex items-center">
             <button
               onClick={toggleMobileMenu}
-              className="text-pink-900 hover:text-pink-600 p-2 transition-colors"
+              className="text-pink-700 hover:text-pink-600 p-2 transition-colors"
               aria-expanded={isMobileMenuOpen}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
@@ -123,28 +123,28 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
+            className="text-pink-700/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
           >
             Home
           </Link>
           <Link
             href="/party"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
+            className="text-pink-700/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
           >
             Parties
           </Link>
           <Link
             href="/waiver"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
+            className="text-pink-700/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
           >
             Waiver
           </Link>
           <Link
             href="/contact"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-pink-900/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
+            className="text-pink-700/80 hover:text-pink-600 font-medium transition-colors block px-2 py-1"
           >
             Contact
           </Link>
@@ -152,7 +152,7 @@ export default function Navbar() {
           <div className="border-t border-pink-200 pt-4 flex flex-col gap-3">
             <Show when="signed-out">
               <SignInButton mode="modal">
-                <button className="w-full text-center border border-pink-300 rounded-lg py-2 text-pink-900 font-medium hover:bg-pink-100 transition-colors cursor-pointer">
+                <button className="w-full text-center border border-pink-300 rounded-lg py-2 text-pink-700 font-medium hover:bg-pink-100 transition-colors cursor-pointer">
                   Sign In
                 </button>
               </SignInButton>
@@ -164,7 +164,7 @@ export default function Navbar() {
                   appearance={{
                     elements: {
                       userButtonBox: "flex-row-reverse",
-                      userButtonOuterIdentifier: "text-pink-900 font-medium",
+                      userButtonOuterIdentifier: "text-pink-700 font-medium",
                     },
                   }}
                 >

@@ -108,7 +108,7 @@ function ContactForm() {
       className="bg-white p-8 rounded-2xl shadow-sm border border-pink-100 scroll-mt-24"
       id="contact-form"
     >
-      <h2 className="text-2xl font-bold text-pink-900 mb-6">
+      <h2 className="text-2xl font-bold text-pink-700 mb-6">
         Send us a Message
       </h2>
       {status === "success" ? (
@@ -136,7 +136,7 @@ function ContactForm() {
           </p>
           <button
             onClick={() => setStatus("idle")}
-            className="text-pink-600 hover:text-pink-900 font-medium"
+            className="text-pink-600 hover:text-pink-700 font-medium"
           >
             Send another message
           </button>
@@ -147,7 +147,7 @@ function ContactForm() {
             <div>
               <label
                 htmlFor="firstName"
-                className="block text-sm font-medium text-pink-900 mb-2"
+                className="block text-sm font-medium text-pink-700 mb-2"
               >
                 First Name
               </label>
@@ -166,7 +166,7 @@ function ContactForm() {
             <div>
               <label
                 htmlFor="lastName"
-                className="block text-sm font-medium text-pink-900 mb-2"
+                className="block text-sm font-medium text-pink-700 mb-2"
               >
                 Last Name
               </label>
@@ -188,7 +188,7 @@ function ContactForm() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-pink-900 mb-2"
+                className="block text-sm font-medium text-pink-700 mb-2"
               >
                 Email Address
               </label>
@@ -207,7 +207,7 @@ function ContactForm() {
             <div>
               <label
                 htmlFor="phone"
-                className="block text-sm font-medium text-pink-900 mb-2"
+                className="block text-sm font-medium text-pink-700 mb-2"
               >
                 Phone Number
               </label>
@@ -228,7 +228,7 @@ function ContactForm() {
             <div>
               <label
                 htmlFor="childAge"
-                className="block text-sm font-medium text-pink-900 mb-2"
+                className="block text-sm font-medium text-pink-700 mb-2"
               >
                 Child&apos;s Age{" "}
                 <span className="text-gray-400 text-xs font-normal">
@@ -253,7 +253,7 @@ function ContactForm() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-pink-900 mb-2">
+              <label className="block text-sm font-medium text-pink-700 mb-2">
                 Preferred Contact Method
               </label>
               <select
@@ -273,7 +273,7 @@ function ContactForm() {
           <div>
             <label
               htmlFor="subject"
-              className="block text-sm font-medium text-pink-900 mb-2"
+              className="block text-sm font-medium text-pink-700 mb-2"
             >
               Subject
             </label>
@@ -293,7 +293,7 @@ function ContactForm() {
           <div>
             <label
               htmlFor="message"
-              className="block text-sm font-medium text-pink-900 mb-2"
+              className="block text-sm font-medium text-pink-700 mb-2"
             >
               Message
             </label>
@@ -353,7 +353,7 @@ export default function ContactPage() {
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-pink-500 mb-6">
             Get in Touch
           </h1>
-          <p className="text-lg sm:text-xl text-pink-900 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-pink-700 max-w-2xl mx-auto">
             Have a question? We&apos;d love to hear from you.
           </p>
         </div>
@@ -364,7 +364,7 @@ export default function ContactPage() {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Info */}
           <div className="space-y-8">
-            <h2 className="text-3xl font-bold text-pink-900 mb-6">
+            <h2 className="text-3xl font-bold text-pink-700 mb-6">
               Contact Information
             </h2>
 
@@ -373,10 +373,10 @@ export default function ContactPage() {
                 <Mail className="text-pink-500" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-pink-900 mb-1">
+                <h3 className="text-lg font-semibold text-pink-700 mb-1">
                   Email Us
                 </h3>
-                <p className="text-pink-900">themnhwonderrides@gmail.com</p>
+                <p className="text-pink-700">themnhwonderrides@gmail.com</p>
                 <p className="text-sm text-pink-600 mt-1">
                   We&apos;ll get back to you within 24 hours.
                 </p>
@@ -388,10 +388,10 @@ export default function ContactPage() {
                 <Phone className="text-pink-500" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-pink-900 mb-1">
+                <h3 className="text-lg font-semibold text-pink-700 mb-1">
                   Call Us
                 </h3>
-                <p className="text-pink-900">+1 (516) 423-6988</p>
+                <p className="text-pink-700">+1 (516) 423-6988</p>
                 <p className="text-sm text-pink-600 mt-1">
                   Mon-Sat from 10am to 9pm.
                 </p>
@@ -403,13 +403,13 @@ export default function ContactPage() {
                 <MapPin className="text-pink-500" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-pink-900 mb-1">
+                <h3 className="text-lg font-semibold text-pink-700 mb-1">
                   Visit Us
                 </h3>
-                <p className="text-pink-900">
+                <p className="text-pink-700">
                   1500 Old Country Rd, Westbury, NY 11590
                 </p>
-                <p className="text-pink-900">
+                <p className="text-pink-700">
                   522 Broadway Mall, Hicksville, NY 11801
                 </p>
               </div>
@@ -421,14 +421,14 @@ export default function ContactPage() {
                 <SiInstagram className="text-pink-500" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-pink-900 mb-1">
+                <h3 className="text-lg font-semibold text-pink-700 mb-1">
                   Follow Us
                 </h3>
                 <a
                   href="https://www.instagram.com/themnhwonderrides/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-pink-900 hover:underline"
+                  className="text-pink-700 hover:underline"
                 >
                   @themnhwonderrides
                 </a>

@@ -117,10 +117,10 @@ export default function WaiverPage() {
       {/* Header Section */}
       <section className="bg-pink-100/50 py-16 sm:py-24">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-pink-900 mb-6">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-pink-700 mb-6">
             WAIVER AND RELEASE OF LIABILITY
           </h1>
-          <p className="text-lg sm:text-xl text-pink-900 font-medium">
+          <p className="text-lg sm:text-xl text-pink-700 font-medium">
             The MNH Wonder Rides
           </p>
         </div>
@@ -130,7 +130,7 @@ export default function WaiverPage() {
         {/* Notice & Rules */}
         <div className="bg-white rounded-2xl shadow-sm border border-pink-100 p-8 mb-8 space-y-6">
           <div className="bg-pink-50 p-4 rounded-lg border border-pink-200">
-            <p className="text-pink-900 font-medium text-sm">
+            <p className="text-pink-700 font-medium text-sm">
               <span className="font-bold">NOTICE:</span> This Waiver and Release
               of Liability Agreement is a legal document that limits and affects
               your rights. Please read carefully before submitting.
@@ -138,10 +138,10 @@ export default function WaiverPage() {
           </div>
 
           <div>
-            <h2 className="text-xl font-bold text-pink-900 mb-4">
+            <h2 className="text-xl font-bold text-pink-700 mb-4">
               The MNH Wonder Rides Rules
             </h2>
-            <ul className="space-y-2 text-pink-900 list-disc pl-5">
+            <ul className="space-y-2 text-pink-700 list-disc pl-5">
               <li>
                 Riders under 4 ft. must be accompanied on all rides by an adult
               </li>
@@ -155,7 +155,7 @@ export default function WaiverPage() {
             </ul>
           </div>
 
-          <div className="space-y-4 text-pink-900 text-sm leading-relaxed">
+          <div className="space-y-4 text-pink-700 text-sm leading-relaxed">
             <p>
               This Personal Injury Waiver (“Waiver”) is made by the undersigned
               for the purpose of participating in ride activities operated by
@@ -197,7 +197,7 @@ export default function WaiverPage() {
               </p>
               <button
                 onClick={() => setStatus({ type: null, message: "" })}
-                className="text-pink-600 hover:text-pink-900 font-medium transition-colors"
+                className="text-pink-600 hover:text-pink-700 font-medium transition-colors"
               >
                 Sign another waiver
               </button>
@@ -229,7 +229,7 @@ export default function WaiverPage() {
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-sm font-medium text-pink-900 mb-2"
+                      className="block text-sm font-medium text-pink-700 mb-2"
                     >
                       Your Name <span className="text-red-500">*</span>
                     </label>
@@ -251,7 +251,7 @@ export default function WaiverPage() {
                   <div>
                     <label
                       htmlFor="childName"
-                      className="block text-sm font-medium text-pink-900 mb-2"
+                      className="block text-sm font-medium text-pink-700 mb-2"
                     >
                       Child&apos;s Name{" "}
                       <span className="text-pink-400 text-xs">
@@ -272,7 +272,7 @@ export default function WaiverPage() {
                   <div>
                     <label
                       htmlFor="date"
-                      className="block text-sm font-medium text-pink-900 mb-2"
+                      className="block text-sm font-medium text-pink-700 mb-2"
                     >
                       Date <span className="text-red-500">*</span>
                     </label>
@@ -282,7 +282,7 @@ export default function WaiverPage() {
                       id="date"
                       className={`w-full px-4 py-3 rounded-lg border appearance-none min-w-0 bg-white ${
                         errors.date ? "border-red-500" : "border-pink-200"
-                      } focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all text-pink-900`}
+                      } focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all text-pink-700`}
                     />
                     {errors.date && (
                       <p className="text-red-500 text-xs mt-1">
@@ -293,7 +293,7 @@ export default function WaiverPage() {
                   <div>
                     <label
                       htmlFor="location"
-                      className="block text-sm font-medium text-pink-900 mb-2"
+                      className="block text-sm font-medium text-pink-700 mb-2"
                     >
                       Location of Participation{" "}
                       <span className="text-red-500">*</span>
@@ -303,7 +303,7 @@ export default function WaiverPage() {
                       id="location"
                       className={`w-full px-4 py-3 rounded-lg border ${
                         errors.location ? "border-red-500" : "border-pink-200"
-                      } focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all bg-white text-pink-900`}
+                      } focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all bg-white text-pink-700`}
                       defaultValue=""
                     >
                       <option value="" disabled>
@@ -325,7 +325,7 @@ export default function WaiverPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-pink-900 mb-2">
+                  <label className="block text-sm font-medium text-pink-700 mb-2">
                     Signature <span className="text-red-500">*</span>
                   </label>
                   <div className="border border-pink-200 rounded-lg overflow-hidden bg-white">
@@ -340,7 +340,7 @@ export default function WaiverPage() {
                       <button
                         type="button"
                         onClick={clearSignature}
-                        className="text-xs text-pink-600 hover:text-pink-900 font-medium px-2 py-1 rounded hover:bg-pink-100 transition-colors"
+                        className="text-xs text-pink-600 hover:text-pink-700 font-medium px-2 py-1 rounded hover:bg-pink-100 transition-colors"
                       >
                         Clear Signature
                       </button>
@@ -358,7 +358,7 @@ export default function WaiverPage() {
                       type="checkbox"
                       className="mt-1 w-4 h-4 text-pink-500 border-pink-300 rounded focus:ring-pink-500"
                     />
-                    <span className="text-sm text-pink-900 group-hover:text-pink-900 transition-colors">
+                    <span className="text-sm text-pink-700 group-hover:text-pink-700 transition-colors">
                       I confirm that I have read and agree to the above waiver
                       and release of liability.
                     </span>
@@ -375,7 +375,7 @@ export default function WaiverPage() {
                       type="checkbox"
                       className="mt-1 w-4 h-4 text-pink-500 border-pink-300 rounded focus:ring-pink-500"
                     />
-                    <span className="text-sm text-pink-900 group-hover:text-pink-900 transition-colors">
+                    <span className="text-sm text-pink-700 group-hover:text-pink-700 transition-colors">
                       I am 18 years old or am signing on behalf of a minor
                       participant.
                     </span>

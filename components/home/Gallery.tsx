@@ -14,7 +14,7 @@ export default function Gallery() {
     <section className="py-16 bg-pink-50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-pink-900 mb-4">
+          <h2 className="text-3xl font-bold text-pink-700 mb-4">
             Wonderful Moments
           </h2>
           <p className="text-pink-600 max-w-2xl mx-auto">

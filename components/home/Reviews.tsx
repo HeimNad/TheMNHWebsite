@@ -50,7 +50,7 @@ export default function Reviews() {
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-pink-900 mb-3">
+          <h2 className="text-3xl font-bold text-pink-700 mb-3">
             What Families Are Saying
           </h2>
           <div className="flex items-center justify-center gap-1 mb-3">
@@ -68,7 +68,7 @@ export default function Reviews() {
               className="bg-pink-50 rounded-2xl p-6 border border-pink-100 flex flex-col gap-4 hover:-translate-y-1 transition-transform duration-300"
             >
               <Quote size={20} className="text-pink-300" />
-              <p className="text-pink-900 text-sm leading-relaxed flex-1">
+              <p className="text-pink-700 text-sm leading-relaxed flex-1">
                 {review.text}
               </p>
               <div className="flex gap-0.5 mt-auto">
@@ -83,7 +83,7 @@ export default function Reviews() {
                   {review.initials}
                 </div>
                 <div>
-                  <div className="font-semibold text-pink-900 text-sm">{review.name}</div>
+                  <div className="font-semibold text-pink-700 text-sm">{review.name}</div>
                   <div className="text-pink-400 text-xs">{review.time}</div>
                 </div>
               </div>

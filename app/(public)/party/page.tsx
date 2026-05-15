@@ -35,11 +35,11 @@ export default function PartyPage() {
       <div className="max-w-6xl mx-auto px-2 relative z-10">
         {/* Header Section */}
         <div className="text-center mb-16 space-y-6">
-          <h1 className="text-4xl md:text-6xl font-bold text-pink-900 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold text-pink-700 leading-tight">
             Celebrate Your Child&rsquo;s Special Day <br />
             <span className="text-pink-500">at MNH Wonder Rides!</span>
           </h1>
-          <p className="text-lg md:text-xl text-pink-900 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-pink-700 max-w-3xl mx-auto leading-relaxed">
             We make your child&rsquo;s birthday unforgettable with exclusive
             access to our adorable electric animal rides and fun play
             activities. Our staff will guide the experience so you can relax,
@@ -53,11 +53,11 @@ export default function PartyPage() {
           <div className="space-y-10">
             {/* Private Birthday Party Card */}
             <div className="bg-white rounded-3xl p-8 shadow-xl border-4 border-pink-100 relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-yellow-400 text-pink-900 font-bold px-6 py-2 rounded-bl-2xl shadow-sm">
+              <div className="absolute top-0 right-0 bg-yellow-400 text-pink-700 font-bold px-6 py-2 rounded-bl-2xl shadow-sm">
                 Best Value!
               </div>
 
-              <h2 className="text-3xl font-bold text-pink-900 mb-4 flex items-center gap-3">
+              <h2 className="text-3xl font-bold text-pink-700 mb-4 flex items-center gap-3">
                 <span className="bg-pink-100 p-2 rounded-full text-pink-600">
                   <PartyPopper size={32} />
                 </span>
@@ -97,7 +97,7 @@ export default function PartyPage() {
 
               {/* Includes */}
               <div className="space-y-4 mb-6">
-                <h3 className="font-bold text-pink-900 text-lg">Includes:</h3>
+                <h3 className="font-bold text-pink-700 text-lg">Includes:</h3>
 
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
@@ -300,11 +300,11 @@ export default function PartyPage() {
 
             {/* Notes Section */}
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-pink-200 shadow-sm">
-              <h3 className="text-xl font-bold text-pink-900 mb-4 flex items-center gap-2">
+              <h3 className="text-xl font-bold text-pink-700 mb-4 flex items-center gap-2">
                 <Info size={24} className="text-pink-500" /> Notes for All Party
                 Packages
               </h3>
-              <ul className="space-y-3 text-pink-900 text-sm">
+              <ul className="space-y-3 text-pink-700 text-sm">
                 <li className="flex items-start gap-2">
                   <span className="text-pink-400 mt-1">•</span>
                   <span>
@@ -367,7 +367,7 @@ export default function PartyPage() {
 
               <Link
                 href="/contact?subject=Party Inquiry#contact-form"
-                className="group relative inline-flex items-center justify-center gap-3 bg-white text-pink-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-100 transition-all w-full sm:w-auto shadow-lg hover:shadow-xl hover:-translate-y-1"
+                className="group relative inline-flex items-center justify-center gap-3 bg-white text-pink-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-100 transition-all w-full sm:w-auto shadow-lg hover:shadow-xl hover:-translate-y-1"
               >
                 <span>Book Your Party Now</span>
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" />

@@ -217,11 +217,11 @@ export default function Hero() {
       <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-10 lg:py-0 grid lg:grid-cols-2 gap-12 items-center">
         {/* Left Content */}
         <div className="space-y-8 text-center lg:text-left z-10">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-pink-900 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-pink-700 leading-tight">
             Spark Joy with <br />
             <span className="text-pink-500">Every Ride!</span>
           </h1>
-          <p className="text-lg text-pink-900 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+          <p className="text-lg text-pink-700 max-w-xl mx-auto lg:mx-0 leading-relaxed">
             Create safe and fun electric riding companions for children of all
             ages! From glowing unicorns to singing dinosaur cars, our animal
             electric vehicles are designed for endless fun.
