@@ -39,7 +39,7 @@ export default function PartyPage() {
             Celebrate Your Child&rsquo;s Special Day <br />
             <span className="text-pink-500">at MNH Wonder Rides!</span>
           </h1>
-          <p className="text-lg md:text-xl text-pink-700 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-pink-900 max-w-3xl mx-auto leading-relaxed">
             We make your child&rsquo;s birthday unforgettable with exclusive
             access to our adorable electric animal rides and fun play
             activities. Our staff will guide the experience so you can relax,
@@ -304,7 +304,7 @@ export default function PartyPage() {
                 <Info size={24} className="text-pink-500" /> Notes for All Party
                 Packages
               </h3>
-              <ul className="space-y-3 text-pink-800 text-sm">
+              <ul className="space-y-3 text-pink-900 text-sm">
                 <li className="flex items-start gap-2">
                   <span className="text-pink-400 mt-1">•</span>
                   <span>

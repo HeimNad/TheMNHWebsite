@@ -136,7 +136,7 @@ function ContactForm() {
           </p>
           <button
             onClick={() => setStatus("idle")}
-            className="text-pink-600 hover:text-pink-700 font-medium"
+            className="text-pink-600 hover:text-pink-900 font-medium"
           >
             Send another message
           </button>
@@ -353,7 +353,7 @@ export default function ContactPage() {
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-pink-500 mb-6">
             Get in Touch
           </h1>
-          <p className="text-lg sm:text-xl text-pink-700 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-pink-900 max-w-2xl mx-auto">
             Have a question? We&apos;d love to hear from you.
           </p>
         </div>
@@ -376,7 +376,7 @@ export default function ContactPage() {
                 <h3 className="text-lg font-semibold text-pink-900 mb-1">
                   Email Us
                 </h3>
-                <p className="text-pink-700">themnhwonderrides@gmail.com</p>
+                <p className="text-pink-900">themnhwonderrides@gmail.com</p>
                 <p className="text-sm text-pink-600 mt-1">
                   We&apos;ll get back to you within 24 hours.
                 </p>
@@ -391,7 +391,7 @@ export default function ContactPage() {
                 <h3 className="text-lg font-semibold text-pink-900 mb-1">
                   Call Us
                 </h3>
-                <p className="text-pink-700">+1 (516) 423-6988</p>
+                <p className="text-pink-900">+1 (516) 423-6988</p>
                 <p className="text-sm text-pink-600 mt-1">
                   Mon-Sat from 10am to 9pm.
                 </p>
@@ -406,10 +406,10 @@ export default function ContactPage() {
                 <h3 className="text-lg font-semibold text-pink-900 mb-1">
                   Visit Us
                 </h3>
-                <p className="text-pink-700">
+                <p className="text-pink-900">
                   1500 Old Country Rd, Westbury, NY 11590
                 </p>
-                <p className="text-pink-700">
+                <p className="text-pink-900">
                   522 Broadway Mall, Hicksville, NY 11801
                 </p>
               </div>
@@ -428,7 +428,7 @@ export default function ContactPage() {
                   href="https://www.instagram.com/themnhwonderrides/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-pink-700 hover:underline"
+                  className="text-pink-900 hover:underline"
                 >
                   @themnhwonderrides
                 </a>

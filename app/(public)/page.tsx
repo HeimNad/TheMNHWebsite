@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Hero from "@/components/home/Hero";
 import Gallery from "@/components/home/Gallery";
+import Reviews from "@/components/home/Reviews";
 import Link from "next/link";
 import { Star, ShieldCheck, MapPin, Smile, Clock } from "lucide-react";
 import { db } from "@/lib/db";
@@ -85,7 +86,7 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="prose prose-lg prose-pink mx-auto text-center space-y-8">
             <h2 className="text-3xl font-bold text-pink-900 mb-8">About Us</h2>
-            <p className="leading-relaxed text-pink-800">
+            <p className="leading-relaxed text-pink-900">
               Founded in 2025,{" "}
               <span className="font-semibold text-pink-900">
                 The MNH Wonder Rides
@@ -95,7 +96,7 @@ export default async function Home() {
               believe every child deserves a wonderful childhood filled with fun,
               laughter, and unforgettable moments with their loved ones.
             </p>
-            <p className="leading-relaxed text-pink-800">
+            <p className="leading-relaxed text-pink-900">
               With our safe, entertaining, and adorable animal rides, we create
               magical experiences that turn ordinary shopping trips into cherished
               family memories. Whether it&rsquo;s a quick ride or an entire
@@ -110,8 +111,10 @@ export default async function Home() {
 
       <Gallery />
 
+      <Reviews />
+
       {/* Features / Trust Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-pink-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-pink-900 mb-4">
@@ -124,41 +127,41 @@ export default async function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-pink-50 p-8 rounded-2xl text-center hover:-translate-y-1 transition-transform duration-300">
+            <div className="bg-white p-8 rounded-2xl text-center hover:-translate-y-1 transition-transform duration-300 shadow-sm">
               <div className="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-pink-500">
                 <ShieldCheck size={32} />
               </div>
               <h3 className="text-xl font-bold text-pink-900 mb-3">
                 Safety First
               </h3>
-              <p className="text-pink-700">
+              <p className="text-pink-900">
                 Our vehicles are designed with rigorous safety standards,
                 allowing children to enjoy exploration while parents feel at
                 ease.
               </p>
             </div>
 
-            <div className="bg-pink-50 p-8 rounded-2xl text-center hover:-translate-y-1 transition-transform duration-300">
+            <div className="bg-white p-8 rounded-2xl text-center hover:-translate-y-1 transition-transform duration-300 shadow-sm">
               <div className="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-pink-500">
                 <Star size={32} />
               </div>
               <h3 className="text-xl font-bold text-pink-900 mb-3">
                 Magical Variety
               </h3>
-              <p className="text-pink-700">
+              <p className="text-pink-900">
                 From glowing unicorns to singing dinosaur cars, we have a
                 companion for every child&rsquo;s imagination.
               </p>
             </div>
 
-            <div className="bg-pink-50 p-8 rounded-2xl text-center hover:-translate-y-1 transition-transform duration-300">
+            <div className="bg-white p-8 rounded-2xl text-center hover:-translate-y-1 transition-transform duration-300 shadow-sm">
               <div className="bg-pink-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-pink-500">
                 <Smile size={32} />
               </div>
               <h3 className="text-xl font-bold text-pink-900 mb-3">
                 Joyful Growth
               </h3>
-              <p className="text-pink-700">
+              <p className="text-pink-900">
                 We are dedicated to creating cherished family memories and
                 accompanying every child&rsquo;s joyful growth time.
               </p>
@@ -190,7 +193,7 @@ export default async function Home() {
                 <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-pink-900">
                   <MapPin className="text-pink-500" /> Samanea Mall 2nd Floor
                 </h3>
-                <p className="text-pink-700 mb-6 pl-8">
+                <p className="text-pink-900 mb-6 pl-8">
                   1500 Old Country Rd,
                   <br />
                   Westbury, NY 11590
@@ -200,7 +203,7 @@ export default async function Home() {
                   <h4 className="font-semibold flex items-center gap-2 mb-2 text-pink-900">
                     <Clock size={18} className="text-pink-500" /> Business Hours
                   </h4>
-                  <ul className="text-sm text-pink-700 space-y-1">
+                  <ul className="text-sm text-pink-900 space-y-1">
                     {samaneaHours.map((h, i) => (
                       <li key={i} className="flex justify-between max-w-xs">
                         <span className="font-medium">{h.label}:</span>
@@ -227,7 +230,7 @@ export default async function Home() {
                 <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-pink-900">
                   <MapPin className="text-pink-500" /> Broadway Commons
                 </h3>
-                <p className="text-pink-700 mb-6 pl-8">
+                <p className="text-pink-900 mb-6 pl-8">
                   522 Broadway Mall,
                   <br />
                   Hicksville, NY 11801
@@ -237,7 +240,7 @@ export default async function Home() {
                   <h4 className="font-semibold flex items-center gap-2 mb-2 text-pink-900">
                     <Clock size={18} className="text-pink-500" /> Business Hours
                   </h4>
-                  <ul className="text-sm text-pink-700 space-y-1">
+                  <ul className="text-sm text-pink-900 space-y-1">
                     {broadwayHours.map((h, i) => (
                       <li key={i} className="flex justify-between max-w-xs">
                         <span className="font-medium">{h.label}:</span>
