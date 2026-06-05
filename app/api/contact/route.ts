@@ -99,10 +99,31 @@ function emailWrapper(content: string) {
   `;
 }
 
+const PARTY_FORM_URL = "https://forms.gle/KxKcniw7xPtP6CdM7";
+
 function customerReceiptHtml(firstName: string, subjectLine: string, message: string) {
   const safeName = escapeHtml(firstName);
   const safeSubject = escapeHtml(subjectLine);
   const safeMessage = escapeHtml(message).replace(/\n/g, "<br>");
+  const isPartyInquiry = /party/i.test(subjectLine);
+  const partyFormSection = isPartyInquiry
+    ? `
+    <hr style="border:none;border-top:1.5px dashed #fce7f3;margin:18px 0;" />
+
+    <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#f472b6;margin-bottom:10px;">🎉 Help Us Plan Your Party</div>
+    <p style="font-size:13.5px;color:#6b7280;line-height:1.7;margin:0 0 14px;">
+      To get your celebration set up just right, please take a moment to fill out our quick party details form:
+    </p>
+    <div style="text-align:center;">
+      <a href="${PARTY_FORM_URL}" style="display:inline-block;background:#ec4899;color:#fff;text-decoration:none;font-weight:700;font-size:13.5px;padding:11px 26px;border-radius:999px;">
+        👉 Open Party Details Form
+      </a>
+    </div>
+    <p style="font-size:11.5px;color:#d1aabb;text-align:center;margin-top:8px;word-break:break-all;">
+      ${PARTY_FORM_URL}
+    </p>
+    `
+    : "";
   return emailWrapper(`
     <h2 style="font-size:18px;color:#831843;font-weight:700;margin:0 0 8px;">Hi ${safeName}! 🦄</h2>
     <p style="font-size:13.5px;color:#6b7280;line-height:1.7;margin:0 0 20px;">
@@ -123,7 +144,7 @@ function customerReceiptHtml(firstName: string, subjectLine: string, message: st
     <div style="background:#fff5f9;border:1.5px solid #fce7f3;border-radius:10px;padding:14px 16px;font-size:13px;color:#4b5563;line-height:1.7;margin-top:8px;">
       ${safeMessage}
     </div>
-
+    ${partyFormSection}
     <hr style="border:none;border-top:1.5px dashed #fce7f3;margin:18px 0;" />
 
     <div style="font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#f472b6;margin-bottom:10px;">📍 Find Us</div>
