@@ -280,9 +280,12 @@ export default function WaiverPage() {
                       {...register("date")}
                       type="date"
                       id="date"
-                      className={`w-full px-4 py-3 rounded-lg border appearance-none min-w-0 bg-white ${
+                      readOnly
+                      aria-readonly="true"
+                      tabIndex={-1}
+                      className={`w-full px-4 py-3 rounded-lg border appearance-none min-w-0 bg-pink-50 cursor-not-allowed ${
                         errors.date ? "border-red-500" : "border-pink-200"
-                      } focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all text-pink-700`}
+                      } outline-none text-pink-700`}
                     />
                     {errors.date && (
                       <p className="text-red-500 text-xs mt-1">
