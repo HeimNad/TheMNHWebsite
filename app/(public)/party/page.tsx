@@ -14,7 +14,111 @@ import {
   Bike,
   Users,
   AlertCircle,
+  Palette,
+  Sparkles,
 } from "lucide-react";
+
+const packages = [
+  {
+    name: "Animal Rides Party",
+    Icon: PartyPopper,
+    description:
+      "Exclusive animal ride time plus play area fun — the classic MNH birthday experience!",
+    weekday: "$399",
+    weekend: "$499",
+    duration: "1.5 Hours",
+    capacity: "Up to 10 Children",
+    schedule: [
+      ["0:00–0:15", "Guest Arrival & Check-In"],
+      ["0:15–1:00", "Animal Rides & Play Area (Approx. 45 mins)"],
+      ["1:00–1:25", "Food, Cake & Celebration"],
+      ["1:25–1:30", "Photos & Free Play"],
+    ],
+    includes: [
+      "Extended Animal Ride Session",
+      "Play Area Access",
+      "Party Seating Area",
+      "Staff Assistance",
+    ],
+    addon: "Additional Child: +$35",
+    theme: {
+      border: "border-pink-100",
+      iconBg: "bg-pink-100 text-pink-600",
+      title: "text-pink-700",
+      priceBg: "bg-pink-400/60",
+      chip: "text-pink-600 bg-pink-50",
+      header: "bg-pink-500",
+      addon: "bg-pink-500",
+    },
+  },
+  {
+    name: "DIY Craft Party",
+    Icon: Palette,
+    description:
+      "Paint, create, and take home a one-of-a-kind figure — a hands-on celebration for little artists!",
+    weekday: "$299",
+    weekend: "$399",
+    duration: "1.5 Hours",
+    capacity: "Up to 10 Children",
+    schedule: [
+      ["0:00–0:15", "Guest Arrival & Check-In"],
+      ["0:15–1:00", "DIY Painting Activity (Approx. 45 mins)"],
+      ["1:00–1:25", "Food, Cake & Celebration"],
+      ["1:25–1:30", "Photos & Take Home Creations"],
+    ],
+    includes: [
+      "One DIY Kit Per Child",
+      "Paints & Supplies Included",
+      "Party Seating Area",
+      "Take Home Creation",
+    ],
+    addon: "Additional DIY Kit: +$30",
+    theme: {
+      border: "border-teal-100",
+      iconBg: "bg-teal-100 text-teal-600",
+      title: "text-teal-700",
+      priceBg: "bg-teal-400/60",
+      chip: "text-teal-600 bg-teal-50",
+      header: "bg-teal-500",
+      addon: "bg-teal-500",
+    },
+  },
+  {
+    name: "Animal Rides + DIY Party",
+    Icon: Sparkles,
+    description:
+      "The ultimate combo! Animal rides, play, and a DIY painting activity all in one extended party.",
+    weekday: "$649",
+    weekend: "$749",
+    duration: "2 Hours",
+    capacity: "Up to 10 Children",
+    schedule: [
+      ["0:00–0:15", "Guest Arrival & Check-In"],
+      ["0:15–0:50", "Animal Rides & Play Area (Approx. 35 mins)"],
+      ["0:50–1:25", "DIY Painting Activity (Approx. 35 mins)"],
+      ["1:25–1:55", "Food, Cake & Celebration"],
+      ["1:55–2:00", "Group Photos & Pick Up Creations"],
+    ],
+    includes: [
+      "Animal Ride Session",
+      "One DIY Kit Per Child",
+      "Paints & Supplies Included",
+      "Play Area Access",
+      "Party Seating Area",
+      "Take Home Creation",
+    ],
+    addon: "Additional Child + DIY Kit: +$60",
+    theme: {
+      border: "border-purple-100",
+      iconBg: "bg-purple-100 text-purple-600",
+      title: "text-purple-700",
+      priceBg: "bg-purple-400/60",
+      chip: "text-purple-600 bg-purple-50",
+      header: "bg-purple-500",
+      addon: "bg-purple-500",
+    },
+  },
+];
 
 export default function PartyPage() {
   return (
@@ -34,179 +138,152 @@ export default function PartyPage() {
 
       <div className="max-w-6xl mx-auto px-2 relative z-10">
         {/* Header Section */}
-        <div className="text-center mb-16 space-y-6">
+        <div className="text-center mb-12 space-y-6">
           <h1 className="text-4xl md:text-6xl font-bold text-pink-700 leading-tight">
             Celebrate Your Child&rsquo;s Special Day <br />
             <span className="text-pink-500">at MNH Wonder Rides!</span>
           </h1>
           <p className="text-lg md:text-xl text-pink-700 max-w-3xl mx-auto leading-relaxed">
-            We make your child&rsquo;s birthday unforgettable with exclusive
-            access to our adorable electric animal rides and fun play
-            activities. Our staff will guide the experience so you can relax,
-            enjoy, and celebrate your child&rsquo;s special day!
+            Ride, play, create, celebrate! Choose your perfect party below —
+            our staff will guide the experience so you can relax, enjoy, and
+            celebrate your child&rsquo;s special day!
           </p>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Left Column: Package Details */}
-          <div className="space-y-10">
-            {/* Private Birthday Party Card */}
-            <div className="bg-white rounded-3xl p-8 shadow-xl border-4 border-pink-100 relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-yellow-400 text-pink-700 font-bold px-6 py-2 rounded-bl-2xl shadow-sm">
-                Best Value!
-              </div>
+        {/* Birthday Packages Heading */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-4xl font-bold text-pink-700 inline-flex items-center gap-3">
+            <Sparkles className="text-yellow-400" /> Choose Your Perfect Party!
+          </h2>
+        </div>
 
-              <h2 className="text-3xl font-bold text-pink-700 mb-4 flex items-center gap-3">
-                <span className="bg-pink-100 p-2 rounded-full text-pink-600">
-                  <PartyPopper size={32} />
-                </span>
-                Private Birthday Party
-              </h2>
-
-              <p className="text-gray-600 mb-6">
-                The complete birthday experience with rides, games, celebration
-                area, and all party supplies included!
-              </p>
-
-              <div className="flex flex-wrap gap-3 mb-6">
-                <div className="flex items-center gap-2 text-pink-600 font-semibold bg-pink-50 px-4 py-2 rounded-full">
-                  <Clock size={20} />
-                  <span>2 hours</span>
-                </div>
-                <div className="flex items-center gap-2 text-pink-600 font-semibold bg-pink-50 px-4 py-2 rounded-full">
-                  <Users size={20} />
-                  <span>Up to 10 kids (ages 2+)</span>
-                </div>
-              </div>
-
-              {/* Pricing */}
-              <div className="bg-pink-400/50 text-white p-6 rounded-2xl text-center mb-6 shadow-md transform hover:scale-105 transition-transform duration-300">
-                <p className="text-sm uppercase tracking-wide opacity-90 mb-1">
-                  Pricing
-                </p>
-                <div className="flex justify-center items-baseline gap-2 mb-2">
-                  <span className="text-3xl font-bold">Weekday: $449</span>
-                  <span className="text-2xl opacity-80">|</span>
-                  <span className="text-3xl font-bold">Weekend: $549</span>
-                </div>
-                <p className="text-sm font-medium bg-white/20 inline-block px-3 py-1 rounded-full">
-                  Up to 10 kids (ages 2+)
-                </p>
-              </div>
-
-              {/* Includes */}
-              <div className="space-y-4 mb-6">
-                <h3 className="font-bold text-pink-700 text-lg">Includes:</h3>
-
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle
-                      className="text-green-500 shrink-0 mt-1"
-                      size={20}
-                    />
-                    <div>
-                      <span className="font-semibold text-gray-700">
-                        Private use of the entire play area for 2 hours
-                      </span>
-                      <ul className="mt-2 ml-4 space-y-1 text-sm text-gray-600 border-l-2 border-pink-100 pl-4">
-                        <li>• 50 minutes of animal ride time</li>
-                        <li>• 90 minutes of game play (blocks, games & interactive zone)</li>
-                        <li>• 30 minutes for celebration</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  {[
-                    "Exclusive use of all 10 electric animal rides",
-                    "On-site staff assistance throughout the party",
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <CheckCircle
-                        className="text-green-500 shrink-0 mt-1"
-                        size={20}
-                      />
-                      <span className="text-gray-700">{item}</span>
-                    </div>
-                  ))}
-
-                  <div className="flex items-start gap-3">
-                    <CheckCircle
-                      className="text-green-500 shrink-0 mt-1"
-                      size={20}
-                    />
-                    <div>
-                      <span className="text-gray-700">
-                        Designated celebration area for cake & food
-                      </span>
-                      <p className="text-xs text-gray-500 mt-1 italic">
-                        (No refrigeration or heating available on-site)
-                      </p>
-                    </div>
-                  </div>
-
-                  {[
-                    "Water bottles provided for all kids",
-                    "Small gift for each child",
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <CheckCircle
-                        className="text-green-500 shrink-0 mt-1"
-                        size={20}
-                      />
-                      <span className="text-gray-700">{item}</span>
-                    </div>
-                  ))}
-
-                  <div className="flex items-start gap-3">
-                    <CheckCircle
-                      className="text-green-500 shrink-0 mt-1"
-                      size={20}
-                    />
-                    <div>
-                      <span className="text-gray-700">
-                        Basic post-party cleaning included
-                      </span>
-                      <p className="text-xs text-gray-500 mt-1 italic">
-                        (Excessive waste or special setups may incur a fee)
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3">
-                    <CheckCircle
-                      className="text-green-500 shrink-0 mt-1"
-                      size={20}
-                    />
-                    <div>
-                      <span className="font-semibold text-gray-700">
-                        All party paper products included
-                      </span>
-                      <ul className="mt-2 ml-4 space-y-1 text-sm text-gray-600 border-l-2 border-pink-100 pl-4">
-                        <li>• Theme plates, napkins & utensils</li>
-                        <li className="text-pink-600 italic">
-                          (Cups not included — we provide water bottles instead)
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Add-on */}
-              <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-xl">
-                <h3 className="font-bold text-yellow-800 mb-1 flex items-center gap-2">
-                  <Star size={18} className="fill-yellow-500 text-yellow-500" />
-                  Add-on Option
+        {/* Package Cards */}
+        <div className="grid lg:grid-cols-3 gap-8 items-stretch mb-12">
+          {packages.map((pkg) => {
+            const Icon = pkg.Icon;
+            return (
+              <div
+                key={pkg.name}
+                className={`bg-white rounded-3xl p-6 shadow-xl border-4 ${pkg.theme.border} flex flex-col`}
+              >
+                <h3
+                  className={`text-2xl font-bold ${pkg.theme.title} mb-3 flex items-center gap-3`}
+                >
+                  <span className={`${pkg.theme.iconBg} p-2 rounded-full`}>
+                    <Icon size={28} />
+                  </span>
+                  {pkg.name}
                 </h3>
-                <p className="text-yellow-900 text-sm">
-                  <strong>Additional child sharing ride time: +$35</strong>
-                  <br />
-                  (Up to 14 kids total. Ride time may be rotated.)
-                </p>
-              </div>
-            </div>
 
+                <p className="text-gray-600 text-sm mb-5">{pkg.description}</p>
+
+                {/* Pricing */}
+                <div
+                  className={`${pkg.theme.priceBg} text-white p-4 rounded-2xl text-center mb-5 shadow-md`}
+                >
+                  <div className="flex justify-center items-stretch divide-x divide-white/40">
+                    <div className="px-4">
+                      <p className="text-xs uppercase tracking-wide opacity-90">
+                        Weekday
+                      </p>
+                      <p className="text-2xl font-bold">{pkg.weekday}</p>
+                    </div>
+                    <div className="px-4">
+                      <p className="text-xs uppercase tracking-wide opacity-90">
+                        Weekend
+                      </p>
+                      <p className="text-2xl font-bold">{pkg.weekend}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Meta */}
+                <div className="flex flex-wrap gap-2 mb-5">
+                  <div
+                    className={`flex items-center gap-1.5 font-semibold ${pkg.theme.chip} px-3 py-1.5 rounded-full text-sm`}
+                  >
+                    <Clock size={16} />
+                    <span>{pkg.duration}</span>
+                  </div>
+                  <div
+                    className={`flex items-center gap-1.5 font-semibold ${pkg.theme.chip} px-3 py-1.5 rounded-full text-sm`}
+                  >
+                    <Users size={16} />
+                    <span>{pkg.capacity}</span>
+                  </div>
+                </div>
+
+                {/* Sample Schedule */}
+                <div className="mb-5">
+                  <div
+                    className={`${pkg.theme.header} text-white text-xs font-bold uppercase tracking-wide px-3 py-1.5 rounded-full inline-block mb-3`}
+                  >
+                    Sample Schedule ({pkg.duration})
+                  </div>
+                  <ul className="space-y-2 text-sm">
+                    {pkg.schedule.map(([time, activity]) => (
+                      <li key={time} className="flex gap-3">
+                        <span className="font-semibold text-gray-500 whitespace-nowrap tabular-nums">
+                          {time}
+                        </span>
+                        <span className="text-gray-700">{activity}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Includes */}
+                <div className="mb-5">
+                  <div
+                    className={`${pkg.theme.header} text-white text-xs font-bold uppercase tracking-wide px-3 py-1.5 rounded-full inline-block mb-3`}
+                  >
+                    Includes
+                  </div>
+                  <ul className="space-y-2">
+                    {pkg.includes.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-sm">
+                        <CheckCircle
+                          className="text-green-500 shrink-0 mt-0.5"
+                          size={18}
+                        />
+                        <span className="text-gray-700">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Add-on (pinned to bottom) */}
+                <div
+                  className={`${pkg.theme.addon} text-white text-center font-bold py-3 px-4 rounded-2xl mt-auto`}
+                >
+                  {pkg.addon}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* DIY Kit callout */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 mb-12 flex items-start gap-4 shadow-sm">
+          <span className="bg-yellow-400 text-pink-700 font-bold px-4 py-2 rounded-full shrink-0 text-lg">
+            $30 / Kit
+          </span>
+          <div>
+            <h3 className="font-bold text-yellow-800 mb-1 flex items-center gap-2">
+              <Palette size={18} className="text-yellow-600" />
+              DIY Painting Activity
+            </h3>
+            <p className="text-yellow-900 text-sm">
+              Each DIY kit includes a figure, paints, brushes &amp; a take-home
+              creation. Fun for kids of all ages!
+            </p>
+          </div>
+        </div>
+
+        {/* Secondary Content Grid */}
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Left Column */}
+          <div className="space-y-10">
             {/* Private Ride Session Card */}
             <div className="bg-white rounded-3xl p-8 shadow-xl border-4 border-indigo-100 relative overflow-hidden">
               <h2 className="text-3xl font-bold text-indigo-900 mb-4 flex items-center gap-3">
@@ -331,15 +408,6 @@ export default function PartyPage() {
             {/* Image Placeholder Area - Simulating the Poster Image */}
             <div className="bg-white p-4 rounded-3xl shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-500">
               <div className="aspect-4/3 bg-linear-to-br from-pink-100 to-purple-100 rounded-2xl overflow-hidden relative group">
-                {/* You can replace this div with an actual <Image /> component */}
-                {/* <div className="absolute inset-0 flex items-center justify-center text-pink-300">
-                  <div className="text-center">
-                    <p className="text-6xl mb-2">🎈🎂🎉</p>
-                    <p className="font-bold text-xl text-pink-400">
-                      Party Zone Photo
-                    </p>
-                  </div>
-                </div> */}
                 <Image
                   src="/party.png"
                   alt="Party Zone Photo"
@@ -349,9 +417,9 @@ export default function PartyPage() {
 
                 {/* Overlay Text */}
                 <div className="absolute bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-4 text-white">
-                  <p className="font-bold text-lg">Safe & Exciting Space</p>
+                  <p className="font-bold text-lg">Safe &amp; Exciting Space</p>
                   <p className="text-sm opacity-90">
-                    Interactive play zone with blocks & games
+                    Interactive play zone with blocks &amp; games
                   </p>
                 </div>
               </div>
