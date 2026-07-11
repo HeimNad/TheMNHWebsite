@@ -62,9 +62,9 @@ export default function Reviews() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map((review, i) => (
+          {reviews.map((review) => (
             <div
-              key={i}
+              key={review.name}
               className="bg-pink-50 rounded-2xl p-6 border border-pink-100 flex flex-col gap-4 hover:-translate-y-1 transition-transform duration-300"
             >
               <Quote size={20} className="text-pink-300" />

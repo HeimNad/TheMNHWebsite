@@ -1,384 +1,70 @@
-"use client";
+import { db } from "@/lib/db";
+import type { Message } from "./types";
+import { MessagesPageClient } from "./MessagesPageClient";
 
-import { useEffect, useState } from "react";
-import { useUser, RedirectToSignIn } from "@clerk/nextjs";
-import { X, Eye, Ban, RefreshCw, Search } from "lucide-react";
-import { Pagination } from "@/components/ui/pagination-control";
-import { LocalTime } from "@/components/ui/local-time";
+export const dynamic = "force-dynamic";
 
-interface Message {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone?: string;
-  child_age?: string;
-  preferred_contact?: string;
-  subject?: string;
-  message: string;
-  status: "unread" | "read" | "ignored" | "replied";
-  created_at: string;
-}
+const DEFAULT_PAGE_SIZE = 10;
 
-export default function MessagesPage() {
-  const { isSignedIn, isLoaded } = useUser();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const [showIgnored, setShowIgnored] = useState(false);
+export default async function MessagesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; limit?: string; search?: string }>;
+}) {
+  const { page: pageParam, limit: limitParam, search: searchParam } =
+    await searchParams;
+  const currentPage = Math.max(1, Number(pageParam) || 1);
+  const pageSize = Math.min(Number(limitParam) || DEFAULT_PAGE_SIZE, 100);
+  const search = searchParam || "";
+  const offset = (currentPage - 1) * pageSize;
 
-  // Pagination & Search State
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [totalItems, setTotalItems] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeSearch, setActiveSearch] = useState("");
+  let totalItems: number;
+  let messages: Message[];
 
-  useEffect(() => {
-    if (isSignedIn) {
-      fetchMessages(currentPage, pageSize, false, activeSearch);
-    }
-  }, [isSignedIn, currentPage, pageSize, activeSearch]);
+  if (search) {
+    const searchPattern = `%${search}%`;
 
-  const fetchMessages = async (
-    page: number,
-    limit: number,
-    isManualRefresh = false,
-    search = ""
-  ) => {
-    if (isManualRefresh) setIsRefreshing(true);
-    else setLoading(true);
-
-    try {
-      const response = await fetch(
-        `/api/admin/messages?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch messages");
-      }
-      const data = await response.json();
-      setMessages(data.data || []);
-      setTotalItems(data.pagination.total);
-      setTotalPages(data.pagination.pages);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    } finally {
-      setLoading(false);
-      setIsRefreshing(false);
-    }
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setCurrentPage(1);
-    setActiveSearch(searchQuery);
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handlePageSizeChange = (newSize: number) => {
-    setPageSize(newSize);
-    setCurrentPage(1);
-  };
-
-  const updateStatus = async (id: string, newStatus: string) => {
-    try {
-      const response = await fetch("/api/admin/messages", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, status: newStatus }),
-      });
-
-      if (!response.ok) throw new Error("Failed to update status");
-
-      // Update local state
-      setMessages(
-        messages.map((msg) =>
-          msg.id === id ? { ...msg, status: newStatus as any } : msg
-        )
-      );
-
-      if (selectedMessage && selectedMessage.id === id) {
-        setSelectedMessage({ ...selectedMessage, status: newStatus as any });
-      }
-    } catch (error) {
-      console.error("Error updating status:", error);
-    }
-  };
-
-  if (!isLoaded) return <div className="p-8 text-center">Loading...</div>;
-
-  if (!isSignedIn) {
-    return <RedirectToSignIn />;
+    const [countResult, result] = await Promise.all([
+      db.sql`
+        SELECT COUNT(*) FROM messages
+        WHERE first_name ILIKE ${searchPattern}
+           OR last_name ILIKE ${searchPattern}
+           OR email ILIKE ${searchPattern}
+      `,
+      db.sql`
+        SELECT * FROM messages
+        WHERE first_name ILIKE ${searchPattern}
+           OR last_name ILIKE ${searchPattern}
+           OR email ILIKE ${searchPattern}
+        ORDER BY created_at DESC
+        LIMIT ${pageSize} OFFSET ${offset}
+      `,
+    ]);
+    totalItems = Number(countResult.rows[0].count);
+    messages = result.rows as Message[];
+  } else {
+    const [countResult, result] = await Promise.all([
+      db.sql`SELECT COUNT(*) FROM messages`,
+      db.sql`
+        SELECT * FROM messages
+        ORDER BY created_at DESC
+        LIMIT ${pageSize} OFFSET ${offset}
+      `,
+    ]);
+    totalItems = Number(countResult.rows[0].count);
+    messages = result.rows as Message[];
   }
 
-  const filteredMessages = messages.filter((msg) =>
-    showIgnored ? true : msg.status !== "ignored"
-  );
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
 
   return (
-    <div>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
-          <label className="flex items-center space-x-2 text-sm text-gray-600 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={showIgnored}
-              onChange={(e) => setShowIgnored(e.target.checked)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <span>Show Ignored</span>
-          </label>
-        </div>
-        
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <form onSubmit={handleSearch} className="flex items-center gap-2 flex-1 md:flex-none">
-            <div className="relative flex-1 md:w-64">
-              <input
-                type="text"
-                placeholder="Search name or email..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
-              >
-                <Search size={16} />
-              </button>
-            </div>
-          </form>
-
-          <button
-            onClick={() => fetchMessages(currentPage, pageSize, true, activeSearch)}
-            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
-            title="Refresh data"
-            disabled={loading || isRefreshing}
-          >
-            <RefreshCw
-              size={20}
-              className={`${isRefreshing ? "animate-spin" : ""}`}
-            />
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Subject
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {loading ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="px-6 py-8 text-center text-gray-500"
-                  >
-                    Loading messages...
-                  </td>
-                </tr>
-              ) : filteredMessages.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="px-6 py-8 text-center text-gray-500"
-                  >
-                    No messages found on this page.
-                  </td>
-                </tr>
-              ) : (
-                filteredMessages.map((msg) => (
-                  <tr
-                    key={msg.id}
-                    className={`hover:bg-gray-50 transition-colors ${
-                      msg.status === "unread" ? "bg-pink-50/30" : ""
-                    }`}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <LocalTime date={msg.created_at} format="date" /> <br />
-                      <span className="text-xs text-gray-500">
-                        <LocalTime date={msg.created_at} format="time" />
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {msg.first_name} {msg.last_name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">
-                      {msg.subject || "-"}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {msg.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                        ${
-                          msg.status === "unread"
-                            ? "bg-green-100 text-green-800"
-                            : msg.status === "replied"
-                            ? "bg-purple-100 text-purple-800"
-                            : msg.status === "ignored"
-                            ? "bg-gray-100 text-gray-800"
-                            : "bg-blue-100 text-blue-800"
-                        }`}
-                      >
-                        {msg.status.charAt(0).toUpperCase() + msg.status.slice(1)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => {
-                            setSelectedMessage(msg);
-                            if (msg.status === "unread")
-                              updateStatus(msg.id, "read");
-                          }}
-                          className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                          title="View Details"
-                        >
-                          <Eye size={16} /> View
-                        </button>
-                        
-                        <select
-                          value={msg.status}
-                          onChange={(e) => updateStatus(msg.id, e.target.value)}
-                          className="cursor-pointer text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:border-gray-300 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <option value="unread">Unread</option>
-                          <option value="read">Read</option>
-                          <option value="replied">Replied</option>
-                          <option value="ignored">Ignored</option>
-                        </select>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination Control */}
-        {!loading && messages.length > 0 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            totalItems={totalItems}
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
-          />
-        )}
-      </div>
-
-      {/* Message Modal */}
-      {selectedMessage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in fade-in zoom-in duration-200">
-            <button
-              onClick={() => setSelectedMessage(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-              aria-label="Close"
-            >
-              <X size={24} />
-            </button>
-
-            <div className="mb-6 grid grid-cols-2 gap-4 text-sm">
-              <div className="col-span-2">
-                <h3 className="text-xl font-bold text-gray-900">
-                  {selectedMessage.first_name} {selectedMessage.last_name}
-                </h3>
-              </div>
-              
-              <div>
-                <span className="block text-xs text-gray-500 uppercase font-semibold">Email</span>
-                <span className="text-gray-900">{selectedMessage.email}</span>
-              </div>
-              
-              <div>
-                <span className="block text-xs text-gray-500 uppercase font-semibold">Phone</span>
-                <span className="text-gray-900">{selectedMessage.phone || "-"}</span>
-              </div>
-
-              <div>
-                <span className="block text-xs text-gray-500 uppercase font-semibold">Child Age</span>
-                <span className="text-gray-900">{selectedMessage.child_age || "-"}</span>
-              </div>
-
-              <div>
-                <span className="block text-xs text-gray-500 uppercase font-semibold">Preferred Contact</span>
-                <span className="text-gray-900 capitalize">{selectedMessage.preferred_contact || "-"}</span>
-              </div>
-
-              <div className="col-span-2">
-                <span className="block text-xs text-gray-500 uppercase font-semibold">Date</span>
-                <span className="text-gray-900"><LocalTime date={selectedMessage.created_at} format="datetime" /></span>
-              </div>
-            </div>
-
-            <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
-              <span className="block text-xs font-bold text-gray-500 uppercase mb-1">Subject</span>
-              <p className="text-gray-900 font-medium">{selectedMessage.subject || "General Inquiry"}</p>
-            </div>
-
-            <div className="bg-white p-4 rounded-lg border border-gray-200 min-h-[100px] max-h-[300px] overflow-y-auto">
-              <p className="text-gray-800 whitespace-pre-wrap">
-                {selectedMessage.message}
-              </p>
-            </div>
-
-            <div className="mt-6 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Status:</span>
-                <select
-                  value={selectedMessage.status}
-                  onChange={(e) => updateStatus(selectedMessage.id, e.target.value)}
-                  className="block w-32 pl-3 pr-10 py-2 text-sm border border-gray-300 bg-white focus:outline-none focus:ring-pink-500 focus:border-pink-500 rounded-md shadow-sm"
-                >
-                  <option value="unread">Unread</option>
-                  <option value="read">Read</option>
-                  <option value="replied">Replied</option>
-                  <option value="ignored">Ignored</option>
-                </select>
-              </div>
-              <button
-                onClick={() => setSelectedMessage(null)}
-                className="bg-pink-100 hover:bg-pink-200 text-pink-900 font-medium px-4 py-2 rounded-lg transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+    <MessagesPageClient
+      messages={messages}
+      currentPage={currentPage}
+      pageSize={pageSize}
+      totalItems={totalItems}
+      totalPages={totalPages}
+      search={search}
+    />
   );
 }

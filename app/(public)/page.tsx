@@ -186,6 +186,7 @@ export default async function Home() {
                   height="100%"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.742748037766!2d-73.59904021712222!3d40.74568579761597!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c287543271f59b%3A0x3477f7fea9700b5f!2sSamanea%20New%20York%20Mall!5e0!3m2!1sen!2sus!4v1765148954844!5m2!1sen!2sus"
                   title="Samanea New York Map"
+                  sandbox="allow-scripts allow-popups"
                   className="absolute inset-0"
                 ></iframe>
               </div>
@@ -204,8 +205,8 @@ export default async function Home() {
                     <Clock size={18} className="text-pink-500" /> Business Hours
                   </h4>
                   <ul className="text-sm text-pink-700 space-y-1">
-                    {samaneaHours.map((h, i) => (
-                      <li key={i} className="flex justify-between max-w-xs">
+                    {samaneaHours.map((h) => (
+                      <li key={h.label} className="flex justify-between max-w-xs">
                         <span className="font-medium">{h.label}:</span>
                         <span>{h.time}</span>
                       </li>
@@ -223,6 +224,7 @@ export default async function Home() {
                   height="100%"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3021.5394533954764!2d-73.53181769999999!3d40.7721531!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c281f6223ed62b%3A0xf32ebdfcbf4b87c3!2sThe%20MNH%20Wonder%20Rides!5e0!3m2!1sen!2sus!4v1765148871451!5m2!1sen!2sus"
                   title="Broadway Commons Map"
+                  sandbox="allow-scripts allow-popups"
                   className="absolute inset-0"
                 ></iframe>
               </div>
@@ -241,8 +243,8 @@ export default async function Home() {
                     <Clock size={18} className="text-pink-500" /> Business Hours
                   </h4>
                   <ul className="text-sm text-pink-700 space-y-1">
-                    {broadwayHours.map((h, i) => (
-                      <li key={i} className="flex justify-between max-w-xs">
+                    {broadwayHours.map((h) => (
+                      <li key={h.label} className="flex justify-between max-w-xs">
                         <span className="font-medium">{h.label}:</span>
                         <span>{h.time}</span>
                       </li>

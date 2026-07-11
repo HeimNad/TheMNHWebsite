@@ -7,6 +7,15 @@ import Image from "next/image";
 import { MapPin } from "lucide-react";
 import { useMemo } from "react";
 
+const RAINBOW_BANDS = [
+  "#FF6F91",
+  "#FFA552",
+  "#FFCD3A",
+  "#7BD389",
+  "#5BB7E0",
+  "#9E7BD3",
+];
+
 // ── Rainbow ──────────────────────────────────────────────────────────────────
 // Bands are spaced exactly one stroke-width apart (no gaps), center sits at
 // the bottom edge of the SVG so only the upper half arc is visible.
@@ -17,14 +26,6 @@ function Rainbow({
   width?: number;
   opacity?: number;
 }) {
-  const bands = [
-    "#FF6F91",
-    "#FFA552",
-    "#FFCD3A",
-    "#7BD389",
-    "#5BB7E0",
-    "#9E7BD3",
-  ];
   const stroke = width / 18;
   const cx = width / 2;
   const cy = width / 2;
@@ -39,7 +40,7 @@ function Rainbow({
       style={{ opacity }}
       aria-hidden="true"
     >
-      {bands.map((color, i) => {
+      {RAINBOW_BANDS.map((color, i) => {
         const r = width / 2 - stroke / 2 - i * stroke;
         if (r <= 0) return null;
         return (
@@ -163,16 +164,16 @@ function ConfettiField({ count = 40 }: { count?: number }) {
 }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
+const slides = [
+  { image: "/home/home-5.jpg", alt: "Samana Store Full" },
+  { image: "/home/home-4.jpg", alt: "BoardWay Commons Store Full" },
+  { image: "/home/home-6.jpg", alt: "Samana Store Animals" },
+  { image: "/home/home-1.jpg", alt: "BoardWay Commons Store Left Side" },
+  { image: "/home/home-2.jpg", alt: "BoardWay Commons Store Right Side" },
+];
+
 export default function Hero() {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay()]);
-
-  const slides = [
-    { image: "/home/home-5.jpg", alt: "Samana Store Full" },
-    { image: "/home/home-4.jpg", alt: "BoardWay Commons Store Full" },
-    { image: "/home/home-6.jpg", alt: "Samana Store Animals" },
-    { image: "/home/home-1.jpg", alt: "BoardWay Commons Store Left Side" },
-    { image: "/home/home-2.jpg", alt: "BoardWay Commons Store Right Side" },
-  ];
 
   return (
     <section className="relative overflow-hidden pt-16 min-h-screen flex flex-col">
@@ -250,13 +251,14 @@ export default function Hero() {
               {slides.map((slide, index) => (
                 <div
                   className="embla__slide flex-[0_0_100%] min-w-0 relative h-full"
-                  key={index}
+                  key={slide.image}
                 >
                   <div className="relative w-full h-full">
                     <Image
                       src={slide.image}
                       alt={slide.alt}
                       fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
                       className="object-cover"
                       priority={index === 0}
                     />

@@ -20,6 +20,17 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+const navItems = [
+  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "Waivers", href: "/admin/waivers", icon: FileSignature },
+  { name: "Messages", href: "/admin/messages", icon: MessageSquare },
+  { name: "Membership", href: "/admin/membership", icon: CreditCard },
+  { name: "Bookings", href: "/admin/bookings", icon: Calendar },
+  { name: "Announcements", href: "/admin/announcements", icon: Flag },
+  { name: "Audit Logs", href: "/admin/audit", icon: ClipboardList },
+  { name: "Settings", href: "/admin/settings", icon: Settings },
+];
+
 export default function AdminLayout({
   children,
 }: {
@@ -29,23 +40,14 @@ export default function AdminLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile state
   const [isCollapsed, setIsCollapsed] = useState(false); // Desktop state
 
-  const navItems = [
-    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { name: "Waivers", href: "/admin/waivers", icon: FileSignature },
-    { name: "Messages", href: "/admin/messages", icon: MessageSquare },
-    { name: "Membership", href: "/admin/membership", icon: CreditCard },
-    { name: "Bookings", href: "/admin/bookings", icon: Calendar },
-    { name: "Announcements", href: "/admin/announcements", icon: Flag },
-    { name: "Audit Logs", href: "/admin/audit", icon: ClipboardList },
-    { name: "Settings", href: "/admin/settings", icon: Settings },
-  ];
-
   return (
     <div className="h-screen bg-gray-50 flex overflow-hidden">
       {/* Mobile Sidebar Overlay */}
 
       {isSidebarOpen && (
-        <div
+        <button
+          type="button"
+          aria-label="Close sidebar"
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
@@ -85,6 +87,8 @@ export default function AdminLayout({
               </span>
             )}
             <button
+              type="button"
+              aria-label="Close sidebar"
               className="ml-auto lg:hidden text-gray-500"
               onClick={() => setIsSidebarOpen(false)}
             >
@@ -169,7 +173,9 @@ export default function AdminLayout({
           {/* Desktop Collapse Toggle */}
           <div className="hidden lg:flex justify-center p-2 border-t border-gray-100">
             <button
+              type="button"
               onClick={() => setIsCollapsed(!isCollapsed)}
+              aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors w-full flex justify-center"
             >
               {isCollapsed ? (
@@ -187,6 +193,8 @@ export default function AdminLayout({
         {/* Mobile Header */}
         <header className="lg:hidden bg-white border-b border-gray-200 h-16 flex items-center px-4 gap-4">
           <button
+            type="button"
+            aria-label="Open sidebar"
             className="text-gray-500 focus:outline-none"
             onClick={() => setIsSidebarOpen(true)}
           >

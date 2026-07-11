@@ -39,6 +39,7 @@ export function AlertModal({
           <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
           <p className="text-gray-500 mb-6">{message}</p>
           <button
+            type="button"
             onClick={onClose}
             className="w-full bg-gray-900 text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors"
           >

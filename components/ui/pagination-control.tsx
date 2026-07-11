@@ -29,6 +29,7 @@ export function Pagination({
         <select
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
+          aria-label="Rows per page"
           className="h-8 w-[70px] rounded-md border border-gray-300 bg-white px-2 py-1 text-sm focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500"
         >
           {[10, 20, 30, 40, 50].map((size) => (
@@ -51,32 +52,40 @@ export function Pagination({
 
       <div className="flex items-center gap-1">
         <button
+          type="button"
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
+          aria-label="First page"
           className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
           title="First page"
         >
           <ChevronsLeft className="h-4 w-4" />
         </button>
         <button
+          type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
+          aria-label="Previous page"
           className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Previous page"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
         <button
+          type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
+          aria-label="Next page"
           className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Next page"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
         <button
+          type="button"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
+          aria-label="Last page"
           className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Last page"
         >

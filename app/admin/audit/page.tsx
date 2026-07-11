@@ -1,9 +1,10 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { Pagination } from "@/components/ui/pagination-control";
-import { Loader2, RefreshCw, ClipboardList } from "lucide-react";
+import { db } from "@/lib/db";
+import { ClipboardList } from "lucide-react";
 import { LocalTime } from "@/components/ui/local-time";
+import { RefreshButton } from "./RefreshButton";
+import { AuditPagination } from "./AuditPagination";
+
+export const dynamic = "force-dynamic";
 
 type AuditLog = {
   id: string;
@@ -15,34 +16,33 @@ type AuditLog = {
   created_at: string;
 };
 
-export default function AuditPage() {
-  const [logs, setLogs] = useState<AuditLog[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const pageSize = 20;
+const PAGE_SIZE = 20;
 
-  const fetchLogs = async (page: number) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/admin/audit?page=${page}&limit=${pageSize}`);
-      if (res.ok) {
-        const data = await res.json();
-        setLogs(data.data);
-        setTotalPages(data.pagination.pages);
-        setTotalItems(data.pagination.total);
-      }
-    } catch (error) {
-      console.error("Failed to fetch logs", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+export default async function AuditPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, Number(pageParam) || 1);
+  const offset = (currentPage - 1) * PAGE_SIZE;
 
-  useEffect(() => {
-    fetchLogs(currentPage);
-  }, [currentPage]);
+  const [countResult, logsResult] = await Promise.all([
+    db.sql`SELECT COUNT(*) FROM audit_logs`,
+    db.sql`
+      SELECT
+        a.*,
+        p.code as target_code
+      FROM audit_logs a
+      LEFT JOIN punch_cards p ON a.target_id = p.id
+      ORDER BY a.created_at DESC
+      LIMIT ${PAGE_SIZE} OFFSET ${offset}
+    `,
+  ]);
+
+  const totalItems = Number(countResult.rows[0].count);
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  const logs = logsResult.rows as AuditLog[];
 
   return (
     <div className="space-y-6">
@@ -51,13 +51,7 @@ export default function AuditPage() {
           <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
           <p className="text-sm text-gray-500 mt-1">Track staff actions and system events.</p>
         </div>
-        <button
-          onClick={() => fetchLogs(currentPage)}
-          className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all"
-          title="Refresh"
-        >
-          <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
-        </button>
+        <RefreshButton />
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -73,14 +67,7 @@ export default function AuditPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                    <Loader2 className="mx-auto h-8 w-8 animate-spin text-gray-300" />
-                    <span className="mt-2 block">Loading logs...</span>
-                  </td>
-                </tr>
-              ) : logs.length === 0 ? (
+              {logs.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                     <ClipboardList className="mx-auto h-12 w-12 text-gray-300 mb-2" />
@@ -118,14 +105,12 @@ export default function AuditPage() {
           </table>
         </div>
 
-        {!loading && logs.length > 0 && (
-          <Pagination
+        {logs.length > 0 && (
+          <AuditPagination
             currentPage={currentPage}
             totalPages={totalPages}
-            pageSize={pageSize}
+            pageSize={PAGE_SIZE}
             totalItems={totalItems}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={() => {}} // Fixed page size for now
           />
         )}
       </div>

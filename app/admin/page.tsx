@@ -1,4 +1,5 @@
 import Link from "next/link";
+import nextDynamic from "next/dynamic";
 import {
   FileSignature,
   MessageSquare,
@@ -10,50 +11,54 @@ import {
 } from "lucide-react";
 import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
-import OverviewChart from "@/components/admin/OverviewChart";
 import { LocalTime } from "@/components/ui/local-time";
+
+const OverviewChart = nextDynamic(() => import("@/components/admin/OverviewChart"), {
+  loading: () => <div className="h-[350px] w-full animate-pulse bg-gray-50 rounded-xl" />,
+});
 
 // Ensure real-time data fetching
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  // Fetch Summary Data
-  const todaysWaiversResult = await db.sql`SELECT COUNT(*) as count FROM waivers WHERE created_at >= CURRENT_DATE`;
+  // Fetch Summary Data + 7-Day Trend Data — all independent, run in parallel
+  const [
+    todaysWaiversResult,
+    unreadMessagesResult,
+    activeCardsResult,
+    cardsTodayResult,
+    waiverTrendResult,
+    auditTrendResult,
+    recentLogsResult,
+    user,
+  ] = await Promise.all([
+    db.sql`SELECT COUNT(*) as count FROM waivers WHERE created_at >= CURRENT_DATE`,
+    db.sql`SELECT COUNT(*) as count FROM messages WHERE status = 'unread'`,
+    db.sql`SELECT COUNT(*) as count FROM punch_cards WHERE status = 'active'`,
+    db.sql`SELECT COUNT(*) as count FROM punch_cards WHERE created_at >= CURRENT_DATE`,
+    db.sql`
+      SELECT TO_CHAR(created_at, 'YYYY-MM-DD') as day, COUNT(*) as count
+      FROM waivers
+      WHERE created_at >= NOW() - INTERVAL '6 days'
+      GROUP BY day ORDER BY day ASC
+    `,
+    db.sql`
+      SELECT TO_CHAR(created_at, 'YYYY-MM-DD') as day, action, COUNT(*) as count
+      FROM audit_logs
+      WHERE created_at >= NOW() - INTERVAL '6 days'
+      GROUP BY day, action ORDER BY day ASC
+    `,
+    db.sql`
+      SELECT * FROM audit_logs ORDER BY created_at DESC LIMIT 8
+    `,
+    currentUser(),
+  ]);
+
   const todaysWaivers = Number(todaysWaiversResult.rows[0]?.count || 0);
-
-  const unreadMessagesResult = await db.sql`SELECT COUNT(*) as count FROM messages WHERE status = 'unread'`;
   const unreadMessages = Number(unreadMessagesResult.rows[0]?.count || 0);
-
-  const activeCardsResult = await db.sql`SELECT COUNT(*) as count FROM punch_cards WHERE status = 'active'`;
   const activeCards = Number(activeCardsResult.rows[0]?.count || 0);
-
-  const cardsTodayResult = await db.sql`SELECT COUNT(*) as count FROM punch_cards WHERE created_at >= CURRENT_DATE`;
   const cardsToday = Number(cardsTodayResult.rows[0]?.count || 0);
-
-  // Fetch 7-Day Trend Data
-  // 1. Waivers Trend
-  const waiverTrendResult = await db.sql`
-    SELECT TO_CHAR(created_at, 'YYYY-MM-DD') as day, COUNT(*) as count 
-    FROM waivers 
-    WHERE created_at >= NOW() - INTERVAL '6 days' 
-    GROUP BY day ORDER BY day ASC
-  `;
-
-  // 2. Audit Logs Trend (Issues & Redeems)
-  const auditTrendResult = await db.sql`
-    SELECT TO_CHAR(created_at, 'YYYY-MM-DD') as day, action, COUNT(*) as count 
-    FROM audit_logs 
-    WHERE created_at >= NOW() - INTERVAL '6 days' 
-    GROUP BY day, action ORDER BY day ASC
-  `;
-
-  // Recent Activity Feed
-  const recentLogsResult = await db.sql`
-    SELECT * FROM audit_logs ORDER BY created_at DESC LIMIT 8
-  `;
   const recentLogs = recentLogsResult.rows;
-
-  const user = await currentUser();
 
   // Process Chart Data
   const last7Days = Array.from({ length: 7 }, (_, i) => {

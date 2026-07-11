@@ -78,6 +78,7 @@ export default function Navbar() {
             <Show when="signed-out">
               <SignInButton mode="modal">
                 <button
+                  type="button"
                   className="p-2 rounded-full hover:bg-pink-100 transition-colors"
                   aria-label="Sign In"
                 >
@@ -107,6 +108,7 @@ export default function Navbar() {
           {/* Mobile menu button */}
           <div className="lg:hidden flex items-center">
             <button
+              type="button"
               onClick={toggleMobileMenu}
               className="text-pink-700 hover:text-pink-600 p-2 transition-colors"
               aria-expanded={isMobileMenuOpen}
@@ -152,7 +154,10 @@ export default function Navbar() {
           <div className="border-t border-pink-200 pt-4 flex flex-col gap-3">
             <Show when="signed-out">
               <SignInButton mode="modal">
-                <button className="w-full text-center border border-pink-300 rounded-lg py-2 text-pink-700 font-medium hover:bg-pink-100 transition-colors cursor-pointer">
+                <button
+                  type="button"
+                  className="w-full text-center border border-pink-300 rounded-lg py-2 text-pink-700 font-medium hover:bg-pink-100 transition-colors cursor-pointer"
+                >
                   Sign In
                 </button>
               </SignInButton>

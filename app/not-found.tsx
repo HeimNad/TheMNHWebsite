@@ -9,6 +9,7 @@ export default function NotFound() {
         The page you are looking for does not exist or has been moved.
       </p>
       <button
+        type="button"
         onClick={() => window.history.back()}
         className="px-6 py-3 bg-pink-600 text-white rounded-md text-lg hover:bg-pink-700 transition duration-300"
       >

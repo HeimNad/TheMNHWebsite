@@ -1,0 +1,103 @@
+import { PartyPopper, Palette, Sparkles } from "lucide-react";
+
+export const packages = [
+  {
+    name: "Animal Rides Party",
+    Icon: PartyPopper,
+    description:
+      "Exclusive animal ride time plus play area fun — the classic MNH birthday experience!",
+    weekday: "$399",
+    weekend: "$499",
+    duration: "1.5 Hours",
+    capacity: "Up to 10 Children",
+    schedule: [
+      ["0:00–0:15", "Guest Arrival & Check-In"],
+      ["0:15–1:00", "Animal Rides & Play Area (Approx. 45 mins)"],
+      ["1:00–1:25", "Food, Cake & Celebration"],
+      ["1:25–1:30", "Photos & Free Play"],
+    ],
+    includes: [
+      "Extended Animal Ride Session",
+      "Play Area Access",
+      "Party Seating Area",
+      "Staff Assistance",
+    ],
+    addon: "Additional Child: +$35",
+    theme: {
+      border: "border-pink-100",
+      iconBg: "bg-pink-100 text-pink-600",
+      title: "text-pink-700",
+      priceBg: "bg-pink-400/60",
+      chip: "text-pink-600 bg-pink-50",
+      header: "bg-pink-500",
+      addon: "bg-pink-500",
+    },
+  },
+  {
+    name: "DIY Craft Party",
+    Icon: Palette,
+    description:
+      "Paint, create, and take home a one-of-a-kind figure — a hands-on celebration for little artists!",
+    weekday: "$299",
+    weekend: "$399",
+    duration: "1.5 Hours",
+    capacity: "Up to 10 Children",
+    schedule: [
+      ["0:00–0:15", "Guest Arrival & Check-In"],
+      ["0:15–1:00", "DIY Painting Activity (Approx. 45 mins)"],
+      ["1:00–1:25", "Food, Cake & Celebration"],
+      ["1:25–1:30", "Photos & Take Home Creations"],
+    ],
+    includes: [
+      "One DIY Kit Per Child",
+      "Paints & Supplies Included",
+      "Party Seating Area",
+      "Take Home Creation",
+    ],
+    addon: "Additional DIY Kit: +$30",
+    theme: {
+      border: "border-teal-100",
+      iconBg: "bg-teal-100 text-teal-600",
+      title: "text-teal-700",
+      priceBg: "bg-teal-400/60",
+      chip: "text-teal-600 bg-teal-50",
+      header: "bg-teal-500",
+      addon: "bg-teal-500",
+    },
+  },
+  {
+    name: "Animal Rides + DIY Party",
+    Icon: Sparkles,
+    description:
+      "The ultimate combo! Animal rides, play, and a DIY painting activity all in one extended party.",
+    weekday: "$649",
+    weekend: "$749",
+    duration: "2 Hours",
+    capacity: "Up to 10 Children",
+    schedule: [
+      ["0:00–0:15", "Guest Arrival & Check-In"],
+      ["0:15–0:50", "Animal Rides & Play Area (Approx. 35 mins)"],
+      ["0:50–1:25", "DIY Painting Activity (Approx. 35 mins)"],
+      ["1:25–1:55", "Food, Cake & Celebration"],
+      ["1:55–2:00", "Group Photos & Pick Up Creations"],
+    ],
+    includes: [
+      "Animal Ride Session",
+      "One DIY Kit Per Child",
+      "Paints & Supplies Included",
+      "Play Area Access",
+      "Party Seating Area",
+      "Take Home Creation",
+    ],
+    addon: "Additional Child + DIY Kit: +$60",
+    theme: {
+      border: "border-purple-100",
+      iconBg: "bg-purple-100 text-purple-600",
+      title: "text-purple-700",
+      priceBg: "bg-purple-400/60",
+      chip: "text-purple-600 bg-purple-50",
+      header: "bg-purple-500",
+      addon: "bg-purple-500",
+    },
+  },
+];

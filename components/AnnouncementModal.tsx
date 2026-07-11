@@ -50,11 +50,13 @@ export default function AnnouncementModal() {
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-300 relative">
         <div className="bg-pink-500 p-4 flex justify-between items-center">
           <div className="flex items-center gap-2 text-white font-bold text-lg">
-            <Megaphone className="animate-bounce" />
+            <Megaphone className="animate-pulse" />
             <span>Announcement</span>
           </div>
           <button
+            type="button"
             onClick={handleClose}
+            aria-label="Close"
             className="text-white/80 hover:text-white hover:bg-white/20 rounded-full p-1 transition-colors"
           >
             <X size={20} />
@@ -68,6 +70,7 @@ export default function AnnouncementModal() {
 
           <div className="mt-8 flex justify-center">
             <button
+              type="button"
               onClick={handleClose}
               className="bg-pink-100 hover:bg-pink-200 text-pink-700 font-semibold px-6 py-2.5 rounded-full transition-colors"
             >
