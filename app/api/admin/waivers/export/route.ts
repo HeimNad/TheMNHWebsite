@@ -7,13 +7,13 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const { rows } = await db.sql`
-      SELECT name, child_name, date, location, created_at
+      SELECT name, child_name, date, location, created_at, terms_accepted, age_confirmed, ip_address
       FROM waivers
       ORDER BY created_at DESC
     `;
 
     // CSV Header
-    const csvHeader = 'Name,Child Name,Date on Waiver,Location,Timestamp\n';
+    const csvHeader = 'Name,Child Name,Date on Waiver,Location,Timestamp,Terms Accepted,Age Confirmed,IP Address\n';
 
     // CSV Rows
     const csvRows = rows.map(row => {
@@ -34,8 +34,11 @@ export async function GET() {
       const date = row.date ? escape(new Date(row.date).toLocaleDateString()) : '';
       const location = escape(row.location);
       const createdAt = row.created_at ? escape(new Date(row.created_at).toLocaleString()) : '';
+      const termsAccepted = escape(row.terms_accepted ? 'Yes' : 'No');
+      const ageConfirmed = escape(row.age_confirmed ? 'Yes' : 'No');
+      const ipAddress = escape(row.ip_address);
 
-      return `${name},${childName},${date},${location},${createdAt}`;
+      return `${name},${childName},${date},${location},${createdAt},${termsAccepted},${ageConfirmed},${ipAddress}`;
     }).join('\n');
 
     const csvContent = csvHeader + csvRows;

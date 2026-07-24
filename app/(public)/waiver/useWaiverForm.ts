@@ -73,6 +73,8 @@ export function useWaiverForm() {
           date: data.date,
           location: data.location,
           signature_data: signatureData,
+          terms_accepted: data.termsAccepted,
+          age_confirmed: data.ageConfirmed,
           _hp: data.website || "",
           _ts: formLoadTime,
         }),

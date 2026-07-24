@@ -1,3 +1,5 @@
+import { WAIVER_PARAGRAPHS, WAIVER_RULES } from "./waiverTerms";
+
 export function WaiverRulesNotice() {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-pink-100 p-8 mb-8 space-y-6">
@@ -14,43 +16,16 @@ export function WaiverRulesNotice() {
           The MNH Wonder Rides Rules
         </h2>
         <ul className="space-y-2 text-pink-700 list-disc pl-5">
-          <li>
-            Riders under 4 ft. must be accompanied on all rides by an adult
-          </li>
-          <li>Max weight limit: 250 lbs per animal ride</li>
-          <li>No food or drinks while riding</li>
-          <li>
-            Riders may not go into stores or exit the mall during the ride
-          </li>
-          <li>No bumping into people or other riders</li>
-          <li>All children must be supervised by an adult</li>
+          {WAIVER_RULES.map((rule) => (
+            <li key={rule}>{rule}</li>
+          ))}
         </ul>
       </div>
 
       <div className="space-y-4 text-pink-700 text-sm leading-relaxed">
-        <p>
-          This Personal Injury Waiver (“Waiver”) is made by the undersigned
-          for the purpose of participating in ride activities operated by The
-          MNH Company LLC (the “Company”). The undersigned acknowledges and
-          accepts that there are inherent risks of personal injury related to
-          the use of the ride-on animals provided.
-        </p>
-        <p>
-          In consideration of being allowed to participate in these
-          activities at the selected location (listed below), the undersigned
-          voluntarily assumes all known and unknown risks and agrees to
-          release, discharge, and hold harmless the Company, its owners,
-          staff, affiliates, and partners from any and all claims,
-          liabilities, damages, or losses arising from participation,
-          including but not limited to any injuries, theft, accidents, or
-          negligence.
-        </p>
-        <p>
-          This Waiver shall be binding upon the undersigned and their heirs,
-          legal representatives, successors, and assigns. If any portion of
-          this Waiver is deemed invalid, the remaining provisions shall
-          remain fully enforceable.
-        </p>
+        {WAIVER_PARAGRAPHS.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
       </div>
     </div>
   );

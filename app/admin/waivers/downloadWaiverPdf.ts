@@ -44,6 +44,9 @@ export async function downloadWaiverPdf(
       ['Location', waiver.location],
       ['Submission Timestamp', new Date(waiver.created_at).toLocaleString()],
       ['Waiver ID', waiver.id],
+      ['Terms Accepted', waiver.terms_accepted ? 'Yes' : 'No'],
+      ['Age Confirmed', waiver.age_confirmed ? 'Yes' : 'No'],
+      ['IP Address', waiver.ip_address || 'N/A'],
     ],
     theme: 'grid',
     headStyles: { fillColor: [236, 72, 153], textColor: 255, fontStyle: 'bold', fontSize: 10 },
@@ -63,7 +66,12 @@ export async function downloadWaiverPdf(
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(60);
-  const legalText = `I, the undersigned, acknowledge that I have read and fully understand the "Waiver and Release of Liability" agreement provided by The MNH Wonder Rides.
+  // Use the exact terms text captured at signing time (waivers.waiver_text)
+  // so reprints of old waivers stay accurate even after wording changes.
+  // Older records predate that column, so fall back to the current text.
+  const legalText =
+    waiver.waiver_text ||
+    `I, the undersigned, acknowledge that I have read and fully understand the "Waiver and Release of Liability" agreement provided by The MNH Wonder Rides.
 
 I voluntarily assume all risks associated with the use of the electric animal rides and agree to release, discharge, and hold harmless The MNH Company LLC, its owners, and staff from any and all claims, liabilities, or damages arising from my participation or the participation of the minor listed above.
 

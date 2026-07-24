@@ -61,6 +61,16 @@ export function WaiverDetailModal({
             <strong>Signed At:</strong>{" "}
             <LocalTime date={waiver.created_at} format="datetime" />
           </p>
+          <p>
+            <strong>Terms Accepted / Age Confirmed:</strong>{" "}
+            {waiver.terms_accepted ? "Yes" : "No"} /{" "}
+            {waiver.age_confirmed ? "Yes" : "No"}
+          </p>
+          {waiver.ip_address && (
+            <p>
+              <strong>IP Address:</strong> {waiver.ip_address}
+            </p>
+          )}
         </div>
 
         <h4 className="text-lg font-semibold text-pink-900 mb-2">

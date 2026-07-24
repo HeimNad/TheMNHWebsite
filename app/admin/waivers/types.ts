@@ -6,4 +6,9 @@ export interface Waiver {
   location: string;
   signature_data: any[]; // JSON data for signature
   created_at: string;
+  terms_accepted: boolean;
+  age_confirmed: boolean;
+  waiver_text: string;
+  ip_address: string | null;
+  user_agent: string | null;
 }

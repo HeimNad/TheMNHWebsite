@@ -12,6 +12,38 @@ CREATE TABLE IF NOT EXISTS waivers (
   signature_data JSONB NOT NULL
 );
 
+-- Evidentiary fields: what was agreed to, and from where. Defaulted so this
+-- is safe to re-run against a database that already has waiver rows.
+ALTER TABLE waivers ADD COLUMN IF NOT EXISTS terms_accepted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE waivers ADD COLUMN IF NOT EXISTS age_confirmed BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE waivers ADD COLUMN IF NOT EXISTS waiver_text TEXT NOT NULL DEFAULT '';
+ALTER TABLE waivers ADD COLUMN IF NOT EXISTS ip_address TEXT;
+ALTER TABLE waivers ADD COLUMN IF NOT EXISTS user_agent TEXT;
+
+-- Backfill for rows submitted before these columns existed. This is not
+-- guesswork: the public waiver form has required both checkboxes to be
+-- checked (client-side zod validation) since the very first commit, so
+-- every pre-existing row was, in fact, submitted with both accepted.
+-- waiver_text/ip_address/user_agent were never captured for these rows and
+-- are left NULL/empty rather than backfilled with invented values.
+-- Must run before the immutability trigger below, or it blocks itself.
+UPDATE waivers SET terms_accepted = TRUE, age_confirmed = TRUE
+  WHERE terms_accepted = FALSE AND age_confirmed = FALSE;
+
+-- Waivers are legal evidence: block UPDATE/DELETE at the database engine
+-- level so a signed record can never be silently altered after the fact,
+-- regardless of which role or app code is connecting.
+CREATE OR REPLACE FUNCTION prevent_waiver_mutation() RETURNS trigger AS $$
+BEGIN
+  RAISE EXCEPTION 'waivers records are immutable and cannot be updated or deleted';
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS waivers_immutable ON waivers;
+CREATE TRIGGER waivers_immutable
+  BEFORE UPDATE OR DELETE ON waivers
+  FOR EACH ROW EXECUTE FUNCTION prevent_waiver_mutation();
+
 -- 2. Table: messages
 -- Used to store contact form submissions
 CREATE TABLE IF NOT EXISTS messages (
