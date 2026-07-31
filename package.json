@@ -23,7 +23,7 @@
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^1.8.0",
-    "next": "16.2.9",
+    "next": "16.2.12",
     "nodemailer": "^9.0.1",
     "react": "19.2.7",
     "react-big-calendar": "^1.19.4",
