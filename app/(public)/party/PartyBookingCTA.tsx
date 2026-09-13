@@ -43,7 +43,7 @@ export function PartyBookingCTA() {
         </Link>
 
         <p className="mt-6 text-xs text-pink-300">
-          Have questions? Call us at (516) 423-6988
+          Have questions? Call us at (516) 373-1319
         </p>
       </div>
     </>

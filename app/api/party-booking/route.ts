@@ -86,7 +86,7 @@ function customerReceiptHtml(data: BookingFormValues, rows: [string, string][]) 
     </div>
 
     <p style="font-size:12px;color:#d1aabb;margin-top:20px;line-height:1.6;">
-      Questions? Call us at (516) 423-6988.
+      Questions? Call us at (516) 373-1319.
     </p>
   `);
 }

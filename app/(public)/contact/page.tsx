@@ -95,7 +95,7 @@ export default function ContactPage() {
                 <h3 className="text-lg font-semibold text-pink-700 mb-1">
                   Call Us
                 </h3>
-                <p className="text-pink-700">+1 (516) 423-6988</p>
+                <p className="text-pink-700">+1 (516) 373-1319</p>
                 <p className="text-sm text-pink-600 mt-1">
                   Mon-Sat from 10am to 9pm.
                 </p>

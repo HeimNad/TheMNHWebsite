@@ -9,7 +9,7 @@ const jsonLd = {
   description:
     "Electric animal rides for kids at malls in Long Island, NY. Birthday parties, private sessions, and walk-up rides available.",
   url: "https://themnhwonderrides.com",
-  telephone: "+1-516-316-2819",
+  telephone: "+1-516-373-1319",
   email: "themnhwonderrides@gmail.com",
   image: "https://themnhwonderrides.com/favicon.jpg",
   address: [

@@ -77,7 +77,7 @@ function customerReceiptHtml(firstName: string, subjectLine: string, message: st
     <table cellpadding="0" cellspacing="0" style="width:100%;font-size:13px;">
       <tr>
         <td style="color:#d1aabb;width:120px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Phone</td>
-        <td style="color:#374151;padding:5px 0;vertical-align:top;">(516) 423-6988</td>
+        <td style="color:#374151;padding:5px 0;vertical-align:top;">(516) 373-1319</td>
       </tr>
       <tr>
         <td style="color:#d1aabb;width:120px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Email</td>
