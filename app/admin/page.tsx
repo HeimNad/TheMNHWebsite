@@ -4,6 +4,7 @@ import {
   FileSignature,
   MessageSquare,
   CreditCard,
+  Inbox,
   ArrowUpRight,
   Clock,
   Activity,
@@ -25,6 +26,7 @@ export default async function AdminDashboard() {
   const [
     todaysWaiversResult,
     unreadMessagesResult,
+    pendingRequestsResult,
     activeCardsResult,
     cardsTodayResult,
     waiverTrendResult,
@@ -34,6 +36,7 @@ export default async function AdminDashboard() {
   ] = await Promise.all([
     db.sql`SELECT COUNT(*) as count FROM waivers WHERE created_at >= CURRENT_DATE`,
     db.sql`SELECT COUNT(*) as count FROM messages WHERE status = 'unread'`,
+    db.sql`SELECT COUNT(*) as count FROM bookings WHERE status = 'pending'`,
     db.sql`SELECT COUNT(*) as count FROM punch_cards WHERE status = 'active'`,
     db.sql`SELECT COUNT(*) as count FROM punch_cards WHERE created_at >= CURRENT_DATE`,
     db.sql`
@@ -56,6 +59,7 @@ export default async function AdminDashboard() {
 
   const todaysWaivers = Number(todaysWaiversResult.rows[0]?.count || 0);
   const unreadMessages = Number(unreadMessagesResult.rows[0]?.count || 0);
+  const pendingRequests = Number(pendingRequestsResult.rows[0]?.count || 0);
   const activeCards = Number(activeCardsResult.rows[0]?.count || 0);
   const cardsToday = Number(cardsTodayResult.rows[0]?.count || 0);
   const recentLogs = recentLogsResult.rows;
@@ -95,7 +99,21 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        {/* Booking Requests Card */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-sm font-medium text-gray-500">Booking Requests</p>
+              <h3 className="text-3xl font-bold text-gray-900 mt-2">{pendingRequests}</h3>
+            </div>
+            <div className="p-3 bg-amber-50 rounded-xl text-amber-600"><Inbox size={24} /></div>
+          </div>
+          <div className="mt-4 flex items-center text-sm">
+            <Link href="/admin/requests" className="text-pink-600 font-medium hover:text-pink-700 flex items-center gap-1">Review <ArrowUpRight size={16} /></Link>
+          </div>
+        </div>
+
         {/* Waivers Card */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
           <div className="flex justify-between items-start">

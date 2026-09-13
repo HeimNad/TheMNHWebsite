@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const result = await db.sql`
       SELECT * FROM bookings
       WHERE start_time >= ${start} AND end_time <= ${end}
-      AND status != 'cancelled'
+      AND status = 'confirmed'
       ORDER BY start_time ASC
     `;
     return NextResponse.json(result.rows);
@@ -90,6 +90,79 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Failed to create booking:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+// PATCH /api/admin/bookings?id=... - Confirm a pending request, optionally
+// moving it first (staff often agree a new slot on the phone). Only confirmed
+// bookings hold a slot, so the overlap check runs here rather than on intake.
+export async function PATCH(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'ID required' }, { status: 400 });
+  }
+
+  try {
+    const body = await request.json().catch(() => ({}));
+    const { start_time, end_time } = body;
+
+    const client = await db.connect();
+    try {
+      await client.sql`BEGIN`;
+
+      const current = await client.sql`
+        SELECT start_time, end_time FROM bookings WHERE id = ${id} FOR UPDATE
+      `;
+      if ((current.rowCount ?? 0) === 0) {
+        await client.sql`ROLLBACK`;
+        return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+      }
+
+      const start = new Date(start_time || current.rows[0].start_time);
+      const end = new Date(end_time || current.rows[0].end_time);
+
+      if (!(start < end)) {
+        await client.sql`ROLLBACK`;
+        return NextResponse.json({ error: 'Start time must be before end time' }, { status: 400 });
+      }
+
+      const conflict = await client.sql`
+        SELECT id FROM bookings
+        WHERE status = 'confirmed'
+          AND id <> ${id}
+          AND start_time < ${end.toISOString()}
+          AND end_time > ${start.toISOString()}
+      `;
+      if ((conflict.rowCount ?? 0) > 0) {
+        await client.sql`ROLLBACK`;
+        return NextResponse.json(
+          { error: 'That slot overlaps a confirmed booking. Pick another time.' },
+          { status: 409 }
+        );
+      }
+
+      await client.sql`
+        UPDATE bookings
+        SET status = 'confirmed',
+            start_time = ${start.toISOString()},
+            end_time = ${end.toISOString()},
+            updated_at = NOW()
+        WHERE id = ${id}
+      `;
+
+      await client.sql`COMMIT`;
+      return NextResponse.json({ success: true });
+    } catch (err) {
+      await client.sql`ROLLBACK`;
+      throw err;
+    } finally {
+      client.release();
+    }
+  } catch (error) {
+    console.error('Failed to confirm booking:', error);
+    return NextResponse.json({ error: 'Failed to confirm' }, { status: 500 });
   }
 }
 

@@ -22,10 +22,10 @@ export function BookingEventCell({ event }: { event: Booking }) {
         {event.package_type}
       </div>
 
-      {/* Line 4: Notes (Visible on large screens and up) */}
-      {event.notes && (
+      {/* Line 4: Special requests or staff notes (large screens and up) */}
+      {(event.special_requests || event.notes) && (
         <div className="truncate opacity-80 border-t border-white/20 mt-0.5 pt-0.5 hidden lg:block">
-          {event.notes}
+          {event.special_requests || event.notes}
         </div>
       )}
     </div>

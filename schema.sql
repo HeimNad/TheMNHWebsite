@@ -129,6 +129,26 @@ CREATE TABLE IF NOT EXISTS bookings (
   updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
+-- Columns for the public party booking form. Added separately so this file
+-- stays safe to re-run against a database that already has bookings. Staff
+-- bookings created in the admin leave them NULL.
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS customer_email TEXT;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS child_count INTEGER;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS add_ons JSONB;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS food_options JSONB;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS special_requests TEXT;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS pizza_preference TEXT;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS pizza_count INTEGER;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS photo_permission BOOLEAN;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS terms_accepted BOOLEAN;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS waiver_acknowledged BOOLEAN;
+
+-- Marks the rows that came from the public form, so the admin request queue
+-- can show their history without listing bookings staff typed in themselves.
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS source TEXT;
+UPDATE bookings SET source = 'website'
+  WHERE source IS NULL AND customer_email IS NOT NULL;
+
 CREATE INDEX IF NOT EXISTS idx_bookings_start_time ON bookings(start_time);
 
 -- 7. Table: settings

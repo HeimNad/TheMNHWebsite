@@ -10,6 +10,15 @@ export type Booking = {
   end_time: string;
   customer_name: string;
   customer_phone: string;
+  customer_email?: string;
+  status?: string;
+  child_count?: number;
+  add_ons?: string[];
+  food_options?: string[];
+  pizza_preference?: string;
+  pizza_count?: number;
+  special_requests?: string;
+  photo_permission?: boolean;
   child_name?: string;
   child_age?: string;
   package_type?: string;

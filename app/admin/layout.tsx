@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Calendar,
+  Inbox,
   Settings,
 } from "lucide-react";
 import { useState } from "react";
@@ -25,6 +26,7 @@ const navItems = [
   { name: "Waivers", href: "/admin/waivers", icon: FileSignature },
   { name: "Messages", href: "/admin/messages", icon: MessageSquare },
   { name: "Membership", href: "/admin/membership", icon: CreditCard },
+  { name: "Requests", href: "/admin/requests", icon: Inbox },
   { name: "Bookings", href: "/admin/bookings", icon: Calendar },
   { name: "Announcements", href: "/admin/announcements", icon: Flag },
   { name: "Audit Logs", href: "/admin/audit", icon: ClipboardList },

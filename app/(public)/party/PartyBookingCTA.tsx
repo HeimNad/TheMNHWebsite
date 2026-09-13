@@ -35,7 +35,7 @@ export function PartyBookingCTA() {
         </p>
 
         <Link
-          href="/contact?subject=Party Inquiry#contact-form"
+          href="/party/book"
           className="group relative inline-flex items-center justify-center gap-3 bg-white text-pink-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-100 transition-all w-full sm:w-auto shadow-lg hover:shadow-xl hover:-translate-y-1"
         >
           <span>Book Your Party Now</span>
