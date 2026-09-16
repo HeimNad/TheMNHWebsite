@@ -2,6 +2,7 @@
 
 import { Mail, Phone, MapPin } from "lucide-react";
 import { SiInstagram } from "@/components/icons/SiInstagram";
+import { SiWhatsApp } from "@/components/icons/SiWhatsApp";
 import { Suspense } from "react";
 import { useContactForm } from "./useContactForm";
 import { ContactSuccessMessage } from "./ContactSuccessMessage";
@@ -89,13 +90,13 @@ export default function ContactPage() {
 
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center shrink-0">
-                <Phone className="text-pink-500" />
+                <SiWhatsApp className="text-pink-500" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-pink-700 mb-1">
-                  Call Us
+                  Message Us
                 </h3>
-                <p className="text-pink-700">+1 (516) 373-1319</p>
+                <p className="text-pink-700">@themnhwonderrides</p>
                 <p className="text-sm text-pink-600 mt-1">
                   Mon-Sat from 10am to 9pm.
                 </p>
