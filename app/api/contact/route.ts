@@ -84,9 +84,9 @@ function customerReceiptHtml(firstName: string, subjectLine: string, message: st
         <td style="color:#374151;padding:5px 0;vertical-align:top;">hello@themnhwonderrides.com</td>
       </tr>
       <tr>
-        <td style="color:#d1aabb;width:120px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Locations</td>
+        <td style="color:#d1aabb;width:120px;font-size:12px;padding:5px 12px 5px 0;vertical-align:top;">Location</td>
         <td style="color:#374151;padding:5px 0;vertical-align:top;line-height:1.6;">
-          Samanea New York, Westbury NY<br/>Broadway Commons, Hicksville NY
+          522 Broadway Mall, Hicksville NY (Broadway Commons)
         </td>
       </tr>
     </table>

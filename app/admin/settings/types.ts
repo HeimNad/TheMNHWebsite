@@ -4,6 +4,5 @@ export type DayHours = Record<
 >;
 
 export interface BusinessHours {
-  samanea: DayHours;
   broadway: DayHours;
 }

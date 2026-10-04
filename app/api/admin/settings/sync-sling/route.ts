@@ -126,7 +126,6 @@ function buildWeekHours(byDate: Map<string, [number, number][]>): LocationHours 
 // POST /api/admin/settings/sync-sling
 export async function POST() {
   const token     = process.env.SLING_API_TOKEN;
-  const samaneaId = process.env.SLING_SAMANEA_GROUP_ID;
   const broadwayId = process.env.SLING_BROADWAY_GROUP_ID;
 
   if (!token) {
@@ -135,15 +134,11 @@ export async function POST() {
 
   const weekStart = getWeekStart(new Date());
 
-  const [samaneaByDate, broadwayByDate] = await Promise.all([
-    samaneaId  ? fetchWeekShifts(samaneaId,  token, weekStart) : Promise.resolve(new Map()),
-    broadwayId ? fetchWeekShifts(broadwayId, token, weekStart) : Promise.resolve(new Map()),
-  ]);
+  const broadwayByDate = broadwayId
+    ? await fetchWeekShifts(broadwayId, token, weekStart)
+    : new Map<string, [number, number][]>();
 
-  const hours = {
-    samanea:  buildWeekHours(samaneaByDate),
-    broadway: buildWeekHours(broadwayByDate),
-  };
+  const hours = { broadway: buildWeekHours(broadwayByDate) };
 
   await db.sql`
     INSERT INTO settings (key, value, updated_at)

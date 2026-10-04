@@ -22,20 +22,10 @@ export function PackageCard({ pkg }: { pkg: (typeof packages)[number] }) {
       <div
         className={`${pkg.theme.priceBg} text-white p-4 rounded-2xl text-center mb-5 shadow-md`}
       >
-        <div className="flex justify-center items-stretch divide-x divide-white/40">
-          <div className="px-4">
-            <p className="text-xs uppercase tracking-wide opacity-90">
-              Weekday
-            </p>
-            <p className="text-2xl font-bold">{pkg.weekday}</p>
-          </div>
-          <div className="px-4">
-            <p className="text-xs uppercase tracking-wide opacity-90">
-              Weekend
-            </p>
-            <p className="text-2xl font-bold">{pkg.weekend}</p>
-          </div>
-        </div>
+        <p className="text-xs uppercase tracking-wide opacity-90">
+          Starting at
+        </p>
+        <p className="text-4xl font-bold">{pkg.price}</p>
       </div>
 
       {/* Meta */}

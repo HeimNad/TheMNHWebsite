@@ -9,7 +9,7 @@ import { db } from "@/lib/db";
 export const metadata: Metadata = {
   title: "Kids' Animal Rides for Parties & Events",
   description:
-    "The MNH Wonder Rides brings joy to children with safe electric animal rides at Samanea Mall and Broadway Commons in Long Island, NY.",
+    "The MNH Wonder Rides brings joy to children with safe electric animal rides at Broadway Commons in Hicksville, Long Island, NY.",
   alternates: { canonical: "/" },
 };
 
@@ -18,15 +18,6 @@ export const dynamic = "force-dynamic";
 
 // Default hours fallback
 const DEFAULT_HOURS = {
-  samanea: {
-    Mon: "Closed",
-    Tue: "Closed",
-    Wed: "Closed",
-    Thu: "Closed",
-    Fri: "3:00 PM - 9:00 PM",
-    Sat: "11:00 AM - 8:00 PM",
-    Sun: "11:00 AM - 8:00 PM",
-  },
   broadway: {
     Mon: "3:00 PM - 8:00 PM",
     Tue: "3:00 PM - 8:00 PM",
@@ -74,7 +65,6 @@ export default async function Home() {
     console.error("Failed to fetch business hours", e);
   }
 
-  const samaneaHours = groupHours(hoursData.samanea);
   const broadwayHours = groupHours(hoursData.broadway);
 
   return (
@@ -177,46 +167,8 @@ export default async function Home() {
             Visit Our Store
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            {/* Location 1: Samanea New York */}
-            <div className="bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm flex flex-col">
-              <div className="h-64 w-full bg-pink-100 relative">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.742748037766!2d-73.59904021712222!3d40.74568579761597!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c287543271f59b%3A0x3477f7fea9700b5f!2sSamanea%20New%20York%20Mall!5e0!3m2!1sen!2sus!4v1765148954844!5m2!1sen!2sus"
-                  title="Samanea New York Map"
-                  sandbox="allow-scripts allow-popups"
-                  className="absolute inset-0"
-                ></iframe>
-              </div>
-              <div className="p-8 flex-1 flex flex-col">
-                <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-pink-700">
-                  <MapPin className="text-pink-500" /> Samanea Mall 2nd Floor
-                </h3>
-                <p className="text-pink-700 mb-6 pl-8">
-                  1500 Old Country Rd,
-                  <br />
-                  Westbury, NY 11590
-                </p>
-
-                <div className="mt-auto pl-8">
-                  <h4 className="font-semibold flex items-center gap-2 mb-2 text-pink-700">
-                    <Clock size={18} className="text-pink-500" /> Business Hours
-                  </h4>
-                  <ul className="text-sm text-pink-700 space-y-1">
-                    {samaneaHours.map((h) => (
-                      <li key={h.label} className="flex justify-between max-w-xs">
-                        <span className="font-medium">{h.label}:</span>
-                        <span>{h.time}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Location 2: Broadway Commons */}
+          <div className="max-w-2xl mx-auto">
+            {/* Broadway Commons */}
             <div className="bg-white border border-pink-100 rounded-2xl overflow-hidden shadow-sm flex flex-col">
               <div className="h-64 w-full bg-pink-100 relative">
                 <iframe

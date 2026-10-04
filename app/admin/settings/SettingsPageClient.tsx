@@ -24,7 +24,6 @@ export function SettingsPageClient({
 }: {
   initialHours: BusinessHours;
 }) {
-  const [activeTab, setActiveTab] = useState<"samanea" | "broadway">("samanea");
   const [hours, setHours] = useState(initialHours);
   const [saving, setSaving] = useState(false);
   const [syncing, setSyncing] = useState(false);
@@ -40,7 +39,7 @@ export function SettingsPageClient({
     value?: string
   ) => {
     const currentStr =
-      hours[activeTab][day as keyof typeof hours.samanea] || "Closed";
+      hours.broadway[day as keyof typeof hours.broadway] || "Closed";
     let isClosed = currentStr === "Closed" || currentStr === "";
     let [start, end] = isClosed
       ? ["10:00 AM", "9:00 PM"]
@@ -50,7 +49,7 @@ export function SettingsPageClient({
       const newVal = isClosed ? "10:00 AM - 9:00 PM" : "Closed";
       setHours((prev) => ({
         ...prev,
-        [activeTab]: { ...prev[activeTab], [day]: newVal },
+        broadway: { ...prev.broadway, [day]: newVal },
       }));
       return;
     }
@@ -60,7 +59,7 @@ export function SettingsPageClient({
 
     setHours((prev) => ({
       ...prev,
-      [activeTab]: { ...prev[activeTab], [day]: `${start} - ${end}` },
+      broadway: { ...prev.broadway, [day]: `${start} - ${end}` },
     }));
   };
 
@@ -85,7 +84,10 @@ export function SettingsPageClient({
       const res = await fetch("/api/admin/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: "business_hours", value: hours }),
+        body: JSON.stringify({
+          key: "business_hours",
+          value: { broadway: hours.broadway },
+        }),
       });
 
       if (!res.ok) throw new Error("Failed to save");
@@ -145,41 +147,12 @@ export function SettingsPageClient({
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* Tabs */}
-        <div className="border-b border-gray-100 flex">
-          <button
-            type="button"
-            onClick={() => setActiveTab("samanea")}
-            className={`flex-1 py-4 text-sm font-medium text-center transition-colors border-b-2 ${
-              activeTab === "samanea"
-                ? "border-pink-500 text-pink-600 bg-pink-50/30"
-                : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-            }`}
-          >
-            Samanea New York
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("broadway")}
-            className={`flex-1 py-4 text-sm font-medium text-center transition-colors border-b-2 ${
-              activeTab === "broadway"
-                ? "border-pink-500 text-pink-600 bg-pink-50/30"
-                : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-            }`}
-          >
-            Broadway Commons
-          </button>
-        </div>
-
         <div className="p-6 sm:p-8">
           <div className="flex items-center gap-3 mb-8 p-4 bg-blue-50 text-blue-800 rounded-xl border border-blue-100">
             <MapPin size={20} />
             <div>
               <p className="font-bold text-sm">
-                Editing:{" "}
-                {activeTab === "samanea"
-                  ? "Samanea Mall (Westbury)"
-                  : "Broadway Mall (Hicksville)"}
+                Editing: Broadway Mall (Hicksville)
               </p>
               <p className="text-xs opacity-80">
                 Toggle a day to close/open. Use the copy button to apply hours
@@ -191,7 +164,7 @@ export function SettingsPageClient({
           <div className="space-y-4">
             {DAYS.map((day) => {
               const val =
-                hours[activeTab][day as keyof typeof hours.samanea] || "Closed";
+                hours.broadway[day as keyof typeof hours.broadway] || "Closed";
               const isClosed = val === "Closed" || val === "";
               const [start, end] = isClosed
                 ? ["10:00 AM", "9:00 PM"]

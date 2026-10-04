@@ -7,28 +7,18 @@ const jsonLd = {
   "@type": "EntertainmentBusiness",
   name: "The MNH Wonder Rides",
   description:
-    "Electric animal rides for kids at malls in Long Island, NY. Birthday parties, private sessions, and walk-up rides available.",
+    "Electric animal rides for kids at Broadway Commons in Hicksville, Long Island, NY. Birthday parties, private sessions, and walk-up rides available.",
   url: "https://themnhwonderrides.com",
   email: "themnhwonderrides@gmail.com",
   image: "https://themnhwonderrides.com/favicon.jpg",
-  address: [
-    {
-      "@type": "PostalAddress",
-      streetAddress: "1500 Old Country Rd, Samanea Mall 2nd Floor",
-      addressLocality: "Westbury",
-      addressRegion: "NY",
-      postalCode: "11590",
-      addressCountry: "US",
-    },
-    {
-      "@type": "PostalAddress",
-      streetAddress: "522 Broadway Mall",
-      addressLocality: "Hicksville",
-      addressRegion: "NY",
-      postalCode: "11801",
-      addressCountry: "US",
-    },
-  ],
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "522 Broadway Mall",
+    addressLocality: "Hicksville",
+    addressRegion: "NY",
+    postalCode: "11801",
+    addressCountry: "US",
+  },
   sameAs: ["https://www.instagram.com/themnhwonderrides"],
 };
 

@@ -32,6 +32,7 @@ export function useWaiverForm() {
   const form = useForm<WaiverFormValues>({
     resolver: zodResolver(waiverSchema),
     defaultValues: {
+      location: "Broadway Commons",
       date: (() => {
         const today = new Date();
         const year = today.getFullYear();

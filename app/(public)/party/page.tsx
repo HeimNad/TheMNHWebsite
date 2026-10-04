@@ -1,7 +1,18 @@
 "use client";
 
-import { Star, Music, PartyPopper, Sparkles, Palette, Calendar, Info } from "lucide-react";
-import { packages } from "./partyPackages";
+import {
+  Star,
+  Music,
+  PartyPopper,
+  Sparkles,
+  Palette,
+  Calendar,
+  Info,
+  Gift,
+  Heart,
+  CheckCircle,
+} from "lucide-react";
+import { packages, partyEssentials, bringYourOwn } from "./partyPackages";
 import { PackageCard } from "./PackageCard";
 import { PrivateRideSession } from "./PrivateRideSession";
 import { PartyBookingCTA } from "./PartyBookingCTA";
@@ -50,20 +61,61 @@ export default function PartyPage() {
           ))}
         </div>
 
-        {/* DIY Kit callout */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 mb-12 flex items-start gap-4 shadow-sm">
+        {/* DIY activity callout */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 mb-8 flex flex-wrap sm:flex-nowrap items-start gap-4 shadow-sm">
           <span className="bg-yellow-400 text-pink-700 font-bold px-4 py-2 rounded-full shrink-0 text-lg">
-            $30 / Kit
+            Ages 2+
           </span>
           <div>
             <h3 className="font-bold text-yellow-800 mb-1 flex items-center gap-2">
               <Palette size={18} className="text-yellow-600" />
-              DIY Painting Activity
+              DIY Craft Activity
             </h3>
             <p className="text-yellow-900 text-sm">
-              Each DIY kit includes a figure, paints, brushes &amp; a take-home
-              creation. Fun for kids of all ages!
+              Choose <strong>one</strong> activity for your party:{" "}
+              <strong>Perler Beads</strong> or <strong>Painting</strong>. All
+              supplies included — every child takes their creation home!
             </p>
+          </div>
+        </div>
+
+        {/* Included with every party / bring your own */}
+        <div className="grid md:grid-cols-2 gap-6 mb-12">
+          <div className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
+            <h3 className="text-xl font-bold text-orange-600 mb-4 flex items-center gap-2">
+              <Gift size={22} className="text-orange-500" /> Party Essentials
+              Included
+            </h3>
+            <ul className="space-y-2">
+              {partyEssentials.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm">
+                  <CheckCircle
+                    className="text-orange-400 shrink-0 mt-0.5"
+                    size={18}
+                  />
+                  <span className="text-gray-700">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-white rounded-2xl p-6 border border-pink-100 shadow-sm">
+            <h3 className="text-xl font-bold text-pink-600 mb-1 flex items-center gap-2">
+              <Heart size={22} className="text-pink-500" /> Make It Your Own!
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">
+              You&rsquo;re welcome to bring your own:
+            </p>
+            <ul className="space-y-2">
+              {bringYourOwn.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm">
+                  <CheckCircle
+                    className="text-pink-400 shrink-0 mt-0.5"
+                    size={18}
+                  />
+                  <span className="text-gray-700">{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -102,10 +154,8 @@ export default function PartyPage() {
                 <li className="flex items-start gap-2">
                   <span className="text-pink-400 mt-1">•</span>
                   <span>
-                    Guests may bring their own cake and food.
-                    <span className="block text-xs text-pink-600 mt-1 font-medium bg-pink-100 w-fit px-2 py-0.5 rounded">
-                      (No refrigeration or heating available on site)
-                    </span>
+                    No refrigeration or heating is available on site — please
+                    plan outside food accordingly.
                   </span>
                 </li>
               </ul>

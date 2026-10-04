@@ -112,9 +112,6 @@ export default function ContactPage() {
                   Visit Us
                 </h3>
                 <p className="text-pink-700">
-                  1500 Old Country Rd, Westbury, NY 11590
-                </p>
-                <p className="text-pink-700">
                   522 Broadway Mall, Hicksville, NY 11801
                 </p>
               </div>

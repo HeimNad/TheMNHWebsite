@@ -111,13 +111,9 @@ export function WaiverFormFields({
             className={`w-full px-4 py-3 rounded-lg border ${
               errors.location ? "border-red-500" : "border-pink-200"
             } focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-all bg-white text-pink-700`}
-            defaultValue=""
           >
             <option value="" disabled>
               Select a location
-            </option>
-            <option value="Samanea New York">
-              Samanea New York, Westbury, NY
             </option>
             <option value="Broadway Commons">
               Broadway Commons, Hicksville, NY

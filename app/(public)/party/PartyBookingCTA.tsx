@@ -5,25 +5,16 @@ import { ArrowRight } from "lucide-react";
 export function PartyBookingCTA() {
   return (
     <>
-      {/* Image Placeholder Area - Simulating the Poster Image */}
-      <div className="bg-white p-4 rounded-3xl shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-500">
-        <div className="aspect-4/3 bg-linear-to-br from-pink-100 to-purple-100 rounded-2xl overflow-hidden relative group">
-          <Image
-            src="/party.png"
-            alt="Party Zone Photo"
-            fill
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            className="object-cover"
-          />
-
-          {/* Overlay Text */}
-          <div className="absolute bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md p-4 text-white">
-            <p className="font-bold text-lg">Safe &amp; Exciting Space</p>
-            <p className="text-sm opacity-90">
-              Interactive play zone with blocks &amp; games
-            </p>
-          </div>
-        </div>
+      {/* Party flyer — shown whole (it's mostly text), never cropped */}
+      <div className="bg-white p-3 rounded-3xl shadow-lg transform rotate-1 hover:rotate-0 transition-transform duration-500">
+        <Image
+          src="/party-poster.jpg"
+          alt="The MNH Wonder Rides birthday party flyer: Animal Rides Party from $399, DIY Craft Party from $299, Animal Rides + DIY Party from $649, each up to 10 children, with party essentials included. 522 Broadway Mall, Hicksville, NY."
+          width={1024}
+          height={1536}
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          className="w-full h-auto rounded-2xl"
+        />
       </div>
 
       {/* Booking CTA Card */}

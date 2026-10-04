@@ -5,15 +5,6 @@ import type { BusinessHours } from "./types";
 export const dynamic = "force-dynamic";
 
 const DEFAULT_HOURS: BusinessHours = {
-  samanea: {
-    Mon: "Closed",
-    Tue: "Closed",
-    Wed: "Closed",
-    Thu: "Closed",
-    Fri: "3:00 PM - 9:00 PM",
-    Sat: "11:00 AM - 8:00 PM",
-    Sun: "11:00 AM - 8:00 PM",
-  },
   broadway: {
     Mon: "3:00 PM - 8:00 PM",
     Tue: "3:00 PM - 8:00 PM",

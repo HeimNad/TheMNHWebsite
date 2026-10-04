@@ -6,8 +6,7 @@ export const packages = [
     Icon: PartyPopper,
     description:
       "Exclusive animal ride time plus play area fun — the classic MNH birthday experience!",
-    weekday: "$399",
-    weekend: "$499",
+    price: "$399",
     duration: "1.5 Hours",
     capacity: "Up to 10 Children",
     schedule: [
@@ -17,10 +16,10 @@ export const packages = [
       ["1:25–1:30", "Photos & Free Play"],
     ],
     includes: [
-      "Extended Animal Ride Session",
+      "Animal Ride Session",
       "Play Area Access",
       "Party Seating Area",
-      "Staff Assistance",
+      "Staff Support",
     ],
     addon: "Additional Child: +$35",
     theme: {
@@ -37,24 +36,24 @@ export const packages = [
     name: "DIY Craft Party",
     Icon: Palette,
     description:
-      "Paint, create, and take home a one-of-a-kind figure — a hands-on celebration for little artists!",
-    weekday: "$299",
-    weekend: "$399",
+      "Perler beads or painting — every child creates a one-of-a-kind piece to take home!",
+    price: "$299",
     duration: "1.5 Hours",
     capacity: "Up to 10 Children",
     schedule: [
       ["0:00–0:15", "Guest Arrival & Check-In"],
-      ["0:15–1:00", "DIY Painting Activity (Approx. 45 mins)"],
+      ["0:15–1:00", "DIY Activity: Perler Beads or Painting (Approx. 45 mins)"],
       ["1:00–1:25", "Food, Cake & Celebration"],
       ["1:25–1:30", "Photos & Take Home Creations"],
     ],
     includes: [
-      "One DIY Kit Per Child",
-      "Paints & Supplies Included",
+      "One DIY Activity Per Child (Perler Beads or Painting)",
+      "All Craft Supplies Included",
       "Party Seating Area",
+      "Staff Support",
       "Take Home Creation",
     ],
-    addon: "Additional DIY Kit: +$30",
+    addon: "Additional Child: +$30",
     theme: {
       border: "border-teal-100",
       iconBg: "bg-teal-100 text-teal-600",
@@ -69,27 +68,27 @@ export const packages = [
     name: "Animal Rides + DIY Party",
     Icon: Sparkles,
     description:
-      "The ultimate combo! Animal rides, play, and a DIY painting activity all in one extended party.",
-    weekday: "$649",
-    weekend: "$749",
+      "The ultimate combo! Animal rides, play, and a DIY craft activity all in one extended party.",
+    price: "$649",
     duration: "2 Hours",
     capacity: "Up to 10 Children",
     schedule: [
       ["0:00–0:15", "Guest Arrival & Check-In"],
       ["0:15–0:50", "Animal Rides & Play Area (Approx. 35 mins)"],
-      ["0:50–1:25", "DIY Painting Activity (Approx. 35 mins)"],
+      ["0:50–1:25", "DIY Activity: Perler Beads or Painting (Approx. 35 mins)"],
       ["1:25–1:55", "Food, Cake & Celebration"],
       ["1:55–2:00", "Group Photos & Pick Up Creations"],
     ],
     includes: [
       "Animal Ride Session",
-      "One DIY Kit Per Child",
-      "Paints & Supplies Included",
+      "One DIY Activity Per Child (Perler Beads or Painting)",
+      "All Craft Supplies Included",
       "Play Area Access",
       "Party Seating Area",
+      "Staff Support",
       "Take Home Creation",
     ],
-    addon: "Additional Child + DIY Kit: +$60",
+    addon: "Additional Child: +$50",
     theme: {
       border: "border-purple-100",
       iconBg: "bg-purple-100 text-purple-600",
@@ -100,4 +99,20 @@ export const packages = [
       addon: "bg-purple-500",
     },
   },
+];
+
+/** Included with every party package. */
+export const partyEssentials = [
+  "Birthday Hat for the Birthday Child",
+  "Birthday Number Balloon & Welcome Balloons",
+  "Party Table & Chair Setup",
+  "Plates & Basic Party Tableware",
+  "Water & Kids' Juice",
+];
+
+/** What families are welcome to bring themselves. */
+export const bringYourOwn = [
+  "Cake & outside food",
+  "Additional decorations",
+  "Music or a personal playlist",
 ];
